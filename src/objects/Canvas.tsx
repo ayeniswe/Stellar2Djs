@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import '../assets/style/Canvas.css';
 import { TextureRenderer } from '../rendering/TextureRenderer';
 import { TextureAtlas } from '../rendering';
-import { effect } from '@preact/signals-react';
 
 const Canvas = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -21,15 +20,17 @@ const Canvas = () => {
     },[width, height]);
 
     if (ctx) {
+      // Add event listener for mousemove event
+      
+
+      (async () => {
         const rend = new TextureRenderer(ctx);
-        effect(() => {
-          if (rend.texturesToLoad.value === 0) {
-            rend.add(TextureAtlas.PLAIN_WALL, 0, 0);
-            rend.add(TextureAtlas.PLAIN_WALL, 32, 0);
-            rend.add(TextureAtlas.PLAIN_WALL, 64, 0);
-            rend.render(ctx);
-          }
-        });
+        await rend.init();
+        document.getElementById("Canvas")?.addEventListener("mousedown", function(event) {
+          rend.add(TextureAtlas.PLAIN_WALL, event.offsetX, event.offsetY);
+          rend.render(ctx);
+        })
+      })();
     }
     
     return (

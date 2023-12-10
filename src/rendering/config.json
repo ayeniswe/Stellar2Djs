@@ -1,0 +1,26 @@
+
+{
+    "name": "heavenlyplaces",
+    "version": "0.1.0",
+    "textures": {
+       "1": {
+            "id": "dungeon",
+            "src": "tiles/dungeon.png",
+            "objects": {
+                "1-1": {
+                    "name": "plain_wall",
+                    "sx": 0,
+                    "sy": 16,
+                    "w": 32,
+                    "h": 32
+                }
+            }
+        },
+        "2": {
+            "id": "player",
+            "src": "player.png",
+            "objects": {
+            }
+        }
+    }
+}

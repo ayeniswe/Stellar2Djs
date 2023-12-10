@@ -1,23 +1,54 @@
 type TextureAtlasMetadata = {
     name: string,
-    src: 'tiles' | 'player',
+    src: string,
+}
+
+type Texture = TextureAtlasMetadata & {
     sx: number,
     sy: number,
     w: number,
     h: number
-}
-
-type Texture = TextureAtlasMetadata & {
     dx: number,
     dy: number,
+}
+
+
+type TexturesMapping = {
+    [key: string]: Texture
 }
 
 type TextureSources = {
     [key: string]: HTMLImageElement
 }
 
+type TextureObject = {
+    name: string;
+    sx: number;
+    sy: number;
+    w: number;
+    h: number;
+}
+  
+type Textures = {
+    id: string;
+    src: string;
+    objects: {
+        [key: string]: TextureObject;
+    };
+}
+  
+type Config = {
+    name: string;
+    version: string;
+    textures: {
+      [key: string]: Textures;
+    };
+}
+
 export type {
     TextureAtlasMetadata,
     Texture,
-    TextureSources
+    TextureSources,
+    Config,
+    TexturesMapping,
 }
