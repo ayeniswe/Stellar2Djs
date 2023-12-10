@@ -1,5 +1,6 @@
-import config from './config.json';
-import { Config, Texture, TexturesMapping, TextureSources } from '../rendering/types';
+import config from '../data/config.json';
+import FileSaver, { saveAs } from 'file-saver';
+import { Config, TexturesMapping, TextureSources } from '../rendering/types';
 
 class TextureRenderer {
     private ctx: CanvasRenderingContext2D;
@@ -44,13 +45,6 @@ class TextureRenderer {
     }
 
     /**
-     * Turns off clipping. Enables clipping by default.
-     */
-    turnOffClipping() {
-        this.clipping = false;
-    }
-
-    /**
      * Checks if an x, y position exists in rendering context.
      *
      * @param {number} x - The x-coordinate of the position.
@@ -61,9 +55,26 @@ class TextureRenderer {
         return this.texturesMapping[`${x},${y}`] ? true : false;
     }
 
-    private logRender(x: number, y: number) {
-        
+    saveTextureMapping() {
+        const data = new Blob([JSON.stringify(this.texturesMapping)], { type: 'application/json' });
+        // Create a URL for the Blob
+        const url = URL.createObjectURL(data);
+        // Create a link element to trigger the download
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'demo.json';
+        link.click();
+        // Remove link
+        URL.revokeObjectURL(url);
     }
+
+    /**
+     * Turns off clipping. Enables clipping by default.
+     */
+    turnOffClipping() {
+        this.clipping = false;
+    }
+
     /**
      * Adds a texture to the list of textures.
      *
