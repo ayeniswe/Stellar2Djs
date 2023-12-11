@@ -3,23 +3,80 @@
     "name": "heavenlyplaces",
     "version": "0.1.0",
     "textures": {
-       "1": {
-            "id": "dungeon",
-            "src": "tiles/dungeon.png",
-            "objects": {
-                "1-1": {
-                    "name": "plain_wall",
-                    "sx": 0,
-                    "sy": 16,
-                    "w": 32,
-                    "h": 32
+        "tiles": {
+            "1": {
+                "id": "dungeon",
+                "src": "tiles/dungeon.png",
+                "objects": {
+                    "wall": {
+                        "1-1": {
+                            "name": "plain_wall",
+                            "sx": 0,
+                            "sy": 16,
+                            "w": 32,
+                            "h": 32
+                        },
+                        "1-2": {
+                            "name": "red_flag_window",
+                            "sx": 0,
+                            "sy": 48,
+                            "w": 32,
+                            "h": 32
+                        },
+                        "1-3": {
+                            "name": "damaged",
+                            "sx": 32,
+                            "sy": 48,
+                            "w": 32,
+                            "h": 32
+                        },
+                        "1-4": {
+                            "name": "blue_flag",
+                            "sx": 64,
+                            "sy": 48,
+                            "w": 32,
+                            "h": 32
+                        },
+                        "1-5": {
+                            "name": "red_flag",
+                            "sx": 96,
+                            "sy": 48,
+                            "w": 32,
+                            "h": 32
+                        },
+                        "1-6": {
+                            "name": "right_point_turn",
+                            "sx": 32,
+                            "sy": 0,
+                            "w": 25,
+                            "h": 48
+                        }
+                    }
+                }
+            },
+            "2": {
+                "id": "play",
+                "src": "tiles/play.png",
+                "objects": {
+                    "wallkkkkk": {
+                        "1-13": {
+                            "name": "plain_wall1",
+                            "sx": 0,
+                            "sy": 16,
+                            "w": 32,
+                            "h": 32
+                        }
+                    }
                 }
             }
         },
-        "2": {
-            "id": "player",
-            "src": "player.png",
-            "objects": {
+        "frames": {
+            "1": {
+                "id": "player",
+                "src": "player.png",
+                "objects": {
+                    
+                }
             }
         }
     }

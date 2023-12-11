@@ -17,5 +17,16 @@ code {
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background-color: gray;
+  background-color: var(--primary-color);
+  background-image: url('../images/background.jpg');
+}
+
+:root {
+  --primary-color: gray;
+  --secondary-color: white;
+  --accent-color: black;
+  --text-color: black;
+  --game-height: 600px;
+  --game-width: 800px;
+  --window-border-radius: 1rem;
 }

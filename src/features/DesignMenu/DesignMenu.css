@@ -1,0 +1,50 @@
+#DesignMenu {
+    background-color: var(--secondary-color);
+    border: 3px solid var(--accent-color);
+    border-radius: var(--window-border-radius);
+    height: 600px;
+    overflow-y: scroll;
+    scrollbar-width: thin;
+    width: 12%;
+}
+
+.DesignMenu__title {
+    text-align: center;
+}
+
+.DesignMenu__select {
+    margin-bottom: 0;
+    margin-left: 10px;
+    text-align: center;
+}
+
+.DesignMenu__select__dropdown {
+    width: 100%;
+}
+
+.DesignMenu__content {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.DesignMenu__content__title {
+    text-align: center;
+}
+
+.DesignMenu__content__tiles {
+    display: grid;
+    column-gap: 10px;
+    grid-template-columns: 1fr 1fr 1fr;
+    row-gap: 10px;
+}
+
+.DesignMenu__content__tiles__tile {
+    background-color: var(--background-color);
+    height: 50px;
+    width: 50px;
+    background-size: cover;
+    image-rendering: pixelated;
+}

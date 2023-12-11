@@ -1,13 +1,12 @@
-import config from '../data/config.json';
-import FileSaver, { saveAs } from 'file-saver';
+import configuration from '../data/config.json';
 import { Config, TexturesMapping, TextureSources } from '../rendering/types';
 
 class TextureRenderer {
-    private ctx: CanvasRenderingContext2D;
-    private textureSources: TextureSources = {}
+    private textureSources: TextureSources = {};
     private texturesMapping: TexturesMapping = {};
-    private config: Config = config;
+    private config: Config = configuration;
     private clipping: boolean = true;
+    public ctx: CanvasRenderingContext2D;
 
     constructor(ctx: CanvasRenderingContext2D) {
         this.ctx = ctx;
@@ -17,27 +16,34 @@ class TextureRenderer {
      * Initializes the renderer.
      */
     async init() {
-        await this.addSources();
+        await this.addAllSources();
     }
 
+    private async addAllSources() {
+        for (const key in this.config.textures) {
+            this.addSources(key);
+        }
+    }
+    
     /**
      * Adds a new source to the textureSources object.
+     * @param {string} type - The texture type.
      */
-    private async addSources() {
-        for (let index = 1; index < Object.keys(this.config.textures).length + 1; index++) {
-            const texture = this.config.textures[index];
-            const id = texture.id
-            const path = `assets/textures/${texture.src}`
+    private async addSources(type: string) {
+        for (let index = 1; index < Object.keys(this.config.textures).length; index++) {
+            const texture = this.config.textures[type][index];
+            const id = texture.id;
+            const path = `assets/textures/${texture.src}`;
             this.textureSources = {
                 ...this.textureSources,
                 [id]: new Image(),
             };
             try {
-                const url = (await import(`../${path}`)).default;
+                const url: string = (await import(`../${path}`)).default;
                 this.textureSources[id].src = url;
                 this.textureSources[id].onload = () => {
                     console.log(id + ' texture loaded')
-                }
+                };
             } catch (error) {
                 console.error(`Failed to load texture: ${id} from path: ${path}`);
             }
@@ -78,11 +84,13 @@ class TextureRenderer {
     /**
      * Adds a texture to the list of textures.
      *
-     * @param {string} textureID - The texture id to be added.
+     * @param {string} type - The texture type.
+     * @param {string} group - The texture group
+     * @param {string} textureID - The texture id (includes the src id and object id respectively "src-obj").
      * @param {number} x - The x-coordinate of the destination position.
      * @param {number} y - The y-coordinate of the destination position.
      */
-    add(textureID: string, x: number, y: number) {
+    addTexture(type: string, group: string, textureID: string, x: number, y: number) {
         const inBoundsY = (h: number, y: number) => {
             return y >= this.ctx.canvas.height - h ? this.ctx.canvas.height - h : y < 0 ? 0 : y;
         }
@@ -102,25 +110,25 @@ class TextureRenderer {
         const srcID = textureID.split('-')[0];
         try {
             
-            const h = this.config.textures[srcID].objects[textureID].h;
-            const w = this.config.textures[srcID].objects[textureID].w;
+            const h = this.config.textures[type][srcID].objects[group][textureID].h;
+            const w = this.config.textures[type][srcID].objects[group][textureID].w;
             // Clipping the positions to the closest units of x and y
             // and checking bounds
             let dx, dy;
             if (this.clipping) {
                 dx = clipX(w, inBoundsX(w, x));
                 dy = clipY(h, inBoundsY(h, y));
-                if (this.posExists(dx, dy) && x < dx) dx = inBoundsX(w, dx - w)
-                if (this.posExists(dx, dy) && y < dy) dy = inBoundsY(w, dy - h)
+                if (this.posExists(dx, dy) && x < dx) dx = inBoundsX(w, dx - w);
+                if (this.posExists(dx, dy) && y < dy) dy = inBoundsY(w, dy - h);
             } else {
                 dx = inBoundsX(w, x);
                 dy = inBoundsY(h, y);
             }
         
-            const src = this.config.textures[srcID].id;
-            const name = this.config.textures[srcID].objects[textureID].name
-            const sx = this.config.textures[srcID].objects[textureID].sx;
-            const sy = this.config.textures[srcID].objects[textureID].sy;
+            const src = this.config.textures[type][srcID].id;
+            const name = this.config.textures[type][srcID].objects[group][textureID].name;
+            const sx = this.config.textures[type][srcID].objects[group][textureID].sx;
+            const sy = this.config.textures[type][srcID].objects[group][textureID].sy;
             // Log the position
             if (!this.posExists(dx, dy)) {
                 console.log(`Rendering ${name} at x: ${dx}, y: ${dy}`);
@@ -137,7 +145,7 @@ class TextureRenderer {
                 dy: dy,
                 w: w,
                 h: h
-            }
+            };
 
         } catch (error) {
             console.error(`Texture ID: ${textureID} could not found`);

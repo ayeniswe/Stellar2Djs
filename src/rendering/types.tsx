@@ -33,7 +33,9 @@ type Textures = {
     id: string;
     src: string;
     objects: {
-        [key: string]: TextureObject;
+        [key: string]: {
+            [key: string]: TextureObject; // String will follow "1-1" format with first and second number respectively representing the texture id, and the object id
+        }
     };
 }
   
@@ -41,7 +43,9 @@ type Config = {
     name: string;
     version: string;
     textures: {
-      [key: string]: Textures;
+        [key: string]: {
+            [key: string]: Textures; // String will follow a numbering format starting from 1..n
+        };
     };
 }
 
@@ -51,4 +55,5 @@ export type {
     TextureSources,
     Config,
     TexturesMapping,
+    TextureObject,
 }
