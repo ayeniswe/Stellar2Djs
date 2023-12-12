@@ -1,8 +1,8 @@
 import DesignMenu from "./features/DesignMenu/DesignMenu";
-import Canvas from "./objects/Canvas";
+import Canvas from "./main/Canvas";
 const Game = () => {
   return (
-    <div className="Game">
+    <div id="Game" className="Game">
       <Canvas/>
       <DesignMenu/>
     </div>

@@ -3,7 +3,7 @@ import './DesignMenu.css';
 import { useDesign } from './useDesign';
 
 const DesignMenu = () => {
-    const { getCategories, getTilesets, setTileset, showTileset, TILESET_VIEW } = useDesign();
+    const { getCategories, getTilesets, setTileset, showTileset } = useDesign();
 
     useEffect(() => {
       getTilesets();

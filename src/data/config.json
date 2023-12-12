@@ -48,8 +48,8 @@
                             "name": "right_point_turn",
                             "sx": 32,
                             "sy": 0,
-                            "w": 25,
-                            "h": 48
+                            "w": 32,
+                            "h": 32
                         }
                     }
                 }
@@ -59,7 +59,7 @@
                 "src": "tiles/play.png",
                 "objects": {
                     "wallkkkkk": {
-                        "1-13": {
+                        "2-13": {
                             "name": "plain_wall1",
                             "sx": 0,
                             "sy": 16,

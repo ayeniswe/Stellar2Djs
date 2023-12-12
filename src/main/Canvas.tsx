@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import '../assets/style/Canvas.css';
-import { Level } from '../design/level/Level';
+import { Level } from '../libs/design/level';
+import { LevelInput } from '../libs/input/Level';
 
 const Canvas = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -20,12 +21,7 @@ const Canvas = () => {
 
     if (ctx) {
       (async () => {
-        const lvl = new Level(ctx);
-        await lvl.init();
-        lvl.turnOnEditing();
-        document.getElementById("Canvas")?.addEventListener("mousedown", function(event) {
-          lvl.add(event.offsetX, event.offsetY);
-        })
+        await new LevelInput(ctx).init();
       })();
     }
     
