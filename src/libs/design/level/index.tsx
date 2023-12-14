@@ -1,8 +1,8 @@
-import { Level } from "./Level";
+import { LevelEditorDesign } from "./LevelEditorDesign";
 import { Brush } from "./types";
 
 export {
-    Level,
+    LevelEditorDesign,
 }
 
 export type {

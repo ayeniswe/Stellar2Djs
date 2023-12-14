@@ -3,7 +3,7 @@ import { Config, TextureObject } from '../../libs/rendering/types';
 import { capitalize } from '../../utils/text';
 import { computed, effect, signal } from '@preact/signals-react';
 import { Tilesets } from './type';
-import { Level } from '../../libs/design/level/index';
+import { LevelEditorDesign } from '../../libs/design/level';
 
 const useDesign = () => {
     let config: Config = configuration;
@@ -32,28 +32,28 @@ const useDesign = () => {
      * @return {Promise<string | undefined>} The data URL of the loaded image.
      */
     const loadBackground = async (object: TextureObject): Promise<string | undefined> => {
-        const IMG = new Image();
-        const PATH = ASSETS_PATH.replace("placeholder", TILES_SRC.value);
-        const URL: string = (await import(`../../${PATH}`)).default;
-        IMG.src = URL;
+        const img = new Image();
+        const path = ASSETS_PATH.replace("placeholder", TILES_SRC.value);
+        const url: string = (await import(`../../${path}`)).default;
+        img.src = url;
 
-        const IMAGELOADING = new Promise<HTMLImageElement>((resolve) => {
-            IMG.onload = () => {
-                resolve(IMG);
+        const imageLoading = new Promise<HTMLImageElement>((resolve) => {
+            img.onload = () => {
+                resolve(img);
             };
         });
-        await IMAGELOADING;
+        await imageLoading;
 
         try {
             // Create a temporary canvas
-            const CANVAS = document.createElement('canvas');
-            CANVAS.width = object.w;
-            CANVAS.height = object.h;
-            const CTX = CANVAS.getContext('2d');
-            if (CTX) {
+            const canvas = document.createElement('canvas');
+            canvas.width = object.w;
+            canvas.height = object.h;
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
                 // Draw temporary canvas
-                CTX.drawImage(IMG, object.sx, object.sy, object.w, object.h, 0, 0, object.w, object.h);
-                return CANVAS.toDataURL();
+                ctx.drawImage(img, object.sx, object.sy, object.w, object.h, 0, 0, object.w, object.h);
+                return canvas.toDataURL();
             };
         } catch(error) {
             console.error("The JSON file key: 'objects' has an invalid key for src: " + TILES_SRC.value);
@@ -68,11 +68,11 @@ const useDesign = () => {
      */
     const setBackground = async () => {
         for (const key in TILES_METADATA.value) {
-            const URL = await loadBackground(TILES_METADATA.value[key]);
-            if (URL) {
+            const url = await loadBackground(TILES_METADATA.value[key]);
+            if (url) {
                 const ELE = document.getElementById(key);
                 if (ELE) {
-                    ELE.style.backgroundImage = `url(${URL})`;
+                    ELE.style.backgroundImage = `url(${url})`;
                 };
             };
         };
@@ -91,7 +91,7 @@ const useDesign = () => {
             ...objects
         }; // keep track of all tiles
         return Object.keys(objects).map(key => {
-            return <div id={key} key={key} className='DesignMenu__content__tiles__tile' onClick={(e) =>Level.setBrush(e.currentTarget.id, group)}/>
+            return <div id={key} key={key} className='DesignMenu__content__tiles__tile' onClick={(e) =>LevelEditorDesign.setBrush(e.currentTarget.id, group, objects[key].name)}/>
         });
     }
 

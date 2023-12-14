@@ -1,6 +1,7 @@
 import configuration from '../../data/config.json';
 import { Config, TexturesMapping, TextureSources } from './types';
 import { capitalize } from '../../utils/text';
+import { error, log, MESSAGE } from '../logging';
 
 class TextureRenderer {
     private __textureSources: TextureSources = {};
@@ -15,35 +16,36 @@ class TextureRenderer {
     /**
      * Initializes the renderer.
      */
-    async init() {
+    async initRenderer() {
         await this.__addAllSources();
     }
     
     /**
-     * Adds a new source to the __textureSources object.
-     * @param {string} type - The texture type.
+     * Adds a new sources to the textureSources object.
      */
-    private async __addSources(type: string) {
-        const sources = Object.keys(this.__config.textures[type]).length;
-        let sourcesLoaded = 0;
-        console.log(`${capitalize(type)} textures to load:`, sources);
-        for (let index = 1; index <= sources; index++) {
-            const texture = this.__config.textures[type][index];
-            const id = texture.id;
-            const path = `assets/textures/${texture.src}`;
-            this.__textureSources = {
-                ...this.__textureSources,
-                [id]: new Image(),
-            };
-            try {
-                const url: string = (await import(`../../${path}`)).default;
-                this.__textureSources[id].src = url;
-                this.__textureSources[id].onload = () => {
-                    sourcesLoaded++;
-                    console.log(`${capitalize(type)}: ${id} texture loaded...`, sourcesLoaded, 'of', sources);
+    private async __addAllSources() {
+        for (const key in this.__config.textures) {
+            log(MESSAGE.ADDING_TEXTURE, `${capitalize(key)}`)
+            const sources = Object.keys(this.__config.textures[key]).length;
+            let sourcesLoaded = 0;
+            for (let index = 1; index <= sources; index++) {
+                const texture = this.__config.textures[key][index];
+                const id = texture.id;
+                const path = `assets/textures/${texture.src}`;
+                this.__textureSources = {
+                    ...this.__textureSources,
+                    [id]: new Image(),
                 };
-            } catch (error) {
-                console.error(`Failed to load texture: ${id} from path: ${path}`);
+                try {
+                    const url: string = (await import(`../../${path}`)).default;
+                    this.__textureSources[id].src = url;
+                    this.__textureSources[id].onload = () => {
+                        sourcesLoaded++;
+                        log(MESSAGE.LOADING_TEXTURE, `${sourcesLoaded} of ${sources}: ${capitalize(key)} `);
+                    };
+                } catch {
+                    error(MESSAGE.FAILED_TEXTURE, `${id} from path: ${path}`);
+                }
             }
         }
     }
@@ -53,17 +55,12 @@ class TextureRenderer {
      *
      * @param {number} x - The x-coordinate of the position.
      * @param {number} y - The y-coordinate of the position.
+     * @param {number} w - The width of the position.
+     * @param {number} h - The height of the position.
      * @return {boolean} Returns true if the position exists, false otherwise.
      */
-    private __posExists(x: number, y: number): boolean {
-        return this.__texturesMapping[`${x},${y}`] ? true : false;
-    }
-
-    private async __addAllSources() {
-        for (const key in this.__config.textures) {
-            console.log(`Adding textures: ${capitalize(key)}`)
-            this.__addSources(key);
-        }
+    private __posExists(x: number, y: number, w: number, h: number): boolean {
+        return this.__texturesMapping[`${x},${y},${w},${h}`] ? true : false;
     }
 
     /**
@@ -97,8 +94,8 @@ class TextureRenderer {
         if (clipping) {
             dx = clipX(w, inBoundsX(w, x));
             dy = clipY(h, inBoundsY(h, y));
-            if (this.__posExists(dx, dy) && x < dx) dx = inBoundsX(w, dx - w);
-            if (this.__posExists(dx, dy) && y < dy) dy = inBoundsY(w, dy - h);
+            if (this.__posExists(dx, dy, w, h) && x < dx) dx = inBoundsX(w, dx - w);
+            if (this.__posExists(dx, dy, w, h) && y < dy) dy = inBoundsY(w, dy - h);
         } else {
             dx = inBoundsX(w, x);
             dy = inBoundsY(h, y);
@@ -128,31 +125,41 @@ class TextureRenderer {
     }
 
     /**
-     * Adds a texture to the list of textures.
-     *
+     * Clears a part or the whole canvas.
+     * @param {number} dx - The x-coordinate of the top-left corner of the area.
+     * @param {number} dy - The y-coordinate of the top-left corner of the area.
+     * @param {number} w - The width of the area.
+     * @param {number} h - The height of the area.
+     */
+    private __clearCanvas = (dx: number, dy: number, w: number, h: number) => {
+        this.ctx.clearRect(dx, dy, w, h);
+    }
+
+    /**
      * @param {string} clipping - Allow clipping textures to nearest unit.
      * @param {string} type - The type of the texture.
      * @param {string} group - The group to which the texture belongs.
      * @param {string} textureID - The texture id (includes the src id and object id respectively "src-obj").
      * @param {number} x - The x-coordinate of the destination position.
      * @param {number} y - The y-coordinate of the destination position.
+     * @returns {number[]} - Returns the location of the texture if it was added, empty array otherwise
      */
-    __addTexture(clipping: boolean, type: string, group: string, textureID: string, x: number, y: number) {
+    addTexture(clipping: boolean, type: string, group: string, textureID: string, x: number, y: number): number[] {
+        // Get the source ID, height, and width of the current brush state
         const [srcID, h, w] = this.__getBrushInfo(type, group, textureID);
-        try {
-            // Scaling and account for clipping if true
-            const [dx, dy] = this.__scaling(x, y, w, h, clipping);
-            
+        
+        // Scaling and account for clipping if true
+        const [dx, dy] = this.__scaling(x, y, w, h, clipping);
+
+        // Only add the texture once
+        if (!this.__posExists(dx, dy, w, h)) {
             const src = this.__config.textures[type][srcID].id;
             const name = this.__config.textures[type][srcID].objects[group][textureID].name;
             const sx = this.__config.textures[type][srcID].objects[group][textureID].sx;
             const sy = this.__config.textures[type][srcID].objects[group][textureID].sy;
 
-            if (!this.__posExists(dx, dy)) {
-                console.log(`Rendering ${name} at x: ${dx}, y: ${dy}`);
-            } 
-            // Store the texture by the x, y position
-            this.__texturesMapping[`${dx},${dy}`] = {
+            // Store the texture by the x, y, w, h coordinates for uniqueness
+            this.__texturesMapping[`${dx},${dy},${w},${h}`] = {
                 src: src,
                 name: name,
                 sx: sx,
@@ -163,33 +170,42 @@ class TextureRenderer {
                 h: h
             };
 
-        } catch (error) {
-            console.error(error);
+            return [dx, dy];
         }
+
+        return [];
     }
 
     /**
-     * Removes a texture at the specified coordinates.
-     *
      * @param {boolean} clipping - Whether or not to apply clipping.
      * @param {string} type - The type of the texture.
      * @param {string} group - The group to which the texture belongs.
      * @param {string} textureID - The ID of the texture.
      * @param {number} x - The x-coordinate of the texture.
      * @param {number} y - The y-coordinate of the texture.
+     * @returns {number[]} - Returns location of the object where it was removed, empty array otherwise
      */
-    __removeTexture(clipping: boolean, type: string, group: string, textureID: string, x: number, y: number) {
-        const [srcID, h, w] = this.__getBrushInfo(type, group, textureID);;
+    removeTexture(clipping: boolean, type: string, group: string, textureID: string, x: number, y: number): number[] {
+        const [srcID, h, w] = this.__getBrushInfo(type, group, textureID);
         const [dx, dy] = this.__scaling(x, y, w, h, clipping);
-        console.log(`Removing texture at x: ${dx}, y: ${dy}`);
-        delete this.__texturesMapping[`${dx},${dy}`];
-        this.ctx.clearRect(dx,dy,h,w);
+        if (this.__posExists(dx, dy, w, h)) {
+            delete this.__texturesMapping[`${dx},${dy},${w},${h}`];
+            // Remove the image from the canvas
+            this.__clearCanvas(dx, dy, w, h);
+            return [dx, dy];
+        }
+        return [];
+    }
+
+    removeAllTexture() {
+        this.__texturesMapping = {};
+        this.__clearCanvas(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     }
     
     /**
      * Renders the textures on the canvas using the provided rendering context.
      */
-    __render() {
+    render() {
         for (const key in this.__texturesMapping) {
             const texture = this.__texturesMapping[key];
             this.ctx.drawImage(

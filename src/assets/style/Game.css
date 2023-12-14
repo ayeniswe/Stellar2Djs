@@ -13,12 +13,13 @@ code {
 }
 
 .Game {
-  display: flex;
   align-items: center;
-  justify-content: center;
-  height: 100vh;
   background-color: var(--primary-color);
   background-image: url('../images/background.jpg');
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  user-select: none;
 }
 
 :root {

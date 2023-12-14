@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import '../assets/style/Canvas.css';
-import { Level } from '../libs/design/level';
-import { LevelInput } from '../libs/input/Level';
+import { LevelEditor } from './LevelEditor';
 
 const Canvas = () => {
     const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -21,10 +20,9 @@ const Canvas = () => {
 
     if (ctx) {
       (async () => {
-        await new LevelInput(ctx).init();
+        await new LevelEditor(ctx, {}).init();
       })();
     }
-    
     return (
       <canvas ref={canvasRef} width={width} height={height} id = "Canvas"/>
     );
