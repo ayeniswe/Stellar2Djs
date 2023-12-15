@@ -2,14 +2,26 @@ import '@testing-library/jest-dom/extend-expect';
 import { render, screen} from '@testing-library/react';
 import DesignMenu from '..';
 import userEvent from '@testing-library/user-event';
+import { LevelEditor } from '../../../main/LevelEditor';
 
-const setup = () => render(<DesignMenu/>);
+const setup = () => {
+    const canvas = document.createElement('canvas');
+    canvas.id = "Canvas";
+    canvas.width = 800;
+    canvas.height = 600;
+    document.body.appendChild(canvas);
+    const ctx = canvas.getContext('2d')!;
+    if (!ctx) throw new Error('Could not get 2d context');
+
+    const lvl = new LevelEditor(ctx, {})
+    render(<DesignMenu editor={lvl}/>);
+}
 beforeEach(() => {
     //eslint-disable-next-line
     setup();
 })
 
-describe ('DesignMenu', () => {
+describe ('LevelEditor', () => {
 
     test('Retrieve tilesets and show a default tileset', () => {
         // Verify tile group section shows
@@ -44,3 +56,5 @@ describe ('DesignMenu', () => {
 
 // Remaining test
 // - Verify better way to detected switching between tilesets
+// - Verify hover effect on tile
+// - Verify trash mode on and shake animation and aria label set and div shows on/off with red / white background

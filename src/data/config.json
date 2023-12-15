@@ -267,29 +267,29 @@
                         }
                     },
                     "turns": {
-                        "1-1621": {
-                            "name": "right_turn",
+                        "1-38": {
+                            "name": "rightback_turn",
                             "sx": 32,
                             "sy": 0,
                             "w": 32,
                             "h": 32
                         },
-                        "1-17211": {
-                            "name": "left_turn",
+                        "1-39": {
+                            "name": "leftback_turn",
                             "sx": 47,
                             "sy": 0,
                             "w": 32,
                             "h": 32
                         },
-                        "1-18121": {
-                            "name": "leftsidewall",
+                        "1-40": {
+                            "name": "left_turn",
                             "sx": 32,
                             "sy": 32,
                             "w": 32,
                             "h": 16
                         },
-                        "1-10e21": {
-                            "name": "deer",
+                        "1-42": {
+                            "name": "leftcorner_turn",
                             "sx": 64,
                             "sy": 0,
                             "w": 16,
@@ -297,21 +297,157 @@
                         }
                     },
                     "sides": {
-                        "1-11e": {
-                            "name": "rightsidewall",
+                        "1-43": {
+                            "name": "wallbackend_side",
+                            "sx": 64,
+                            "sy": 32,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-44": {
+                            "name": "wall_side",
                             "sx": 32,
                             "sy": 16,
                             "w": 16,
                             "h": 16
                         }
+
                     },
                     "ceiling": {
-                        "1-12e": {
+                        "1-46": {
                             "name": "ceiling",
                             "sx": 96,
                             "sy": 16,
                             "w": 16,
                             "h": 16
+                        },
+                        "1-47": {
+                            "name": "ceilingback",
+                            "sx": 144,
+                            "sy": 0,
+                            "w": 32,
+                            "h": 12
+                        }
+                    },
+                    "misc": {
+                        "1-48": {
+                            "name": "barrel",
+                            "sx": 112,
+                            "sy": 87,
+                            "w": 16,
+                            "h": 19
+                        },
+                        "1-49": {
+                            "name": "silverbarrel",
+                            "sx": 146,
+                            "sy": 91,
+                            "w": 12,
+                            "h": 15
+                        },
+                        "1-50": {
+                            "name": "goldbarrel",
+                            "sx": 163,
+                            "sy": 91,
+                            "w": 9,
+                            "h": 15
+                        },
+                        "1-51": {
+                            "name": "torch",
+                            "sx": 181,
+                            "sy": 88,
+                            "w": 7,
+                            "h": 16
+                        },
+                        "1-52": {
+                            "name": "sewer",
+                            "sx": 144,
+                            "sy": 32,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-53": {
+                            "name": "downstair",
+                            "sx": 144,
+                            "sy": 17,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-54": {
+                            "name": "bones",
+                            "sx": 240,
+                            "sy": 64,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-55": {
+                            "name": "brokenwall",
+                            "sx": 177,
+                            "sy": 58,
+                            "w": 32,
+                            "h": 21
+                        },
+                        "1-56": {
+                            "name": "spikes_part4",
+                            "sx": 192,
+                            "sy": 33,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-57": {
+                            "name": "spikes_part3",
+                            "sx": 208,
+                            "sy": 33,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-58": {
+                            "name": "spikes_part2",
+                            "sx": 224,
+                            "sy": 33,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-59": {
+                            "name": "spikes_part1",
+                            "sx": 240,
+                            "sy": 33,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-60": {
+                            "name": "plain_pillar",
+                            "sx": 320,
+                            "sy": 0,
+                            "w": 16,
+                            "h": 37
+                        },
+                        "1-61": {
+                            "name": "face_pillar",
+                            "sx": 336,
+                            "sy": 0,
+                            "w": 16,
+                            "h": 37
+                        },
+                        "1-62": {
+                            "name": "plain_pillarwall",
+                            "sx": 80,
+                            "sy": 0,
+                            "w": 16,
+                            "h": 37
+                        },
+                        "1-63": {
+                            "name": "face_pillarwall",
+                            "sx": 128,
+                            "sy": 0,
+                            "w": 16,
+                            "h": 37
+                        },
+                        "1-64": {
+                            "name": "long_pillar",
+                            "sx": 352,
+                            "sy": 3,
+                            "w": 16,
+                            "h": 45
                         }
                     }
                 }

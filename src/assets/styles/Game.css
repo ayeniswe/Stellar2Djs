@@ -19,7 +19,7 @@ code {
 
 :root {
   --primary-color: gray;
-  --secondary-color: white;
+  --secondary-color: rgb(255, 255, 255);
   --accent-color: black;
   --text-color: white;
   --game-height: 600px;

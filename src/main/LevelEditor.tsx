@@ -1,16 +1,19 @@
 import { KMMapping, LevelEditorInput } from "../libs/input";
 
 class LevelEditor {
-    private __i: LevelEditorInput;
-
+    private __input: LevelEditorInput;
+    
     constructor(ctx: CanvasRenderingContext2D, mapping: KMMapping, id?: string) {
-        this.__i = new LevelEditorInput(ctx, mapping, id);
+        this.__input = new LevelEditorInput(ctx, mapping, id);
     }
 
     async init() {
-        await this.__i.initInput();
+        await this.__input.initInput();
     }
 
+    get input() {
+        return this.__input;
+    }
 }
 
 export {

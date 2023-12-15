@@ -1,4 +1,5 @@
 import { KMMapping, Bindings } from ".";
+import { applyTrashEffect, removeTrashEffect } from "../../features/LevelEditor/effects";
 import { LevelEditorDesign } from "../design/level";
 import { MESSAGE, log, warn } from "../logging";
 
@@ -18,7 +19,7 @@ class LevelEditorInput extends LevelEditorDesign {
         await this.initEditor();
         this.__b.addBinding(this.handleDragDrawing.bind(this), [], "mousemove", false, "Canvas");
         this.__b.addBinding(this.handleDrawing.bind(this), ['LeftButton'], "mousedown", false, "Canvas");
-        this.__b.addBinding(this.handleClippingMode.bind(this), ['c'], "keydown", false);
+        this.__b.addBinding(this.handleClippingMode.bind(this), ['c'], "keydown", true);
         this.__b.addBinding(this.handleDragDrawingMode.bind(this), ['d'], "keydown", true);
         this.__b.addBinding(this.handleEditingMode.bind(this), ['e'], "keydown", true);
         this.__b.addBinding(this.handleTrashMode.bind(this), ['Delete'], "keydown", true);
@@ -45,8 +46,10 @@ class LevelEditorInput extends LevelEditorDesign {
     private handleTrashMode() {
         if (this.trash) {
             this.trash = false;
+            removeTrashEffect();
         } else {
             this.trash = true;
+            applyTrashEffect();
         }
         warn(MESSAGE.TRASH, this.trash ? "on" : "off");
     }

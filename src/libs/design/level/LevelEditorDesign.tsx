@@ -1,11 +1,12 @@
 import { MESSAGE, log } from '../../logging';
 import { Brush } from '.';
 import { TextureRenderer } from '../../rendering';
+import { Signal, signal } from '@preact/signals-react';
 
 class LevelEditorDesign {
     private __editable: boolean = false;
     private __clipping: boolean = true;
-    private __trash: boolean = false;
+    private __trash: Signal<boolean> = signal(false);
     private __drag: boolean = false;
     private __safety: boolean = true; // prevent serious actions by accident
     private __textureType: string = "tiles";
@@ -77,6 +78,10 @@ class LevelEditorDesign {
     }
 
     get trash() {
+        return this.__trash.value;
+    }
+
+    get trashSignal() {
         return this.__trash;
     }
 
@@ -97,7 +102,7 @@ class LevelEditorDesign {
     }
 
     set trash(val: boolean) {
-       this.__trash = val
+       this.__trash.value = val
     }
 
     set editable(val: boolean) {
@@ -107,6 +112,7 @@ class LevelEditorDesign {
     set clipping(val: boolean) {
        this.__clipping = val
     }
+
 
 }
 

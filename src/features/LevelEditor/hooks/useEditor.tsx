@@ -4,8 +4,10 @@ import { capitalize } from '../../../utils/text';
 import { computed, effect, signal } from '@preact/signals-react';
 import { Tilesets } from '../type';
 import { LevelEditorDesign } from '../../../libs/design/level';
+import { LevelEditor } from '../../../main/LevelEditor';
+import { applyTrashEffect, removeTrashEffect } from '../effects';
 
-const useDesign = () => {
+const useEditor = (editor: LevelEditor) => {
     let config: Config = configuration;
     const TILES = config.textures.tiles;
 
@@ -80,6 +82,20 @@ const useDesign = () => {
     }
 
     /**
+     * Turn on/off the editor class instance trash mode on and create a 
+     * shaking animation.
+     */
+    const toggleTrashmode = () => {
+        if (!editor.input.trash) {
+            editor.input.trash = true
+            applyTrashEffect();
+        } else {
+            editor.input.trash = false
+            removeTrashEffect();
+        }
+    }
+
+    /**
      * Sets the current tile to the selected tile and update the LevelEditor brush.
      *
      * @param {string} id - The ID of the tile to set as the brush.
@@ -114,7 +130,7 @@ const useDesign = () => {
                     id={key}
                     key={key}
                     aria-label={objects[key].name}
-                    className='DesignMenu__content__tiles__tile'
+                    className='LevelEditor__content__tiles__tile'
                     onClick={(e) =>setTileBrush(e.currentTarget.id, group, objects[key].name)}
                 />
             );
@@ -131,11 +147,11 @@ const useDesign = () => {
         let groups = TILES[keyId].objects
         return Object.keys(groups).map(key => {
             return (
-                <div key={key}>
-                    <h5 data-testid='group' className='DesignMenu__content__group'>
+                <div className='LevelEditor__content__group' key={key}>
+                    <h5 className='LevelEditor__content__group__title' data-testid='group'>
                         {capitalize(key)}
                     </h5>
-                    <div className='DesignMenu__content__tiles'>
+                    <div className='LevelEditor__content__group__tiles'>
                         {getTiles(groups[key], key)}
                     </div>
                 </div>
@@ -153,7 +169,7 @@ const useDesign = () => {
                 [TILES[key].id]: {
                     src: TILES[key].src,
                     html: (
-                        <div className='DesignMenu__content'>
+                        <div className='LevelEditor__content'>
                             {getGroups(key)}
                         </div>
                     )
@@ -183,7 +199,7 @@ const useDesign = () => {
     }
 
     const showTileset = () => {
-        return TILESET_VIEW ? TILESET_VIEW : <div></div>;
+        return TILESET_VIEW ? TILESET_VIEW : <div/>;
     }
 
     const setTileset = (val: string) => {
@@ -196,9 +212,10 @@ const useDesign = () => {
         getCategories,
         setTileset,
         showTileset,
+        toggleTrashmode,
     }
 }
 
 export {
-    useDesign
+    useEditor
 }
