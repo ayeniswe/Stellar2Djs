@@ -132,7 +132,7 @@ const useDesign = () => {
         return Object.keys(groups).map(key => {
             return (
                 <div key={key}>
-                    <h5 className='DesignMenu__content__group'>
+                    <h5 data-testid='group' className='DesignMenu__content__group'>
                         {capitalize(key)}
                     </h5>
                     <div className='DesignMenu__content__tiles'>

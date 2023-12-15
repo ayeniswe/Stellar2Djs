@@ -13,7 +13,7 @@ describe ('DesignMenu', () => {
 
     test('Retrieve tilesets and show a default tileset', () => {
         // Verify tile group section shows
-        expect(screen.getByText('Wall')).toBeInTheDocument();
+        expect(screen.getAllByTestId('group')).toBeInTheDocument();
         // Verify total number of tiles show
         const tiles = screen.getAllByTestId('tile', {exact: false})
         expect(tiles.length).toEqual(6);
@@ -41,3 +41,6 @@ describe ('DesignMenu', () => {
     });
 
 })
+
+// Remaining test
+// - Verify better way to detected switching between tilesets

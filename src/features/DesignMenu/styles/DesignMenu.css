@@ -6,7 +6,7 @@
     height: 600px;
     overflow: auto;
     overflow-x: hidden;
-    width: 12%;
+    width: 15%;
     background-image: url('../../../assets/images/level_editor_background.jpg');
     /* background-size: cover; */
 }
