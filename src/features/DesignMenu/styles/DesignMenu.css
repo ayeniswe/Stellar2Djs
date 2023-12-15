@@ -2,10 +2,13 @@
     background-color: var(--secondary-color);
     border: 3px solid var(--accent-color);
     border-radius: var(--window-border-radius);
+    color: var(--text-color);
     height: 600px;
-    overflow-y: scroll;
-    scrollbar-width: thin;
+    overflow: auto;
+    overflow-x: hidden;
     width: 12%;
+    background-image: url('../../../assets/images/level_editor_background.jpg');
+    /* background-size: cover; */
 }
 
 .DesignMenu__title {
@@ -19,7 +22,8 @@
 }
 
 .DesignMenu__select__dropdown {
-    width: 100%;
+    width: 75%;
+    border-radius: var(--window-border-radius);
 }
 
 .DesignMenu__content {
@@ -30,7 +34,7 @@
     margin-bottom: 30px;
 }
 
-.DesignMenu__content__title {
+.DesignMenu__content__group {
     text-align: center;
 }
 
@@ -42,9 +46,12 @@
 }
 
 .DesignMenu__content__tiles__tile {
-    background-color: var(--background-color);
-    height: 50px;
-    width: 50px;
+    background-color: transparent;
     background-size: cover;
+    border: 4px solid var(--accent-color);
+    border-radius: var(--window-border-radius);
+    height: 50px;
     image-rendering: pixelated;
+    opacity: 0.5;
+    width: 50px;
 }

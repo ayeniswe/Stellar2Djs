@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom/client';
-import './assets/style/Game.css';
+import './assets/styles/Game.css';
 import Game from './Game';
 
 document.addEventListener('DOMContentLoaded', () => {

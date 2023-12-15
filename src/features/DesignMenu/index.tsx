@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import './DesignMenu.css';
-import { useDesign } from './useDesign';
+import './styles/DesignMenu.css';
+import { useDesign } from './hooks/useDesign';
 
 const DesignMenu = () => {
     const { getCategories, getTilesets, setTileset, showTileset } = useDesign();
@@ -12,7 +12,7 @@ const DesignMenu = () => {
     return (
       <div id="DesignMenu">
         <h2 className='DesignMenu__title'>
-          LEVEL DESIGN
+          LEVEL EDITOR
         </h2>
         <h4 className='DesignMenu__select'>
           Select Tileset

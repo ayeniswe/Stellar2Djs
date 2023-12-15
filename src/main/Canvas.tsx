@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import '../assets/style/Canvas.css';
+import '../assets/styles/Canvas.css';
 import { LevelEditor } from './LevelEditor';
 
 const Canvas = () => {

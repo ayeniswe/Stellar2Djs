@@ -1,4 +1,4 @@
-import DesignMenu from "./features/DesignMenu/DesignMenu";
+import DesignMenu from "./features/DesignMenu";
 import Canvas from "./main/Canvas";
 const Game = () => {
   return (

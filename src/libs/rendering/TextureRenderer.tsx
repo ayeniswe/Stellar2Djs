@@ -43,6 +43,7 @@ class TextureRenderer {
                         sourcesLoaded++;
                         log(MESSAGE.LOADING_TEXTURE, `${sourcesLoaded} of ${sources}: ${capitalize(key)} `);
                     };
+                    this.__textureSources[id].onerror = () => error(MESSAGE.FAILED_TEXTURE, `${id} from path: ${path}`);
                 } catch {
                     error(MESSAGE.FAILED_TEXTURE, `${id} from path: ${path}`);
                 }

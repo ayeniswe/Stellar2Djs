@@ -55,17 +55,10 @@
                 }
             },
             "2": {
-                "id": "play",
-                "src": "tiles/play.png",
+                "id": "grassland",
+                "src": "tiles/grassland.png",
                 "objects": {
-                    "wallkkkkk": {
-                        "2-13": {
-                            "name": "plain_wall1",
-                            "sx": 0,
-                            "sy": 16,
-                            "w": 32,
-                            "h": 32
-                        }
+                    "floor": {
                     }
                 }
             }
