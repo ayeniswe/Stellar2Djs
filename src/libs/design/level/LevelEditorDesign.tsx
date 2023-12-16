@@ -4,11 +4,11 @@ import { TextureRenderer } from '../../rendering';
 import { Signal, signal } from '@preact/signals-react';
 
 class LevelEditorDesign {
-    private __editable: boolean = false;
-    private __clipping: boolean = true;
+    private __editable: Signal<boolean> = signal(true);
+    private __clipping: Signal<boolean> = signal(false);
     private __trash: Signal<boolean> = signal(false);
-    private __drag: boolean = false;
-    private __safety: boolean = true; // prevent serious actions by accident
+    private __drag: Signal<boolean> = signal(false);
+    private __safety: Signal<boolean> = signal(true); // prevent serious actions by accident
     private __textureType: string = "tiles";
     private __renderer: TextureRenderer;
     static brush: Brush;
@@ -29,8 +29,8 @@ class LevelEditorDesign {
      * @returns {number[]} - Returns location if the object was rendered, empty array otherwise.
      */
     add(x: number, y: number): number[] {
-        if (this.__editable && LevelEditorDesign.brush) {
-            const res = this.__renderer.addTexture(this.__clipping, this.__textureType, LevelEditorDesign.brush.group, LevelEditorDesign.brush.id, x, y);
+        if (this.__editable.value && LevelEditorDesign.brush) {
+            const res = this.__renderer.addTexture(this.__clipping.value, this.__textureType, LevelEditorDesign.brush.group, LevelEditorDesign.brush.id, x, y);
             this.__renderer.render();
             return res;
         }
@@ -44,8 +44,11 @@ class LevelEditorDesign {
      * @returns {number[]} - Returns location of the object where it was removed, empty array otherwise.
      */
     remove(x: number, y: number): number[] {
-        const res = this.__renderer.removeTexture(this.__clipping, this.__textureType, LevelEditorDesign.brush.group, LevelEditorDesign.brush.id, x, y);
-        return res;
+        if (LevelEditorDesign.brush) {
+            const res = this.__renderer.removeTexture(this.__clipping.value, this.__textureType, LevelEditorDesign.brush.group, LevelEditorDesign.brush.id, x, y);
+            return res;
+        }
+        return [];
     }
 
     /**
@@ -70,35 +73,31 @@ class LevelEditorDesign {
     }
         
     get safety() {
-        return this.__safety;
+        return this.__safety.value;
     }
 
     get drag() {
-        return this.__drag;
+        return this.__drag.value;
     }
 
     get trash() {
         return this.__trash.value;
     }
 
-    get trashSignal() {
-        return this.__trash;
-    }
-
     get editable() {
-        return this.__editable;
+        return this.__editable.value;
     }
     
     get clipping() {
-        return this.__clipping;
+        return this.__clipping.value;
     }
 
     set safety(val: boolean) {
-       this.__safety = val
+       this.__safety.value = val
     }
 
     set drag(val: boolean) {
-       this.__drag = val
+       this.__drag.value= val
     }
 
     set trash(val: boolean) {
@@ -106,13 +105,12 @@ class LevelEditorDesign {
     }
 
     set editable(val: boolean) {
-       this.__editable = val
+       this.__editable.value = val
     }
 
     set clipping(val: boolean) {
-       this.__clipping = val
+       this.__clipping.value = val
     }
-
 
 }
 

@@ -1,7 +1,7 @@
 import { KMMapping, Bindings } from ".";
-import { applyTrashEffect, removeTrashEffect } from "../../features/LevelEditor/effects";
 import { LevelEditorDesign } from "../design/level";
 import { MESSAGE, log, warn } from "../logging";
+import { LevelEditorEffects } from "../effects/effects";
 
 /**
  * Handles all events related to the level editor.
@@ -46,10 +46,10 @@ class LevelEditorInput extends LevelEditorDesign {
     private handleTrashMode() {
         if (this.trash) {
             this.trash = false;
-            removeTrashEffect();
+            LevelEditorEffects.removeTrashEffect();
         } else {
             this.trash = true;
-            applyTrashEffect();
+            LevelEditorEffects.applyTrashEffect();
         }
         warn(MESSAGE.TRASH, this.trash ? "on" : "off");
     }
@@ -57,8 +57,10 @@ class LevelEditorInput extends LevelEditorDesign {
     private handleEditingMode() {
         if (this.editable) {
             this.editable = false;
+            LevelEditorEffects.removeEditingEffect();
         } else {
             this.editable = true;
+            LevelEditorEffects.applyEditingEffect();
         }
         warn(MESSAGE.EDITING, this.editable ? "on" : "off");
     }
@@ -66,8 +68,10 @@ class LevelEditorInput extends LevelEditorDesign {
     private handleClippingMode() {
         if (this.clipping) {
             this.clipping = false;
+            LevelEditorEffects.removeClippingEffect();
         } else {
             this.clipping = true;
+            LevelEditorEffects.applyClippingEffect();
         }
         warn(MESSAGE.CLIPPING, this.clipping ? "on" : "off");
     }
@@ -75,8 +79,10 @@ class LevelEditorInput extends LevelEditorDesign {
     private handleDragDrawingMode() {
         if (this.drag) {
             this.drag = false;
+            LevelEditorEffects.removeDragEffect();
         } else {
             this.drag = true;
+            LevelEditorEffects.applyDragEffect();
         }
         warn(MESSAGE.DRAG, this.drag ? "on" : "off");
     }

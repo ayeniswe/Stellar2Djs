@@ -1,9 +1,10 @@
 #LevelEditor {
     background-color: var(--secondary-color);
-    background-image: url('../../../assets/images/level_editor_background.jpg');
+    background-image: url('../../../assets/images/bkg-editor.jpg');
     border: 3px solid var(--accent-color);
     border-radius: var(--window-border-radius);
     color: var(--text-color);
+    cursor: pointer;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -12,7 +13,7 @@
 
 .LevelEditor__title {
     text-align: center;
-    margin-bottom: 3px;
+    margin: 10px;
 }
 
 .LevelEditor__controls {
@@ -21,36 +22,50 @@
     gap: 10px;
 }
 
-.LevelEditor__controls__title {
-    background-color: var(--secondary-color);
+.LevelEditor__button {
     border-radius: var(--window-border-radius);
-    color: var(--accent-color);
-    padding: 3px;
+    cursor: pointer;
+    margin-top: 10px;
+    text-align: center;
+    transition: 0.2s;
+    width: 75%;
 }
 
-.LevelEditor__controls__trashcan {
-    animation: 0.5s infinite;
-    animation-timing-function: i;
-    cursor: pointer;
-    margin-bottom: 10px;
-    margin-top: 10px;
-    width: 50px;
+.LevelEditor__button--serious {
+    background-color: var(--serious-color);
 }
-@keyframes shake {
-    0% { transform: translateX(0); }
-    25% { transform: translateX(-5px) rotate(-5deg); }
-    50% { transform: translateX(5px) rotate(5deg); }
-    75% { transform: translateX(-5px) rotate(-5deg); }
-    100% { transform: translateX(0); }
+
+.LevelEditor__button--serious:hover {
+    transition: 0.2s;
+    background-color: var(--serious-hover-color);
+}
+
+.LevelEditor__delete-confirmation {
+    align-items: center;
+    background-color: var(--secondary-color);
+    border: 2px solid var(--accent-color);
+    border-radius: var(--window-border-radius);;
+    color: var(--accent-color);
+    display: flex;
+    flex-direction: column;
+    left: 50%;
+    position: absolute;
+    padding: 10px;
+    text-align: center;
+    top: 50%;
+    transform: translate(-85%, -50%);
+    transition: 0.2s;
 }
 
 .LevelEditor__select {
     text-align: center;
+    margin: 5px;
+    margin-bottom: 15px;
 }
 
 .LevelEditor__select__dropdown {
-    width: 75%;
     border-radius: var(--window-border-radius);
+    width: 75%;
 }
 
 .LevelEditor__content {

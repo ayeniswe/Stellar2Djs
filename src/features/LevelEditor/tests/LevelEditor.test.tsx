@@ -57,4 +57,6 @@ describe ('LevelEditor', () => {
 // Remaining test
 // - Verify better way to detected switching between tilesets
 // - Verify hover effect on tile
-// - Verify trash mode on and shake animation and aria label set and div shows on/off with red / white background
+// - Verify all mode animation aret triggered
+// - Verify delete confirmation
+// - Verify panel hide/shows on click

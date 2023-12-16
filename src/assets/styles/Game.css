@@ -4,12 +4,12 @@
 }
 
 body {
-  margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
+  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  sans-serif;
+  margin: 0;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
 }
 
 code {
@@ -18,22 +18,25 @@ code {
 }
 
 :root {
-  --primary-color: gray;
-  --secondary-color: rgb(255, 255, 255);
   --accent-color: black;
-  --text-color: white;
   --game-height: 600px;
   --game-width: 800px;
-  --window-border-radius: 1rem;
+  --primary-color: gray;
+  --regular-hover-color: gray;
+  --secondary-color: rgb(255, 255, 255);
+  --serious-color: red;
+  --serious-hover-color: darkred;
+  --text-color: white;
+  --window-border-radius: 10px;
 }
 
 .Game {
   align-items: center;
   background-color: var(--primary-color);
-  background-image: url('../images/background.jpg');
+  background-image: url('../images/bkg.jpg');
   display: flex;
+  font-family: PixelFont;
   height: 100vh;
   justify-content: center;
   user-select: none;
-  font-family: PixelFont;
 }

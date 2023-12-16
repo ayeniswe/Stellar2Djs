@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import './styles/LevelEditor.css';
 import { LevelEditor } from '../../main/LevelEditor';
 import { useEditor } from './hooks/useEditor';
-import trashcan from '../../assets/images/trashcan.svg';
+import LevelEditorControls from './components/LevelEditorControls';
 
 type Props = {
   editor: LevelEditor
@@ -13,31 +13,39 @@ const LevelEditorComp: React.FC<Props> = ({ editor }) => {
       getTilesets,
       setTileset,
       showTileset,
-      toggleTrashmode,
+      togglePanel,
+      setBackground,
+      TILESET,
+      PANEL,
     } = useEditor(editor);
 
     useEffect(() => {
-      getTilesets();
-    },[editor.input.trash]);
+      if (TILESET.value !== '') {
+        getTilesets();
+        (async () => {
+         await setBackground();
+        })();
+      }
+    },[TILESET.value]);
 
     return (
       <div id="LevelEditor">
-        <h2 className='LevelEditor__title'>
+        <h2 className='LevelEditor__title' onClick={() => togglePanel()}>
           LEVEL EDITOR
         </h2>
-        <h4 className='LevelEditor__select'>
-          Select Tileset
-          <select className='LevelEditor__select__dropdown' onChange={e => setTileset(e.target.value)}>
-            {getCategories()}
-          </select>
-        </h4>
-        {showTileset()}
-        <div className='LevelEditor__controls'>
-          <div id='trashcan-editor-title' className='LevelEditor__controls__title'>
-            {editor.input.trash ? 'on' : 'off'}
-          </div>
-          <img id='trashcan-editor' className='LevelEditor__controls__trashcan' src={trashcan} onClick={() => toggleTrashmode()}/>
-        </div>
+        {PANEL.value &&
+        <>
+          <h4 className='LevelEditor__select'>
+            Select Tileset
+            <select value={TILESET.value} className='LevelEditor__select__dropdown' onChange={e => setTileset(e.target.value)}>
+              <option value="" disabled>None</option>
+              {getCategories()}
+            </select>
+          </h4>
+          {showTileset()}
+          {TILESET.value && <LevelEditorControls editor={editor}/>}
+        </>
+        }
       </div>
     );
 }

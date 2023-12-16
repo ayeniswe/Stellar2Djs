@@ -1,32 +1,25 @@
 import configuration from '../../../data/config.json';
 import { Config, TextureObject } from '../../../libs/rendering/types';
 import { capitalize } from '../../../utils/text';
-import { computed, effect, signal } from '@preact/signals-react';
+import { computed, signal, useSignal } from '@preact/signals-react';
 import { Tilesets } from '../type';
 import { LevelEditorDesign } from '../../../libs/design/level';
 import { LevelEditor } from '../../../main/LevelEditor';
-import { applyTrashEffect, removeTrashEffect } from '../effects';
 
 const useEditor = (editor: LevelEditor) => {
     let config: Config = configuration;
     const TILES = config.textures.tiles;
 
-    const TILES_SRC = signal("");
-    const TILESET = signal("");
+    const PANEL = useSignal(false);
+    const TILESET = useSignal("");
     const CURRENT_TILE = signal("");
     const TILESETS = signal<Tilesets>({});
     const TILES_METADATA = signal<{ [key: string]: TextureObject; } | null>(null);
+    const TILES_SRC = signal("");
     const TILESET_VIEW = computed(() => TILESETS.value[TILESET.value]?.html);
 
     const ASSETS_PATH = `assets/textures/{}`;
     const SELECTED_TILE_OPACITY = '1' // 100% opacity
-
-    // Set background for all tiles
-    effect( async () => {
-        if (TILES_SRC.value && TILES_METADATA.value) {
-            await setBackground();
-        };
-    })
 
     /**
      * Loads the background image for the given texture object.
@@ -66,8 +59,6 @@ const useEditor = (editor: LevelEditor) => {
 
     /**
      * Sets the background image for each element in the TILES_METADATA object.
-     *
-     * @return {Promise<void>} A promise that resolves when all the background images have been set.
      */
     const setBackground = async () => {
         for (const key in TILES_METADATA.value) {
@@ -79,20 +70,6 @@ const useEditor = (editor: LevelEditor) => {
                 };
             };
         };
-    }
-
-    /**
-     * Turn on/off the editor class instance trash mode on and create a 
-     * shaking animation.
-     */
-    const toggleTrashmode = () => {
-        if (!editor.input.trash) {
-            editor.input.trash = true
-            applyTrashEffect();
-        } else {
-            editor.input.trash = false
-            removeTrashEffect();
-        }
     }
 
     /**
@@ -123,7 +100,7 @@ const useEditor = (editor: LevelEditor) => {
             ...TILES_METADATA.value,
             ...objects
         }; // keep track of all tiles
-        return Object.keys(objects).map(key => {
+        const tiles = Object.keys(objects).map(key => {
             return (
                 <div
                     data-testid={`tile ${key}`}
@@ -135,6 +112,8 @@ const useEditor = (editor: LevelEditor) => {
                 />
             );
         });
+
+        return tiles;
     }
 
     /**
@@ -162,7 +141,7 @@ const useEditor = (editor: LevelEditor) => {
     /**
      * Get the tilesets from the JSON file.
      */
-    const getTilesets = () => {
+    const getTilesets = async () => {
         for (const key in TILES) {
             TILESETS.value = {
                 ...TILESETS.value,
@@ -176,11 +155,12 @@ const useEditor = (editor: LevelEditor) => {
                 }
             };
             // Set default for first tileset found
-            if (key === "1") {
-                TILESET.value = TILES[key].id;
-                TILES_SRC.value = TILESETS.value[TILESET.value].src;
-            };
+            // if (key === "1") {
+            //     TILESET.value = TILES[key].id;
+            //     TILES_SRC.value = TILESETS.value[TILESET.value].src;
+            // };
         };
+        TILES_SRC.value = TILESETS.value[TILESET.value]?.src
     }
     
     /**
@@ -199,20 +179,37 @@ const useEditor = (editor: LevelEditor) => {
     }
 
     const showTileset = () => {
-        return TILESET_VIEW ? TILESET_VIEW : <div/>;
+        return TILESET_VIEW;
     }
 
     const setTileset = (val: string) => {
         TILESET.value = val;
-        TILES_SRC.value = TILESETS.value[TILESET.value].src;
     }
-    
+
+    /**
+     * Hide and show the panel when clicking on the title. Set the
+     * tileset to null when the panel is closed.
+     */
+    const togglePanel = () => {
+        if (PANEL.value) {
+            PANEL.value = false;
+            TILESET.value = '';
+        } else {
+            PANEL.value = true;
+        }
+    }
+
     return {
         getTilesets,
         getCategories,
         setTileset,
         showTileset,
-        toggleTrashmode,
+        togglePanel,
+        setBackground,
+        PANEL,
+        TILESET,
+        TILESETS,
+        TILES_SRC
     }
 }
 

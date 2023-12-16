@@ -1,0 +1,20 @@
+#ToggleImage {
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    gap: 10px;
+}
+
+.ToggleImage__circle {
+    background-color: var(--secondary-color);
+    border-radius: 10px;
+    color: var(--accent-color);
+    padding: 3px;
+}
+
+.ToggleImage__img {
+    animation: 0.5s infinite;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    width: 15px;
+}
