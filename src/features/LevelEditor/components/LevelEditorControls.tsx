@@ -64,6 +64,7 @@ const LevelEditorControls: React.FC<Props> = ({ editor }) => {
                     id='toggle-editing'
                     src={editpointer}
                     fn={toggleEditMode}
+                    width={6}
                 />
             </div>
         </>

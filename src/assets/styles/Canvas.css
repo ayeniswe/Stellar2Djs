@@ -2,6 +2,7 @@
     background-color: var(--canvas-color);
     border: 3px solid var(--accent-color);
     border-radius: var(--window-border-radius);
+    cursor: pointer;
     height: var(--game-height);
     image-rendering: pixelated;
     width: var(--game-width);
@@ -10,6 +11,7 @@
 #Canvas-brush {
     background-color: var(--accent-color);
     border-radius: var(--window-border-radius);
+    cursor: pointer;
     display: none;
     height: 32px;
     opacity: 0.5;
