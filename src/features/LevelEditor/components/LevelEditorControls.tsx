@@ -21,8 +21,7 @@ const LevelEditorControls: React.FC<Props> = ({ editor }) => {
       toggleEditMode,
       setEditMode,
       showDeleteConfirmation,
-      deleteAll,
-      DELETE_CONFIRMATION
+      clearCanvas,
     } = useControls(editor);
 
     useEffect(() => {
@@ -33,14 +32,14 @@ const LevelEditorControls: React.FC<Props> = ({ editor }) => {
         <>
             {editor.input.trash &&
             <>
-                {!DELETE_CONFIRMATION.value ?
+                {editor.input.safety ?
                 <div className='LevelEditor__button LevelEditor__button--serious' onClick={() => showDeleteConfirmation()}>
                     Delete All
                 </div>
                 :
                 <div className='LevelEditor__delete-confirmation'>
                     Are you sure? Action can't be UNDONE!
-                    <span onClick={() => deleteAll()} className='LevelEditor__button LevelEditor__button--serious'>Yes</span>
+                    <span onClick={() => clearCanvas()} className='LevelEditor__button LevelEditor__button--serious'>Yes</span>
                 </div>
                 }
             </>

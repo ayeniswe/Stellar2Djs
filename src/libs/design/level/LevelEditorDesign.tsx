@@ -1,15 +1,16 @@
 import { MESSAGE, log } from '../../logging';
 import { Brush } from '.';
-import { TextureRenderer } from '../../rendering';
-import { Signal, signal } from '@preact/signals-react';
+import { TextureObject, TextureRenderer } from '../../rendering';
+import { signal } from '@preact/signals-react';
 
 class LevelEditorDesign {
-    private __editable: Signal<boolean> = signal(true);
-    private __clipping: Signal<boolean> = signal(false);
-    private __trash: Signal<boolean> = signal(false);
-    private __drag: Signal<boolean> = signal(false);
-    private __safety: Signal<boolean> = signal(true); // prevent serious actions by accident
-    private __textureType: string = "tiles";
+    private __editable = signal(true);
+    private __clipping = signal(false);
+    private __trash = signal(false);
+    private __drag = signal(false);
+    private __safety = signal(true); // prevent serious actions by accident
+    private __ready = signal(false); // prevent input from being called before initilization
+    private __textureType = "tiles";
     private __renderer: TextureRenderer;
     static brush: Brush;
  
@@ -22,7 +23,19 @@ class LevelEditorDesign {
     }
 
     /**
-     * Render object at the specified coordinates.
+     * Undo the actions of the renderer.
+     * @returns {boolean} - Returns false if there are no actions. Returns true otherwise.
+     */
+    undo(): boolean {
+        if (this.__renderer.undoRevision()) {
+            this.__renderer.render();
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Render object at the specified coordinates and adds action to revision record.
      *
      * @param {number} x - The x-coordinate of the source.
      * @param {number} y - The y-coordinate of the source.
@@ -31,7 +44,10 @@ class LevelEditorDesign {
     add(x: number, y: number): number[] {
         if (this.__editable.value && LevelEditorDesign.brush) {
             const res = this.__renderer.addTexture(this.__clipping.value, this.__textureType, LevelEditorDesign.brush.group, LevelEditorDesign.brush.id, x, y);
-            this.__renderer.render();
+            // Record the action for revision
+            if (res.length > 0) {
+                this.__renderer.render();
+            }
             return res;
         }
         return [];
@@ -46,6 +62,9 @@ class LevelEditorDesign {
     remove(x: number, y: number): number[] {
         if (LevelEditorDesign.brush) {
             const res = this.__renderer.removeTexture(this.__clipping.value, this.__textureType, LevelEditorDesign.brush.group, LevelEditorDesign.brush.id, x, y);
+            if (res.length > 0) {
+                this.__renderer.render();
+            }
             return res;
         }
         return [];
@@ -62,16 +81,22 @@ class LevelEditorDesign {
      * Sets the brush for the object to place.
      *
      * @param {string} brushId - The brush id to set.
+     * @param {string} group - The brush group.
+     * @param {TextureObject} group - The brush metadata.
      */
-    static setBrush(brushId: string, group: string, name: string) {
+    static setBrush(brushId: string, group: string, object: TextureObject) {
         this.brush = {
             id: brushId,
             group: group,
-            name: name
+            object: object
         }
-        log(MESSAGE.BRUSH_SELECTED, name);
+        log(MESSAGE.BRUSH_SELECTED, object.name);
     }
         
+    get ready() {
+        return this.__ready.value;
+    }
+
     get safety() {
         return this.__safety.value;
     }
@@ -90,6 +115,10 @@ class LevelEditorDesign {
     
     get clipping() {
         return this.__clipping.value;
+    }
+
+    set ready(val: boolean) {
+       this.__ready.value = val
     }
 
     set safety(val: boolean) {

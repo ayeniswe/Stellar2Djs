@@ -21,10 +21,12 @@ const LevelEditorComp: React.FC<Props> = ({ editor }) => {
 
     useEffect(() => {
       if (TILESET.value !== '') {
+        editor.input.ready = true;
         getTilesets();
         (async () => {
          await setBackground();
         })();
+
       }
     },[TILESET.value]);
 

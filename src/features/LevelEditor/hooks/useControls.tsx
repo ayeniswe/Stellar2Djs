@@ -1,30 +1,24 @@
 import { LevelEditor } from '../../../main/LevelEditor';
 import { LevelEditorEffects } from '../../../libs/effects/effects';
-import { useSignal } from '@preact/signals-react';
 
 /**
  * A hook that applies the necessary effects to each control functions for the LevelEditor.
  */
 const useControls = (editor: LevelEditor) => {
-    const DELETE_CONFIRMATION = useSignal(false);
-    
+
     /**
-     * Show delete confirmation for 5 seconds.
+     * Show delete confirmation for 3 seconds.
      */
     const showDeleteConfirmation = () => {
-        DELETE_CONFIRMATION.value = true;
+        editor.input.safety = false;
         setTimeout(() => {
-            DELETE_CONFIRMATION.value = false;
+            editor.input.safety = true;
         }, 3000);
     }
     
-    /**
-     * Clears the entire canvas
-     */
-    const deleteAll = () => {
-        editor.input.safety = false;
+    const clearCanvas = () => {
         editor.input.removeAll();
-        DELETE_CONFIRMATION.value = false;
+        editor.input.safety = true;
     }
 
     /**
@@ -83,8 +77,7 @@ const useControls = (editor: LevelEditor) => {
         toggleDragMode,
         setEditMode,
         showDeleteConfirmation,
-        deleteAll,
-        DELETE_CONFIRMATION
+        clearCanvas,
     }
 }
 

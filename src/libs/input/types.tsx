@@ -1,12 +1,12 @@
 type KMMapping = {
-    [key: string]: boolean
+    [KM in KMInput]?: boolean
 }
 
 type BindingsMapping = {
     [key: string]: {
         fn: Function,
         id: string,
-        type: string
+        type: Keyboard | Mouse
     }
 }
 
@@ -121,7 +121,7 @@ type KMInput =
   | "MiddleButton"
   | "RightButton"
 
-type MouseInteraction =
+type Mouse =
   | "click"
   | "contextmenu"
   | "dblclick"
@@ -141,7 +141,7 @@ type Keyboard =
 export type {
     KMMapping,
     BindingsMapping,
-    MouseInteraction,
+    Mouse,
     KMInput,
     Keyboard
 }

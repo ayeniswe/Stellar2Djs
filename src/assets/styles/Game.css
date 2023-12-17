@@ -19,24 +19,26 @@ code {
 
 :root {
   --accent-color: black;
-  --game-height: 600px;
-  --game-width: 800px;
-  --primary-color: gray;
-  --regular-hover-color: gray;
-  --secondary-color: rgb(255, 255, 255);
+  /* --background-color: white; */
+  --background-color: rgb(32, 32, 32);
+  --canvas-color: gray;
   --serious-color: red;
   --serious-hover-color: darkred;
   --text-color: white;
+  --game-height: 600px;
+  --game-width: 800px;
   --window-border-radius: 10px;
 }
 
 .Game {
   align-items: center;
-  background-color: var(--primary-color);
+  background-color: var(--background-color);
   background-image: url('../images/bkg.jpg');
+  color: var(--text-color);
   display: flex;
   font-family: PixelFont;
   height: 100vh;
   justify-content: center;
+  text-shadow: 0 0 2px var(--accent-color);
   user-select: none;
 }

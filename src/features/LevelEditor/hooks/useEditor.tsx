@@ -1,5 +1,5 @@
 import configuration from '../../../data/config.json';
-import { Config, TextureObject } from '../../../libs/rendering/types';
+import { Config, TextureObject, TextureObjects } from '../../../libs/rendering';
 import { capitalize } from '../../../utils/text';
 import { computed, signal, useSignal } from '@preact/signals-react';
 import { Tilesets } from '../type';
@@ -77,15 +77,15 @@ const useEditor = (editor: LevelEditor) => {
      *
      * @param {string} id - The ID of the tile to set as the brush.
      * @param {string} group - The group of the tile.
-     * @param {string} name - The name of the tile.
+     * @param {TextureObject} object - The brush metadata.
      */
-    const setTileBrush = (id: string, group: string, name: string) => {
+    const setTileBrush = (id: string, group: string, object: TextureObject) => {
         // Reset previous tile
         if (CURRENT_TILE.value) document.getElementById(CURRENT_TILE.value)!.style.opacity = "";
         // Set new tile
         document.getElementById(id)!.style.opacity = SELECTED_TILE_OPACITY;
         CURRENT_TILE.value = id;
-        LevelEditorDesign.setBrush(id, group, name);
+        LevelEditorDesign.setBrush(id, group, object);
     }
 
     /**
@@ -95,7 +95,7 @@ const useEditor = (editor: LevelEditor) => {
      * @param {string} group - The group the tiles belong to.
      * @return {Array<JSX.Element>} An array of JSX elements representing the tiles.
      */
-    const getTiles = (objects: { [key: string]: TextureObject; }, group: string): Array<JSX.Element> => {
+    const getTiles = (objects: TextureObjects , group: string): Array<JSX.Element> => {
         TILES_METADATA.value = {
             ...TILES_METADATA.value,
             ...objects
@@ -108,7 +108,7 @@ const useEditor = (editor: LevelEditor) => {
                     key={key}
                     aria-label={objects[key].name}
                     className='LevelEditor__content__tiles__tile'
-                    onClick={(e) =>setTileBrush(e.currentTarget.id, group, objects[key].name)}
+                    onClick={(e) =>setTileBrush(e.currentTarget.id, group, objects[key])}
                 />
             );
         });
@@ -193,6 +193,7 @@ const useEditor = (editor: LevelEditor) => {
     const togglePanel = () => {
         if (PANEL.value) {
             PANEL.value = false;
+            editor.input.ready = false;
             TILESET.value = '';
         } else {
             PANEL.value = true;

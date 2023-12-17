@@ -1,9 +1,10 @@
 import configuration from '../../data/config.json';
-import { Config, TexturesMapping, TextureSources } from './types';
+import { Config, RevisionRecord, TexturesMapping, TextureSources } from '.';
 import { capitalize } from '../../utils/text';
 import { error, log, MESSAGE } from '../logging';
 
 class TextureRenderer {
+    private __revisions: RevisionRecord[] = [];
     private __textureSources: TextureSources = {};
     private __texturesMapping: TexturesMapping = {};
     private __config: Config = configuration;
@@ -171,6 +172,19 @@ class TextureRenderer {
                 h: h
             };
 
+            // Store action in history
+            this.__revisions.push({
+                src: src,
+                name: name,
+                sx: sx,
+                sy: sy,
+                dx: dx,
+                dy: dy,
+                w: w,
+                h: h,
+                action: "added"
+            });
+
             return [dx, dy];
         }
 
@@ -190,9 +204,8 @@ class TextureRenderer {
         const [srcID, h, w] = this.__getBrushInfo(type, group, textureID);
         const [dx, dy] = this.__scaling(x, y, w, h, clipping);
         if (this.__posExists(dx, dy, w, h)) {
-            delete this.__texturesMapping[`${dx},${dy},${w},${h}`];
-            // Remove the image from the canvas
             this.__clearCanvas(dx, dy, w, h);
+            delete this.__texturesMapping[`${dx},${dy},${w},${h}`];
             return [dx, dy];
         }
         return [];
@@ -202,7 +215,36 @@ class TextureRenderer {
         this.__texturesMapping = {};
         this.__clearCanvas(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     }
-    
+ 
+    undoRevision() {
+        if (this.__revisions.length > 0) {
+            const action = this.__revisions.pop();
+            if (action) {
+                const { dx, dy, w, h, src, name, sx, sy } = action;
+                switch (action.action) {
+                    case "added":
+                        delete this.__texturesMapping[`${dx},${dy},${w},${h}`];
+                        this.__clearCanvas(dx, dy, w, h);
+                        break;
+                    case "removed":
+                        this.__texturesMapping[`${dx},${dy},${w},${h}`] = {
+                            src: src,
+                            name: name,
+                            sx: sx,
+                            sy: sy,
+                            dx: dx,
+                            dy: dy,
+                            w: w,
+                            h: h
+                        };
+                        break;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Renders the textures on the canvas using the provided rendering context.
      */
@@ -210,7 +252,7 @@ class TextureRenderer {
         for (const key in this.__texturesMapping) {
             const texture = this.__texturesMapping[key];
             this.ctx.drawImage(
-                this.__textureSources[texture.src],
+                this.__textureSources[texture.src!],
                 texture.sx,
                 texture.sy,
                 texture.w,

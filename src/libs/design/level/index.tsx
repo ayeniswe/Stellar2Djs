@@ -6,5 +6,5 @@ export {
 }
 
 export type {
-    Brush
+    Brush,
 }

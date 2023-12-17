@@ -1,4 +1,5 @@
 import '../../assets/styles/Animation.css'
+import { LevelEditorDesign } from '../design/level'
 
 /**
  * Applies an effect to the different modes for the editor. This will be used when UI or keyboard interactions are triggered.
@@ -6,13 +7,23 @@ import '../../assets/styles/Animation.css'
 class LevelEditorEffects {
     static onColor = 'green'
     
+    static brushId = 'Canvas-brush'
     static trashId = 'toggle-trash'
     static trashIconId = 'toggle-trash-icon'
     static clippingId = 'toggle-clipping'
     static dragId = 'toggle-drag'
     static editingId = 'toggle-editing'
-
-
+    
+    static createBrush(event: MouseEvent) {
+        const brush = document.getElementById(this.brushId)!;
+        const { w, h } = LevelEditorDesign.brush.object;
+        brush.style.display = 'flex';
+        brush.style.left = `${event.clientX}px`;
+        brush.style.top = `${event.clientY}px`;
+        brush.style.width = `${w}px`;
+        brush.style.height = `${h}px`;
+    }
+    
     static applyTrashEffect() {
         document.getElementById(this.trashIconId)!.style.animationName = 'shake';
         document.getElementById(this.trashId)!.style.backgroundColor = this.onColor;
@@ -50,6 +61,7 @@ class LevelEditorEffects {
         document.getElementById(this.clippingId)!.style.backgroundColor = '';
         document.getElementById(this.clippingId)!.ariaLabel = 'Clipping mode is off'
     }
+
 
 }
 

@@ -17,24 +17,33 @@ class LevelEditorInput extends LevelEditorDesign {
 
     async initInput() {
         await this.initEditor();
-        this.__b.addBinding(this.handleDragDrawing.bind(this), [], "mousemove", false, "Canvas");
-        this.__b.addBinding(this.handleDrawing.bind(this), ['LeftButton'], "mousedown", false, "Canvas");
+        this.__b.addBinding(this.handleBrush.bind(this), [], ["mousemove"], false, "Canvas");
+        this.__b.addBinding(this.handleDrawing.bind(this), ['LeftButton'], ["mousedown", "mousemove"], false, "Canvas");
         this.__b.addBinding(this.handleClippingMode.bind(this), ['c'], "keydown", true);
         this.__b.addBinding(this.handleDragDrawingMode.bind(this), ['d'], "keydown", true);
         this.__b.addBinding(this.handleEditingMode.bind(this), ['e'], "keydown", true);
         this.__b.addBinding(this.handleTrashMode.bind(this), ['Delete'], "keydown", true);
-        this.__b.addBinding(this.handleClearAll.bind(this), ['Control', 'a'], "keydown", true);
+        this.__b.addBinding(this.handleClearCanvas.bind(this), ['Control', 'a'], "keydown", true);
+        this.__b.addBinding(this.handleUndo.bind(this), ['Control', 'z'], "keydown", false);
     }
 
-    private handleDragDrawing(event: MouseEvent) {
-        if (this.drag) this.handleDrawing(event);
+    private handleUndo() {
+        if (!this.ready) return;
+        if (this.undo()) log(MESSAGE.UNDO);
+    }
+
+    private handleBrush(event: MouseEvent) {
+        if (!this.ready || !LevelEditorDesign.brush) return;
+        LevelEditorEffects.createBrush(event);
     }
 
     private handleDrawing(event: MouseEvent) {
+        if (!this.ready) return;
         if (this.trash) {
             const res = this.remove(event.offsetX, event.offsetY);
             if (res.length != 0) log(MESSAGE.REMOVE_POSITION, `X: ${res[0]}, Y: ${res[1]}`);
         } else {
+            if (event.type === "mousemove" && !this.drag) return;
             const res = this.add(event.offsetX, event.offsetY);
             const isEmpty = res.length === 0;
             if (isEmpty && this.editable) warn(MESSAGE.BRUSH_NOT_SET);
@@ -44,6 +53,7 @@ class LevelEditorInput extends LevelEditorDesign {
     }
 
     private handleTrashMode() {
+        if (!this.ready) return;
         if (this.trash) {
             this.trash = false;
             LevelEditorEffects.removeTrashEffect();
@@ -55,6 +65,7 @@ class LevelEditorInput extends LevelEditorDesign {
     }
 
     private handleEditingMode() {
+        if (!this.ready) return;
         if (this.editable) {
             this.editable = false;
             LevelEditorEffects.removeEditingEffect();
@@ -66,6 +77,7 @@ class LevelEditorInput extends LevelEditorDesign {
     }
 
     private handleClippingMode() {
+        if (!this.ready) return;
         if (this.clipping) {
             this.clipping = false;
             LevelEditorEffects.removeClippingEffect();
@@ -77,6 +89,7 @@ class LevelEditorInput extends LevelEditorDesign {
     }
 
     private handleDragDrawingMode() {
+        if (!this.ready) return;
         if (this.drag) {
             this.drag = false;
             LevelEditorEffects.removeDragEffect();
@@ -87,16 +100,22 @@ class LevelEditorInput extends LevelEditorDesign {
         warn(MESSAGE.DRAG, this.drag ? "on" : "off");
     }
 
-    // PROTECTED METHODS
-    // ==================
-    // These methods are guarded by a safety check.
+    // private handleBrushIcon() {
+    //     document.getElementById
+    // }
 
-    private handleClearAll() {
-        if (!this.safety) {
-            this.removeAll();
+    // PROTECTED ACTIONS
+    // ==================
+    // These actions are guarded by a safety check.
+
+    private handleClearCanvas() {
+        if (!this.ready) return;
+        this.handleTrashMode();
+        this.safety = false;
+        setTimeout(() => {
+            this.handleTrashMode();
             this.safety = true;
-        }
-        warn(MESSAGE.SERIOUS_ACTION);
+        }, 3000);
     }
 
 }

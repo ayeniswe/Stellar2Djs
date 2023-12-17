@@ -1,9 +1,11 @@
+import { TextureObject } from "../../rendering"
+
 type Brush = {
     id: string,
     group: string,
-    name: string
+    object: TextureObject,
 }
 
 export type {
-    Brush
+    Brush,
 }

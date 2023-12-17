@@ -45,7 +45,7 @@ test('textures are loaded and initial keyboard/mouse buttons are detected', asyn
     expect(warn).toHaveBeenLastCalledWith(`${MESSAGE.EDITING} on`);
     userEvent.click(canvas, { button: 0 });
     expect(warn).toHaveBeenLastCalledWith(MESSAGE.BRUSH_NOT_SET + " "); // jest adds a space
-    LevelEditorDesign.brush = {id: "1-1", name: "plain_wall", group: "wall"}; // a static setting from json configs
+    LevelEditorDesign.brush = {id: "1-1", group: "wall", object: {name: "test", sx: 0, sy: 0, w: 0, h: 0}}; // a static setting from json configs
     userEvent.click(canvas, { button: 0, clientX: 0, clientY: 0 });
     expect(log).toHaveBeenLastCalledWith(`${MESSAGE.RENDER_POSITION} X: NaN, Y: NaN`);
 
@@ -96,4 +96,6 @@ test('textures are loaded and initial keyboard/mouse buttons are detected', asyn
 // Remaining test
 // - Verify the canvas is actually cleared
 // - Verify mouseover works for drag mode
+// - Verify delete confimraiton popup
+// - Verify undo action
 // - [OPTIONAL] Create a test config to always get values from

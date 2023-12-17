@@ -1,4 +1,5 @@
-import { KMMapping, MouseInteraction, Keyboard, KMInput, MouseInputToName } from "..";
+import { KMMapping, Mouse, Keyboard, KMInput, MouseInputToName } from "..";
+import { MESSAGE, warn } from "../../logging";
 
 /**
  * Handles tracking of keyboard/mouse inputs to specfic custom actions.
@@ -14,25 +15,25 @@ class Input {
     
     private __addKey = (mapping: KMMapping) => {
         return (event: KeyboardEvent) => {
-            if (!event.repeat) mapping[event.key] = true;
+            if (!event.repeat) mapping[event.key as KMInput] = true;
         }
     }
     
     private __removeKey = (mapping: KMMapping) => {
         return (event: KeyboardEvent) => {
-            delete mapping[event.key];
+            delete mapping[event.key as KMInput];
         }
     }
 
     private __addButton = (mapping: KMMapping) => {
         return (event: MouseEvent) => {
-            mapping[MouseInputToName[event.button]] = true;
+            mapping[MouseInputToName[event.button] as KMInput] = true;
         }
     }
     
     private __removeButton = (mapping: KMMapping) => {
         return (event: MouseEvent) => {
-            delete mapping[MouseInputToName[event.button]];
+            delete mapping[MouseInputToName[event.button] as KMInput];
         }
     }
 
@@ -45,13 +46,42 @@ class Input {
      * @param {object} mapping - The mapping object to check for values
      * @param {object} once - Fire the action once or repeatedly
      */
-    private __eventHandler = (fn: Function, mapping: KMMapping, allInputs: string[], once: boolean) => {
+    private __eventHandler = (fn: Function, mapping: KMMapping, allInputs: KMInput[], once: boolean) => {
         return (event: any) => {
             const action = () => {
-                for (const key of allInputs) {
-                    if (!mapping[key]) return;
-                };
-                fn(event);
+                if (event instanceof KeyboardEvent){
+                    if (allInputs.length === 1) {
+                        if (!mapping[allInputs[0]]) return;
+                        // Wait .15 seconds for next key press
+                        setTimeout(() => {
+                            if (mapping[allInputs[0]]) {
+                                warn(MESSAGE.KEY_WAIT, allInputs[0]);
+                                return;
+                            };
+                            fn(event);
+                        },150);
+                    } 
+                    else if (allInputs.length > 1) {
+                        for (const key of allInputs) {
+                            if (!mapping[key]) return;
+                        } 
+                        fn(event);
+                    }
+                }
+                else if (event instanceof MouseEvent) {
+                    if (allInputs.length === 1) {
+                        if (!mapping[allInputs[0]]) return;
+                        fn(event);
+                    } 
+                    else if (allInputs.length > 1) {
+                        for (const key of allInputs) {
+                            if (!mapping[key]) return;
+                        }
+                        fn(event);
+                    } else {
+                        fn(event);
+                    }
+                }
             }
             if (!once) action();
             else if (event instanceof KeyboardEvent) {
@@ -108,7 +138,7 @@ class Input {
      * @param {boolean} once - Fire the action once or repeatedly
      * @return {Function} - The bound function that was created to handle the keyboard event.
      */
-    protected __eventListener(fn: Function, type: Keyboard | MouseInteraction, mapping: KMMapping, inputs: KMInput[], once: boolean, id?:string): Function {
+    protected __eventListener(fn: Function, type: Keyboard | Mouse, mapping: KMMapping, inputs: KMInput[], once: boolean, id?:string): Function {
         const bound = this.__eventHandler(fn, mapping, inputs, once);
         if (id) {
             document.getElementById(id)?.addEventListener(type, bound);

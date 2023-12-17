@@ -1,4 +1,4 @@
-import { Input, BindingsMapping, Keyboard, KMInput, MouseInteraction, KMMapping } from "..";
+import { Input, BindingsMapping, Keyboard, KMInput, Mouse, KMMapping } from "..";
 
 /**
  * Sets up the bindings for the keyboard/mouse events to specific keys and/or mouse buttons.
@@ -46,19 +46,30 @@ class Bindings extends Input {
         delete this.__bindings[binding];
     }
 
-    addBinding(fn: Function, inputs: KMInput[], type: Keyboard | MouseInteraction, once: boolean = true, id: string = "") {
-        // Join inputs together to create a key
-        const key = inputs.join(",");
-        if (this.checkBindingExists(key)) this.removeBinding(key);
+    addBinding(fn: Function, inputs: KMInput[], types: Keyboard | Mouse | Mouse[], once: boolean = true, id: string = "") {
         // Check if id exists; then switch mapping and
         // intialize new event listeners for element
         const mapping = id ? {} : this.__mapping;
         if (id) new Input(mapping, id);
-        // Add bindings
-        this.__bindings[key] = {
-            fn: this.__eventListener(fn, type, mapping, inputs, once, id),
-            id: id,
-            type: type
+        // Join inputs together to create a key lookup
+        const key = inputs.join(",");
+        // Add bindings per type if more than one
+        if (Array.isArray(types)) {
+            for (const type of types) {
+                if (this.checkBindingExists(`${key}+${type}`)) this.removeBinding(key);
+                this.__bindings[`${key}+${type}`] = {
+                    fn: this.__eventListener(fn, type, mapping, inputs, once, id),
+                    id: id,
+                    type: type
+                }
+            }
+        } else {
+            if (this.checkBindingExists(key)) this.removeBinding(key);
+            this.__bindings[key] = {
+                fn: this.__eventListener(fn, types, mapping, inputs, once, id),
+                id: id,
+                type: types
+            }
         }
     };
 

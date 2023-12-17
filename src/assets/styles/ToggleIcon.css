@@ -7,6 +7,7 @@
 
 .ToggleImage__circle {
     background-color: var(--secondary-color);
+    border: 2px solid var(--accent-color);
     border-radius: 10px;
     color: var(--accent-color);
     padding: 3px;

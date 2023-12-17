@@ -8,7 +8,10 @@ type Props = {
 
 const Canvas: React.FC<Props> = ({reference, width, height}) => {
     return (
-      <canvas ref={reference} width={width} height={height} id = "Canvas"/>
+      <>
+        <div id="Canvas-brush"/>
+        <canvas id="Canvas" ref={reference} width={width} height={height} />
+      </>
     );
 }
 

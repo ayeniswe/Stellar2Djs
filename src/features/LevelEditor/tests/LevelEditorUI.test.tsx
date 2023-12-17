@@ -21,7 +21,7 @@ beforeEach(() => {
     setup();
 })
 
-describe ('LevelEditor', () => {
+describe ('LevelEditor user interactions', () => {
 
     test('Retrieve tilesets and show a default tileset', () => {
         // Verify tile group section shows
@@ -57,6 +57,7 @@ describe ('LevelEditor', () => {
 // Remaining test
 // - Verify better way to detected switching between tilesets
 // - Verify hover effect on tile
-// - Verify all mode animation aret triggered
+// - Verify all mode animation/color are triggered
 // - Verify delete confirmation
 // - Verify panel hide/shows on click
+// - Verify brush mosue shows

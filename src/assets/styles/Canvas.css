@@ -1,8 +1,28 @@
 #Canvas {
-    background-color: var(--secondary-color);
+    background-color: var(--canvas-color);
     border: 3px solid var(--accent-color);
     border-radius: var(--window-border-radius);
     height: var(--game-height);
     image-rendering: pixelated;
     width: var(--game-width);
+}
+
+#Canvas-brush {
+    background-color: var(--accent-color);
+    border-radius: var(--window-border-radius);
+    display: none;
+    height: 32px;
+    opacity: 0.5;
+    position: absolute;
+    animation: 0.3s reveal;
+    width: 32px;
+}
+
+@keyframes reveal {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 0.5;
+    }
 }

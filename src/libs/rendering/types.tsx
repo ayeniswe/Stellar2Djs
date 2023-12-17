@@ -12,7 +12,6 @@ type Texture = TextureAtlasMetadata & {
     dy: number,
 }
 
-
 type TexturesMapping = {
     [key: string]: Texture
 }
@@ -28,7 +27,11 @@ type TextureObject = {
     w: number;
     h: number;
 }
-  
+
+type TextureObjects = {
+    [key: string]: TextureObject
+}
+
 type Textures = {
     id: string;
     src: string;
@@ -49,11 +52,21 @@ type Config = {
     };
 }
 
+type RevisionAction = "added" | "removed"
+
+type RevisionRecord = Texture & {
+    action: RevisionAction
+}
+
 export type {
     TextureAtlasMetadata,
     Texture,
     TextureSources,
+    TextureObjects,
     Config,
     TexturesMapping,
     TextureObject,
+    RevisionAction,
+    RevisionRecord,
+    Textures
 }
