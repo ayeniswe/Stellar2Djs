@@ -1,0 +1,474 @@
+
+{
+    "name": "heavenlyplaces",
+    "version": "0.1.0",
+    "textures": {
+        "tiles": {
+            "1": {
+                "id": "dungeon",
+                "src": "tiles/dungeon.png",
+                "objects": {
+                    "walls": {
+                        "1-1": {
+                            "name": "barwindow_wall",
+                            "sx": 16,
+                            "sy": 48,
+                            "w": 16,
+                            "h": 32
+                        },
+                        "1-2": {
+                            "name": "damaged_wall",
+                            "sx": 32,
+                            "sy": 48,
+                            "w": 16,
+                            "h": 32
+                        },
+                        "1-3": {
+                            "name": "plain_wall",
+                            "sx": 47,
+                            "sy": 0,
+                            "w": 16,
+                            "h": 32
+                        },
+                        "1-4": {
+                            "name": "window_wall",
+                            "sx": 64,
+                            "sy": 48,
+                            "w": 16,
+                            "h": 32
+                        },
+                        "1-5": {
+                            "name": "blueflag_wall",
+                            "sx": 80,
+                            "sy": 48,
+                            "w": 16,
+                            "h": 32
+                        },
+                        "1-6": {
+                            "name": "redflag_wall",
+                            "sx": 96,
+                            "sy": 48,
+                            "w": 16,
+                            "h": 32
+                        },
+                        "1-7": {
+                            "name": "back_wall",
+                            "sx": 112,
+                            "sy": 48,
+                            "w": 16,
+                            "h": 32
+                        },
+                        "1-8": {
+                            "name": "firewindow_wall",
+                            "sx": 128,
+                            "sy": 48,
+                            "w": 16,
+                            "h": 32
+                        },
+                        "1-9": {
+                            "name": "firewindowback_wall",
+                            "sx": 144,
+                            "sy": 48,
+                            "w": 16,
+                            "h": 32
+                        },
+                        "1-10": {
+                            "name": "shadow_wall",
+                            "sx": 160,
+                            "sy": 48,
+                            "w": 16,
+                            "h": 32
+                        }
+                    },
+                    "entries": {
+                        "1-11": {
+                            "name": "rightpost_entry",
+                            "sx": 0,
+                            "sy": 82,
+                            "w": 8,
+                            "h": 28
+                        }, 
+                        "1-12": {
+                            "name": "lockeddoor_entry",
+                            "sx": 8,
+                            "sy": 83,
+                            "w": 32,
+                            "h": 26
+                        },
+                        "1-13": {
+                            "name": "middlepost_entry",
+                            "sx": 40,
+                            "sy": 82,
+                            "w": 16,
+                            "h": 28
+                        },
+                        "1-14": {
+                            "name": "unlockeddoor_entry",
+                            "sx": 56,
+                            "sy": 83,
+                            "w": 32,
+                            "h": 26
+                        },
+                        "1-15": {
+                            "name": "leftpost_entry",
+                            "sx": 88,
+                            "sy": 82,
+                            "w": 8,
+                            "h": 28
+                        }
+                    },
+                    "floors": {
+                        "1-16": {
+                            "name": "floor1",
+                            "sx": 0,
+                            "sy": 144,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-17": {
+                            "name": "floor2",
+                            "sx": 0,
+                            "sy": 158,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-18": {
+                            "name": "floor3",
+                            "sx": 0,
+                            "sy": 174,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-19": {
+                            "name": "floor4",
+                            "sx": 16,
+                            "sy": 144,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-20": {
+                            "name": "floor5",
+                            "sx": 16,
+                            "sy": 158,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-21": {
+                            "name": "floor6",
+                            "sx": 16,
+                            "sy": 174,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-22": {
+                            "name": "floor7",
+                            "sx": 32,
+                            "sy": 144,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-23": {
+                            "name": "floor8",
+                            "sx": 32,
+                            "sy": 158,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-24": {
+                            "name": "floor9",
+                            "sx": 32,
+                            "sy": 174,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-25": {
+                            "name": "floor10",
+                            "sx": 64,
+                            "sy": 144,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-26": {
+                            "name": "floor11",
+                            "sx": 64,
+                            "sy": 158,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-27": {
+                            "name": "floor12",
+                            "sx": 64,
+                            "sy": 177,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-28": {
+                            "name": "floor13",
+                            "sx": 80,
+                            "sy": 144,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-29": {
+                            "name": "floor14",
+                            "sx": 80,
+                            "sy": 177,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-30": {
+                            "name": "floor15",
+                            "sx": 96,
+                            "sy": 144,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-31": {
+                            "name": "floor16",
+                            "sx": 96,
+                            "sy": 158,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-32": {
+                            "name": "floor17",
+                            "sx": 96,
+                            "sy": 177,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-33": {
+                            "name": "floor18",
+                            "sx": 112,
+                            "sy": 158,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-35": {
+                            "name": "floor19",
+                            "sx": 160,
+                            "sy": 160,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-36": {
+                            "name": "floor20",
+                            "sx": 208,
+                            "sy": 160,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-37": {
+                            "name": "floor21",
+                            "sx": 208,
+                            "sy": 176,
+                            "w": 16,
+                            "h": 16
+                        }
+                    },
+                    "turns": {
+                        "1-38": {
+                            "name": "rightback_turn",
+                            "sx": 32,
+                            "sy": 0,
+                            "w": 32,
+                            "h": 32
+                        },
+                        "1-39": {
+                            "name": "leftback_turn",
+                            "sx": 47,
+                            "sy": 0,
+                            "w": 32,
+                            "h": 32
+                        },
+                        "1-40": {
+                            "name": "left_turn",
+                            "sx": 32,
+                            "sy": 32,
+                            "w": 32,
+                            "h": 16
+                        },
+                        "1-42": {
+                            "name": "leftcorner_turn",
+                            "sx": 64,
+                            "sy": 0,
+                            "w": 16,
+                            "h": 16
+                        }
+                    },
+                    "sides": {
+                        "1-43": {
+                            "name": "wallbackend_side",
+                            "sx": 64,
+                            "sy": 32,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-44": {
+                            "name": "wall_side",
+                            "sx": 32,
+                            "sy": 16,
+                            "w": 16,
+                            "h": 16
+                        }
+
+                    },
+                    "ceiling": {
+                        "1-46": {
+                            "name": "ceiling",
+                            "sx": 96,
+                            "sy": 16,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-47": {
+                            "name": "ceilingback",
+                            "sx": 144,
+                            "sy": 0,
+                            "w": 32,
+                            "h": 12
+                        }
+                    },
+                    "misc": {
+                        "1-48": {
+                            "name": "barrel",
+                            "sx": 112,
+                            "sy": 87,
+                            "w": 16,
+                            "h": 19
+                        },
+                        "1-49": {
+                            "name": "silverbarrel",
+                            "sx": 146,
+                            "sy": 91,
+                            "w": 12,
+                            "h": 15
+                        },
+                        "1-50": {
+                            "name": "goldbarrel",
+                            "sx": 163,
+                            "sy": 91,
+                            "w": 9,
+                            "h": 15
+                        },
+                        "1-51": {
+                            "name": "torch",
+                            "sx": 181,
+                            "sy": 88,
+                            "w": 7,
+                            "h": 16
+                        },
+                        "1-52": {
+                            "name": "sewer",
+                            "sx": 144,
+                            "sy": 32,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-53": {
+                            "name": "downstair",
+                            "sx": 144,
+                            "sy": 17,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-54": {
+                            "name": "bones",
+                            "sx": 240,
+                            "sy": 64,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-55": {
+                            "name": "brokenwall",
+                            "sx": 177,
+                            "sy": 58,
+                            "w": 32,
+                            "h": 21
+                        },
+                        "1-56": {
+                            "name": "spikes_part4",
+                            "sx": 192,
+                            "sy": 33,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-57": {
+                            "name": "spikes_part3",
+                            "sx": 208,
+                            "sy": 33,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-58": {
+                            "name": "spikes_part2",
+                            "sx": 224,
+                            "sy": 33,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-59": {
+                            "name": "spikes_part1",
+                            "sx": 240,
+                            "sy": 33,
+                            "w": 16,
+                            "h": 16
+                        },
+                        "1-60": {
+                            "name": "plain_pillar",
+                            "sx": 320,
+                            "sy": 0,
+                            "w": 16,
+                            "h": 37
+                        },
+                        "1-61": {
+                            "name": "face_pillar",
+                            "sx": 336,
+                            "sy": 0,
+                            "w": 16,
+                            "h": 37
+                        },
+                        "1-62": {
+                            "name": "plain_pillarwall",
+                            "sx": 80,
+                            "sy": 0,
+                            "w": 16,
+                            "h": 37
+                        },
+                        "1-63": {
+                            "name": "face_pillarwall",
+                            "sx": 128,
+                            "sy": 0,
+                            "w": 16,
+                            "h": 37
+                        },
+                        "1-64": {
+                            "name": "long_pillar",
+                            "sx": 352,
+                            "sy": 3,
+                            "w": 16,
+                            "h": 45
+                        }
+                    }
+                }
+            },
+            "2": {
+                "id": "grassland",
+                "src": "tiles/grassland.png",
+                "objects": {
+                    "floor": {
+                    }
+                }
+            }
+        },
+        "frames": {
+            "1": {
+                "id": "player",
+                "src": "player.png",
+                "objects": {
+                    
+                }
+            }
+        }
+    }
+}
