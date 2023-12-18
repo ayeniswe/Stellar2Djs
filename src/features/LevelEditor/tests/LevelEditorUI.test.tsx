@@ -167,6 +167,22 @@ describe ('LevelEditor user interactions', () => {
 
     });
 
+    test('Show tooltip on brush tile', async () => {
+        // Open panel
+        await userEvent.click(screen.getByRole('heading', {name: 'LEVEL EDITOR'}));
+        // Select new tileset option
+        userEvent.selectOptions(screen.getByRole('combobox'), 'dungeon');
+        // Set example tile
+        const tileExampleOne = screen.getByRole('checkbox', {name: 'tile 1-1'});
+        // Select new tile
+        userEvent.click(tileExampleOne);
+        // Verify tooltip shows
+        expect(screen.getAllByRole('tooltip')).not.toBeNull(); 
+        
+        // Comments:
+        // could show multiple tooltips but easy to test since every tile is repeated with the same style and the first solution is `display:none` not enabled
+    });
+
     test('Select brush tile', async () => {
         // Open panel
         await userEvent.click(screen.getByRole('heading', {name: 'LEVEL EDITOR'}));
@@ -200,7 +216,7 @@ describe ('LevelEditor user interactions', () => {
         // Select new tile
         userEvent.click(tileExampleOne);
         // Verify brush is not shown yet
-        expect(document.getElementById("Canvas-brush")!).toHaveStyle("");
+        expect(document.getElementById("Canvas-brush")!).not.toHaveStyle("display: flex; left: 0px; top: 0px; width: 16px; height: 32px;");
         // Hover on canvas
         await userEvent.hover(document.getElementById("Canvas")!);
         // Verify brush is shown
@@ -211,6 +227,3 @@ describe ('LevelEditor user interactions', () => {
     })
 
 })
-
-// Additional test
-// - Verify hover effect on tile to see tooltip [VISUAL]

@@ -13,7 +13,7 @@ type Props = {
 const Tooltip: React.FC<Props> = ({ msg, children }) => {
     return (
         <div id="Tooltip">
-            <div data-testid='tooltip' id="Tooltip__msg">{msg}</div>
+            <div role='tooltip' id="Tooltip__msg">{msg}</div>
             {children}
         </div>
     );

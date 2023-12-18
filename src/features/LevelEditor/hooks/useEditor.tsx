@@ -137,7 +137,7 @@ const useEditor = (editor: LevelEditor) => {
         return Object.keys(groups).map(key => {
             return (
                 <div className='LevelEditor__content__group' key={key}>
-                    <h5 className='LevelEditor__content__group__title' data-testid='group'>
+                    <h5 className='LevelEditor__content__group__title'>
                         {capitalize(key)}
                     </h5>
                     <div className='LevelEditor__content__group__tiles'>
