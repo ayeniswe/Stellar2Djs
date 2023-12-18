@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom/extend-expect';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitForElementToBeRemoved, waitFor, act } from '@testing-library/react';
 import LevelEditorComp from '..';
 import userEvent from '@testing-library/user-event';
 import { LevelEditor } from '../../../main/LevelEditor';
@@ -11,7 +11,9 @@ const setupCanvas = () => {
     const canvas = document.createElement('canvas');
     const brush = document.createElement('div');
     brush.id = "Canvas-brush";
+    brush.title = "drawing brush";
     canvas.id = "Canvas";
+    canvas.title = "canvas for drawing";
     canvas.width = 800;
     canvas.height = 600;
     document.body.appendChild(canvas);
@@ -31,7 +33,6 @@ beforeAll(() => {
 })
 
 beforeEach(() => {
-    //eslint-disable-next-line
     setup();
     jest.useFakeTimers();
 })
@@ -47,17 +48,17 @@ describe ('LevelEditor user interactions', () => {
         // Verify panel closed initially
         expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
         // Verify panel opens on click on title name
-        await userEvent.click(screen.getByRole('heading', {name: 'LEVEL EDITOR'}));
-        expect(screen.getByRole('combobox')).toBeInTheDocument();
+        userEvent.click(screen.getByRole('heading'));
+        expect(await screen.findByRole('combobox')).toBeInTheDocument();
         // Verify panel closes on click on title name
-        await userEvent.click(screen.getByRole('heading', {name: 'LEVEL EDITOR'}));
-        expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
+        userEvent.click(screen.getByRole('heading' , {name: 'LEVEL EDITOR'}));
+        await waitForElementToBeRemoved(() => screen.queryByRole('combobox'));
     });
 
     test('Turn on/off clipping mode', async () => {
         // Open panel and select any option
-        await userEvent.click(screen.getByRole('heading', {name: 'LEVEL EDITOR'}));
-        userEvent.selectOptions(screen.getByRole('combobox'), 'grassland');
+        userEvent.click(screen.getByRole('heading'));
+        userEvent.selectOptions(await screen.findByRole('combobox'), 'grassland');
         // Turn on clipping
         const button = screen.getByRole('button', {name: 'toggle clipping mode'});
         const status = screen.getByRole('checkbox', {name: 'toggle clipping mode'});
@@ -79,8 +80,8 @@ describe ('LevelEditor user interactions', () => {
 
     test('Turn on/off drag mode', async () => {
         // Open panel and select any option
-        await userEvent.click(screen.getByRole('heading', {name: 'LEVEL EDITOR'}));
-        userEvent.selectOptions(screen.getByRole('combobox'), 'grassland');
+        userEvent.click(screen.getByRole('heading'));
+        userEvent.selectOptions(await screen.findByRole('combobox'), 'grassland');
         // Turn on drag
         const button = screen.getByRole('button', {name: 'toggle drag mode'});
         const status = screen.getByRole('checkbox', {name: 'toggle drag mode'});
@@ -102,8 +103,8 @@ describe ('LevelEditor user interactions', () => {
 
     test('Turn on/off trash mode', async () => {
         // Open panel and select any option
-        await userEvent.click(screen.getByRole('heading', {name: 'LEVEL EDITOR'}));
-        userEvent.selectOptions(screen.getByRole('combobox'), 'grassland');
+        userEvent.click(screen.getByRole('heading'));
+        userEvent.selectOptions(await screen.findByRole('combobox'), 'grassland');
         // Turn on trash
         const button = screen.getByRole('button', {name: 'toggle trash mode'});
         const status = screen.getByRole('checkbox', {name: 'toggle trash mode'});
@@ -125,29 +126,27 @@ describe ('LevelEditor user interactions', () => {
 
     test('Show trash delete all button and trigger confirmation dialog', async () => {
         // Open panel and select any option
-        await userEvent.click(screen.getByRole('heading', {name: 'LEVEL EDITOR'}));
-        userEvent.selectOptions(screen.getByRole('combobox'), 'grassland');
+        userEvent.click(screen.getByRole('heading'));
+        userEvent.selectOptions(await screen.findByRole('combobox'), 'grassland');
         // Turn on trash
-        const button = screen.getByRole('button', {name: 'toggle trash mode'});
-        await userEvent.click(button);
+        userEvent.click(screen.getByRole('button', {name: 'toggle trash mode'}));
         // Click delete all
-        const deleteButton = screen.getByRole('button', {name: 'delete all'});
-        await userEvent.click(deleteButton);
-        // Verify confirmation dialog
-        const dialog = screen.queryByText("Are you sure? Action can't be UNDONE!");
-        const confirmButton = screen.getByRole('button', {name: 'delete all confirm'});
+        userEvent.click(await screen.findByRole('button', {name: 'delete all'}));
+        // Verify confirmation dialog and confirm button
+        const confirmButton = await screen.findByRole('button', {name: 'delete all confirm'});
+        const dialog = await screen.findByText("Are you sure? Action can't be UNDONE!");
         expect(dialog).toBeInTheDocument();
         expect(confirmButton).toBeInTheDocument();
         // Advance time and verify dialog automatically closes
-        jest.advanceTimersByTime(3000);
-        await waitFor(() => expect(confirmButton).not.toBeInTheDocument());
+        act(() => jest.advanceTimersByTime(3000));
+        expect(confirmButton).not.toBeInTheDocument();
 
     });
 
     test('Turn on/off edit mode', async () => {
         // Open panel and select any option
-        await userEvent.click(screen.getByRole('heading', {name: 'LEVEL EDITOR'}));
-        userEvent.selectOptions(screen.getByRole('combobox'), 'grassland');
+        userEvent.click(screen.getByRole('heading'));
+        userEvent.selectOptions(await screen.findByRole('combobox'), 'grassland');
         // Turn on edit
         const button = screen.getByRole('button', {name: 'toggle editing mode'});
         const status = screen.getByRole('checkbox', {name: 'toggle editing mode'});
@@ -169,9 +168,9 @@ describe ('LevelEditor user interactions', () => {
 
     test('Show tooltip on brush tile', async () => {
         // Open panel
-        await userEvent.click(screen.getByRole('heading', {name: 'LEVEL EDITOR'}));
+        userEvent.click(screen.getByRole('heading'));
         // Select new tileset option
-        userEvent.selectOptions(screen.getByRole('combobox'), 'dungeon');
+        userEvent.selectOptions(await screen.findByRole('combobox'), 'dungeon');
         // Set example tile
         const tileExampleOne = screen.getByRole('checkbox', {name: 'tile 1-1'});
         // Select new tile
@@ -185,9 +184,9 @@ describe ('LevelEditor user interactions', () => {
 
     test('Select brush tile', async () => {
         // Open panel
-        await userEvent.click(screen.getByRole('heading', {name: 'LEVEL EDITOR'}));
+        userEvent.click(screen.getByRole('heading'));
         // Select new tileset option
-        userEvent.selectOptions(screen.getByRole('combobox'), 'dungeon');
+        userEvent.selectOptions(await screen.findByRole('combobox'), 'dungeon');
         // Set example tiles
         const tileExampleOne = screen.getByRole('checkbox', {name: 'tile 1-1'});
         const tileExampleTwo = screen.getByRole('checkbox', {name: 'tile 1-2'});
@@ -208,21 +207,19 @@ describe ('LevelEditor user interactions', () => {
 
     test('Mouse brush shadow effect', async () => {
         // Open panel
-        await userEvent.click(screen.getByRole('heading', {name: 'LEVEL EDITOR'}));
+        userEvent.click(screen.getByRole('heading'));
         // Select new tileset option
-        userEvent.selectOptions(screen.getByRole('combobox'), 'dungeon');
+        userEvent.selectOptions(await screen.findByRole('combobox'), 'dungeon');
         // Set example tile
         const tileExampleOne = screen.getByRole('checkbox', {name: 'tile 1-1'});
         // Select new tile
         userEvent.click(tileExampleOne);
         // Verify brush is not shown yet
-        expect(document.getElementById("Canvas-brush")!).not.toHaveStyle("display: flex; left: 0px; top: 0px; width: 16px; height: 32px;");
+        expect(screen.getByTitle("drawing brush")).not.toHaveStyle("display: flex; left: 0px; top: 0px; width: 16px; height: 32px;");
         // Hover on canvas
-        await userEvent.hover(document.getElementById("Canvas")!);
+        userEvent.hover(screen.getByTitle("canvas for drawing"));
         // Verify brush is shown
-        await waitFor(() => {
-            expect(document.getElementById("Canvas-brush")!).toHaveStyle("display: flex; left: 0px; top: 0px; width: 16px; height: 32px;");
-        });
+        expect(await screen.findByTitle("drawing brush")).toHaveStyle("display: flex; left: 0px; top: 0px; width: 16px; height: 32px;");
         
     })
 

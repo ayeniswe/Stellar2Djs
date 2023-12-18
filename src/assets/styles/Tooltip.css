@@ -1,4 +1,4 @@
-#Tooltip {
+.Tooltip {
     align-items: center;
     display: flex;
     flex-direction: column;
@@ -6,7 +6,7 @@
     position: relative;
 }
 
-#Tooltip__msg {
+.Tooltip__msg {
     display: none;
     font-size: small;
     pointer-events: none;
@@ -16,7 +16,7 @@
     z-index: 1;
 }
 
-#Tooltip:hover #Tooltip__msg {
+.Tooltip:hover .Tooltip__msg {
     animation: showTooltip 0.2s ease-in;
     display: block;
 }
