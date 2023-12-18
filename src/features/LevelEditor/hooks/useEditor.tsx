@@ -5,6 +5,7 @@ import { computed, signal, useSignal } from '@preact/signals-react';
 import { Tilesets } from '../type';
 import { LevelEditorDesign } from '../../../libs/design/level';
 import { LevelEditor } from '../../../main/LevelEditor';
+import Tooltip from '../../../components/Tooltip';
 
 const useEditor = (editor: LevelEditor) => {
     let config: Config = configuration;
@@ -81,9 +82,14 @@ const useEditor = (editor: LevelEditor) => {
      */
     const setTileBrush = (id: string, group: string, object: TextureObject) => {
         // Reset previous tile
-        if (CURRENT_TILE.value) document.getElementById(CURRENT_TILE.value)!.style.opacity = "";
+        if (CURRENT_TILE.value) {
+            document.getElementById(CURRENT_TILE.value)!.style.opacity = "";
+            document.getElementById(CURRENT_TILE.value)!.ariaChecked = 'false';
+
+        }
         // Set new tile
         document.getElementById(id)!.style.opacity = SELECTED_TILE_OPACITY;
+        document.getElementById(id)!.ariaChecked = 'true';
         CURRENT_TILE.value = id;
         LevelEditorDesign.setBrush(id, group, object);
     }
@@ -101,15 +107,19 @@ const useEditor = (editor: LevelEditor) => {
             ...objects
         }; // keep track of all tiles
         const tiles = Object.keys(objects).map(key => {
+            const msg = `${objects[key].w}x${objects[key].h}` + "\n" + `${objects[key].sx},${objects[key].sy}`
             return (
-                <div
-                    data-testid={`tile ${key}`}
-                    id={key}
-                    key={key}
-                    aria-label={objects[key].name}
-                    className='LevelEditor__content__tiles__tile'
-                    onClick={(e) =>setTileBrush(e.currentTarget.id, group, objects[key])}
-                />
+                <Tooltip msg={msg}>
+                    <div
+                        role='checkbox'
+                        id={key}
+                        key={key}
+                        title={`Click to select tile: ${objects[key].name}`}
+                        aria-label={`tile ${key}`}
+                        className='LevelEditor__content__tiles__tile'
+                        onClick={(e) =>setTileBrush(e.currentTarget.id, group, objects[key])}
+                    />
+                </Tooltip>
             );
         });
 

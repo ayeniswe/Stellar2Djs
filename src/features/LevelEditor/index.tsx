@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import './styles/LevelEditor.css';
+import '../../assets/styles/Tooltip.css';
 import { LevelEditor } from '../../main/LevelEditor';
 import { useEditor } from './hooks/useEditor';
 import LevelEditorControls from './components/LevelEditorControls';

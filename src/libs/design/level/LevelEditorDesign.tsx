@@ -4,7 +4,7 @@ import { TextureObject, TextureRenderer } from '../../rendering';
 import { signal } from '@preact/signals-react';
 
 class LevelEditorDesign {
-    private __editable = signal(true);
+    private __editable = signal(false);
     private __clipping = signal(false);
     private __trash = signal(false);
     private __drag = signal(false);

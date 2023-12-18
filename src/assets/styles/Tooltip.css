@@ -1,0 +1,31 @@
+#Tooltip {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+}
+
+#Tooltip__msg {
+    display: none;
+    font-size: small;
+    pointer-events: none;
+    position: absolute;
+    transition: 0.2s;
+    white-space: pre-wrap;
+    z-index: 1;
+}
+
+#Tooltip:hover #Tooltip__msg {
+    animation: showTooltip 0.2s ease-in;
+    display: block;
+}
+
+@keyframes showTooltip {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}

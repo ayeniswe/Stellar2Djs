@@ -21,15 +21,6 @@ const useControls = (editor: LevelEditor) => {
         editor.input.safety = true;
     }
 
-    /**
-     * Intializes default (if any) state of the edit mode
-     */
-    const setEditMode = () => {
-        if (editor.input.editable) {
-            LevelEditorEffects.applyEditingEffect();
-        }
-    }
-
     const toggleTrashmode = () => {
         if (!editor.input.trash) {
             editor.input.trash = true
@@ -75,7 +66,6 @@ const useControls = (editor: LevelEditor) => {
         toggleEditMode,
         toggleClippingMode,
         toggleDragMode,
-        setEditMode,
         showDeleteConfirmation,
         clearCanvas,
     }

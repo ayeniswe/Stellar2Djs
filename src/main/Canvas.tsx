@@ -10,7 +10,7 @@ const Canvas: React.FC<Props> = ({reference, width, height}) => {
     return (
       <>
         <div id="Canvas-brush"/>
-        <canvas id="Canvas" ref={reference} width={width} height={height} />
+        <canvas title='drawing canvas' aria-label='canvas' id="Canvas" ref={reference} width={width} height={height} />
       </>
     );
 }
