@@ -84,12 +84,12 @@ const useEditor = (editor: LevelEditor) => {
         // Reset previous tile
         if (CURRENT_TILE.value) {
             document.getElementById(CURRENT_TILE.value)!.style.opacity = "";
-            document.getElementById(CURRENT_TILE.value)!.ariaChecked = 'false';
+            document.getElementById(CURRENT_TILE.value)!.ariaPressed = 'false';
 
         }
         // Set new tile
         document.getElementById(id)!.style.opacity = SELECTED_TILE_OPACITY;
-        document.getElementById(id)!.ariaChecked = 'true';
+        document.getElementById(id)!.ariaPressed = 'true';
         CURRENT_TILE.value = id;
         LevelEditorDesign.setBrush(id, group, object);
     }
@@ -111,7 +111,7 @@ const useEditor = (editor: LevelEditor) => {
             return (
                 <Tooltip msg={msg}>
                     <div
-                        role='checkbox'
+                        role='button'
                         id={key}
                         key={key}
                         title={`Click to select tile: ${objects[key].name}`}

@@ -25,8 +25,8 @@ type Props = {
  */
 const ToggleIcon: React.FC<Props> = ({ id, src, fn, alt, ariaLabel, width = 15 }) => {
     return (
-        <div id={id + '-button'} role='button' aria-label={ariaLabel} className="ToggleImage" onClick={() => fn()}>
-          <div role='checkbox' aria-label={ariaLabel} id={id + '-status'} className='ToggleImage__circle'/>
+        <div aria-pressed='false' id={id + '-button'} role='button' aria-label={ariaLabel} className="ToggleImage" onClick={() => fn()}>
+          <div role='status' aria-label={ariaLabel} id={id + '-status'} className='ToggleImage__circle'/>
           <img alt={alt} id={id + '-icon'} style={{width: `${width}px`}} className='ToggleImage__img' src={src} />
         </div>
     );

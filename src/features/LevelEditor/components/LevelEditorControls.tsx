@@ -30,9 +30,9 @@ const LevelEditorControls: React.FC<Props> = ({ editor }) => {
                     Delete All
                 </div>
                 :
-                <div className='LevelEditor__delete-confirmation'>
+                <div role="dialog" className='LevelEditor__delete-confirmation' aria-label='delete all confirmation message'>
                     Are you sure? Action can't be UNDONE!
-                    <div role='button' aria-label='delete all confirm' onClick={() => clearCanvas()} className='LevelEditor__button LevelEditor__button--serious'>Yes</div>
+                    <div role='button' aria-label="yes to delete all confirmation message" onClick={() => clearCanvas()} className='LevelEditor__button LevelEditor__button--serious'>Yes</div>
                 </div>
                 }
             </>

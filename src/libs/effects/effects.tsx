@@ -39,46 +39,46 @@ class LevelEditorEffects {
         document.getElementById(this.trashIconId)!.style.animationName = 'shake';
         document.getElementById(this.trashButtonId)!.title = 'Turn trash mode off'
         document.getElementById(this.trashStatusId)!.style.backgroundColor = this.onColor;
-        document.getElementById(this.trashStatusId)!.ariaChecked = 'true';
+        document.getElementById(this.trashStatusId)!.ariaPressed = 'true';
     }
     static removeTrashEffect() {
         document.getElementById(this.trashIconId)!.style.animationName = '';
         document.getElementById(this.trashButtonId)!.title = 'Turn trash mode on'
         document.getElementById(this.trashStatusId)!.style.backgroundColor = '';
-        document.getElementById(this.trashStatusId)!.ariaChecked = 'false';
+        document.getElementById(this.trashStatusId)!.ariaPressed = 'false';
     }
 
     static applyDragEffect = () => {
         document.getElementById(this.dragButtonId)!.title = 'Turn drag mode off'
         document.getElementById(this.dragStatusId)!.style.backgroundColor = this.onColor;
-        document.getElementById(this.dragStatusId)!.ariaChecked = 'true';
+        document.getElementById(this.dragStatusId)!.ariaPressed = 'true';
     }
     static removeDragEffect = () => {
         document.getElementById(this.dragButtonId)!.title = 'Turn drag mode on'
         document.getElementById(this.dragStatusId)!.style.backgroundColor = '';
-        document.getElementById(this.dragStatusId)!.ariaChecked = 'false';
+        document.getElementById(this.dragStatusId)!.ariaPressed = 'false';
     }
     
     static applyEditingEffect = () => {
-        document.getElementById(this.editingButtonId)!.title = 'Turn edit mode off'
+        document.getElementById(this.editingButtonId)!.title = 'Turn editing mode off'
         document.getElementById(this.editingStatusId)!.style.backgroundColor = this.onColor;
-        document.getElementById(this.editingStatusId)!.ariaChecked = 'true';
+        document.getElementById(this.editingStatusId)!.ariaPressed = 'true';
     }
     static removeEditingEffect = () => {
-        document.getElementById(this.editingButtonId)!.title = 'Turn edit mode on'
+        document.getElementById(this.editingButtonId)!.title = 'Turn editing mode on'
         document.getElementById(this.editingStatusId)!.style.backgroundColor = '';
-        document.getElementById(this.editingStatusId)!.ariaChecked = 'false';
+        document.getElementById(this.editingStatusId)!.ariaPressed = 'false';
     }
 
     static applyClippingEffect = () => {
         document.getElementById(this.clippingButtonId)!.title = 'Turn clipping mode off'
         document.getElementById(this.clippingStatusId)!.style.backgroundColor = this.onColor;
-        document.getElementById(this.clippingStatusId)!.ariaChecked = 'true';
+        document.getElementById(this.clippingStatusId)!.ariaPressed = 'true';
     }
     static removeClippingEffect = () => {
         document.getElementById(this.clippingButtonId)!.title = 'Turn clipping mode on'
         document.getElementById(this.clippingStatusId)!.style.backgroundColor = '';
-        document.getElementById(this.clippingStatusId)!.ariaChecked = 'false';
+        document.getElementById(this.clippingStatusId)!.ariaPressed = 'false';
     }
 
 
