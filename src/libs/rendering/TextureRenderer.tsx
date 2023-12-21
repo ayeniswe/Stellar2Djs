@@ -28,7 +28,6 @@ class TextureRenderer {
         for (const key in this.__config.textures) {
             log(MESSAGE.ADDING_TEXTURE, `${capitalize(key)}`)
             const sources = Object.keys(this.__config.textures[key]).length;
-            let sourcesLoaded = 0;
             for (let index = 1; index <= sources; index++) {
                 const texture = this.__config.textures[key][index];
                 const id = texture.id;
@@ -41,8 +40,7 @@ class TextureRenderer {
                     const url: string = (await import(`../../${path}`)).default;
                     this.__textureSources[id].src = url;
                     this.__textureSources[id].onload = () => {
-                        sourcesLoaded++;
-                        log(MESSAGE.LOADING_TEXTURE, `${sourcesLoaded} of ${sources}: ${capitalize(key)} `);
+                        log(MESSAGE.LOADING_TEXTURE, `${index} of ${sources}: ${capitalize(key)} `);
                     };
                     this.__textureSources[id].onerror = () => error(MESSAGE.FAILED_TEXTURE, `${id} from path: ${path}`);
                 } catch {

@@ -107,15 +107,14 @@ const useEditor = (editor: LevelEditor) => {
             ...objects
         }; // keep track of all tiles
         const tiles = Object.keys(objects).map(key => {
-            const msg = `${objects[key].w}x${objects[key].h}` + "\n" + `${objects[key].sx},${objects[key].sy}`
+            const [w,h,x,y] = [objects[key].w, objects[key].h, objects[key].sx, objects[key].sy]
+            const msg = `${w}x${h}\n${x},${y}`
             return (
-                <Tooltip msg={msg}>
+                <Tooltip msg={msg} key={key}>
                     <div
                         role='button'
                         id={key}
-                        key={key}
-                        title={`Click to select tile: ${objects[key].name}`}
-                        aria-label={`tile ${key}`}
+                        aria-label={`tile: ${objects[key].name}`}
                         className='LevelEditor__content__tiles__tile'
                         onClick={(e) =>setTileBrush(e.currentTarget.id, group, objects[key])}
                     />

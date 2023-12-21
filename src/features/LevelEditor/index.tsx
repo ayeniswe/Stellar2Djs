@@ -29,7 +29,7 @@ const LevelEditorComp: React.FC<Props> = ({ editor }) => {
         })();
 
       }
-    },[TILESET.value]);
+    },[TILESET.value, setBackground, getTilesets, editor.input]);
 
     return (
       <div id="LevelEditor">

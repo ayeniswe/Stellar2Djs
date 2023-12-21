@@ -26,11 +26,11 @@ const LevelEditorControls: React.FC<Props> = ({ editor }) => {
             {editor.input.trash &&
             <>
                 {editor.input.safety ?
-                <div role='button' aria-label='delete all' className='LevelEditor__button LevelEditor__button--serious' onClick={() => showDeleteConfirmation()}>
+                <div role='button' aria-label='delete all placed tiles in canvas' className='LevelEditor__button LevelEditor__button--serious' onClick={() => showDeleteConfirmation()}>
                     Delete All
                 </div>
                 :
-                <div role="dialog" className='LevelEditor__delete-confirmation' aria-label='delete all confirmation message'>
+                <div role="dialog" className='LevelEditor__delete-confirmation' aria-label='confirmation message to delete all placed tiles in canvas'>
                     Are you sure? Action can't be UNDONE!
                     <div role='button' aria-label="yes to delete all confirmation message" onClick={() => clearCanvas()} className='LevelEditor__button LevelEditor__button--serious'>Yes</div>
                 </div>
@@ -39,33 +39,37 @@ const LevelEditorControls: React.FC<Props> = ({ editor }) => {
             }
             <div className='LevelEditor__controls'>
                 <ToggleIcon
-                    id='toggle-trash'
+                    name='trash'
                     src={trashcan}
                     fn={toggleTrashmode}
                     alt='trashcan'
-                    ariaLabel='toggle trash mode'
+                    title='trash mode'
+                    keyShortcuts='Delete'
                 />
                 <ToggleIcon
-                    id='toggle-clipping'
+                    name='clipping'
                     src={scissors}
                     fn={toggleClippingMode}
                     alt='scissors'
-                    ariaLabel='toggle clipping mode'
+                    keyShortcuts='C'
+                    title='clipping mode'
                 />
                 <ToggleIcon
-                    id='toggle-drag'
+                    name='drag'
                     src={dragpointer}
                     fn={toggleDragMode}
                     alt='drag pointer'
-                    ariaLabel='toggle drag mode'
+                    keyShortcuts='D'
+                    title='drag mode'
                 />
                 <ToggleIcon
-                    id='toggle-editing'
+                    name='editing'
                     src={editpointer}
                     fn={toggleEditMode}
                     width={6}
                     alt='pencil'
-                    ariaLabel='toggle editing mode'
+                    keyShortcuts='E'
+                    title='editing mode'
                 />
             </div>
         </>

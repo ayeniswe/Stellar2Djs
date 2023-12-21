@@ -313,7 +313,7 @@
                         }
 
                     },
-                    "ceiling": {
+                    "ceilings": {
                         "1-46": {
                             "name": "ceiling",
                             "sx": 96,
@@ -456,7 +456,7 @@
                 "id": "grassland",
                 "src": "tiles/grassland.png",
                 "objects": {
-                    "floor": {
+                    "floors": {
                     }
                 }
             }
