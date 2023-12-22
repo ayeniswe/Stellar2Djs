@@ -5,7 +5,6 @@ import { computed, signal, useSignal } from '@preact/signals-react';
 import { Tilesets } from '../type';
 import { LevelEditorDesign } from '../../../libs/design/level';
 import { LevelEditor } from '../../../main/LevelEditor';
-import Tooltip from '../../../components/Tooltip';
 
 const useEditor = (editor: LevelEditor) => {
     let config: Config = configuration;
@@ -108,17 +107,17 @@ const useEditor = (editor: LevelEditor) => {
         }; // keep track of all tiles
         const tiles = Object.keys(objects).map(key => {
             const [w,h,x,y] = [objects[key].w, objects[key].h, objects[key].sx, objects[key].sy]
-            const msg = `${w}x${h}\n${x},${y}`
+            const msg = `${w} x ${h}\n${x} , ${y}`
             return (
-                <Tooltip msg={msg} key={key}>
-                    <div
-                        role='button'
-                        id={key}
-                        aria-label={`tile: ${objects[key].name}`}
-                        className='LevelEditor__content__tiles__tile'
-                        onClick={(e) =>setTileBrush(e.currentTarget.id, group, objects[key])}
-                    />
-                </Tooltip>
+                <div
+                    title={msg}
+                    role='button'
+                    id={key}
+                    key={key}
+                    aria-label={`tile: ${objects[key].name}`}
+                    className='LevelEditor__content__tiles__tile'
+                    onClick={(e) =>setTileBrush(e.currentTarget.id, group, objects[key])}
+                 />
             );
         });
 
