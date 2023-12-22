@@ -81,9 +81,14 @@ const useEditor = (editor: LevelEditor) => {
      */
     const setTileBrush = (id: string, group: string, object: TextureObject) => {
         // Reset previous tile
-        if (CURRENT_TILE.value) document.getElementById(CURRENT_TILE.value)!.style.opacity = "";
+        if (CURRENT_TILE.value) {
+            document.getElementById(CURRENT_TILE.value)!.style.opacity = "";
+            document.getElementById(CURRENT_TILE.value)!.ariaPressed = 'false';
+
+        }
         // Set new tile
         document.getElementById(id)!.style.opacity = SELECTED_TILE_OPACITY;
+        document.getElementById(id)!.ariaPressed = 'true';
         CURRENT_TILE.value = id;
         LevelEditorDesign.setBrush(id, group, object);
     }
@@ -101,15 +106,18 @@ const useEditor = (editor: LevelEditor) => {
             ...objects
         }; // keep track of all tiles
         const tiles = Object.keys(objects).map(key => {
+            const [w,h,x,y] = [objects[key].w, objects[key].h, objects[key].sx, objects[key].sy]
+            const msg = `${w} x ${h}\n${x} , ${y}`
             return (
                 <div
-                    data-testid={`tile ${key}`}
+                    title={msg}
+                    role='button'
                     id={key}
                     key={key}
-                    aria-label={objects[key].name}
+                    aria-label={`tile: ${objects[key].name}`}
                     className='LevelEditor__content__tiles__tile'
                     onClick={(e) =>setTileBrush(e.currentTarget.id, group, objects[key])}
-                />
+                 />
             );
         });
 
@@ -127,7 +135,7 @@ const useEditor = (editor: LevelEditor) => {
         return Object.keys(groups).map(key => {
             return (
                 <div className='LevelEditor__content__group' key={key}>
-                    <h5 className='LevelEditor__content__group__title' data-testid='group'>
+                    <h5 className='LevelEditor__content__group__title'>
                         {capitalize(key)}
                     </h5>
                     <div className='LevelEditor__content__group__tiles'>

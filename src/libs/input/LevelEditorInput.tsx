@@ -23,7 +23,7 @@ class LevelEditorInput extends LevelEditorDesign {
         this.__b.addBinding(this.handleDragDrawingMode.bind(this), ['d'], "keydown", true);
         this.__b.addBinding(this.handleEditingMode.bind(this), ['e'], "keydown", true);
         this.__b.addBinding(this.handleTrashMode.bind(this), ['Delete'], "keydown", true);
-        this.__b.addBinding(this.handleClearCanvas.bind(this), ['Control', 'a'], "keydown", true);
+        this.__b.addBinding(this.handleClearCanvas.bind(this), ['Control','a'], "keydown", true);
         this.__b.addBinding(this.handleUndo.bind(this), ['Control', 'z'], "keydown", false);
     }
 
@@ -41,7 +41,7 @@ class LevelEditorInput extends LevelEditorDesign {
         if (!this.ready) return;
         if (this.trash) {
             const res = this.remove(event.offsetX, event.offsetY);
-            if (res.length != 0) log(MESSAGE.REMOVE_POSITION, `X: ${res[0]}, Y: ${res[1]}`);
+            if (res.length !== 0) log(MESSAGE.REMOVE_POSITION, `X: ${res[0]}, Y: ${res[1]}`);
         } else {
             if (event.type === "mousemove" && !this.drag) return;
             const res = this.add(event.offsetX, event.offsetY);
@@ -99,10 +99,6 @@ class LevelEditorInput extends LevelEditorDesign {
         }
         warn(MESSAGE.DRAG, this.drag ? "on" : "off");
     }
-
-    // private handleBrushIcon() {
-    //     document.getElementById
-    // }
 
     // PROTECTED ACTIONS
     // ==================
