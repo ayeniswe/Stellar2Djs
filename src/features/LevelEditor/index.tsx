@@ -7,45 +7,47 @@ import LevelEditorControls from './components/LevelEditorControls';
 type Props = {
   editor: LevelEditor
 }
+
 const LevelEditorComp: React.FC<Props> = ({ editor }) => {
+
     const {
-      getCategories,
-      getTilesets,
       setTileset,
+      setTilesetKey,
+      setTilesBackground,
+      getTilesets,
       showTileset,
-      togglePanel,
-      setBackground,
-      TILESET,
-      PANEL,
+      toggleEditorTab,
+      TILESET_KEY,
+      EDITOR_TAB,
     } = useEditor(editor);
 
+    // This effect handles the initialization of the tileset chosen, set the background image of the tiles, and set the ready property of the editor input to receive input
     useEffect(() => {
-      if (TILESET.value !== '') {
+      if (TILESET_KEY.value !== '') {
         editor.input.ready = true;
-        getTilesets();
         (async () => {
-         await setBackground();
+          await setTileset();
+          setTilesBackground();
         })();
-
       }
-    },[TILESET.value, setBackground, getTilesets, editor.input]);
+    }, [TILESET_KEY.value, setTilesBackground, setTileset, editor.input]);
 
     return (
       <div id="LevelEditor">
-        <h2 className='LevelEditor__title' onClick={() => togglePanel()}>
+        <h2 className='LevelEditor__title' onClick={() => toggleEditorTab()}>
           LEVEL EDITOR
         </h2>
-        {PANEL.value &&
+        {EDITOR_TAB.value &&
         <>
           <h4 className='LevelEditor__select'>
             Select Tileset
-            <select value={TILESET.value} className='LevelEditor__select__dropdown' onChange={e => setTileset(e.target.value)}>
+            <select value={TILESET_KEY.value} className='LevelEditor__select__dropdown' onChange={e => setTilesetKey(e.target.value)}>
               <option value="" disabled>None</option>
-              {getCategories()}
+              {getTilesets()}
             </select>
           </h4>
           {showTileset()}
-          {TILESET.value && <LevelEditorControls editor={editor}/>}
+          {TILESET_KEY.value && <LevelEditorControls editor={editor}/>}
         </>
         }
       </div>

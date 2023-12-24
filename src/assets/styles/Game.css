@@ -33,7 +33,7 @@ code {
 .Game {
   align-items: center;
   background-color: var(--background-color);
-  background-image: url('../images/bkg.jpg');
+  background-image: url('../images/background.jpg');
   color: var(--text-color);
   display: flex;
   font-family: PixelFont;

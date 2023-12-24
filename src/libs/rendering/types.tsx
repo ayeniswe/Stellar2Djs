@@ -33,12 +33,10 @@ type TextureObjects = {
 }
 
 type Textures = {
-    id: string;
+    name: string;
     src: string;
-    objects: {
-        [key: string]: {
-            [key: string]: TextureObject; // String will follow "1-1" format with first and second number respectively representing the texture id, and the object id
-        }
+    groups: {
+        [key: string]: TextureObjects
     };
 }
   

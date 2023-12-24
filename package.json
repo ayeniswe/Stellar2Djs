@@ -43,6 +43,8 @@
   },
   "devDependencies": {
     "@types/node": "^20.10.4",
-    "canvas": "^2.11.2"
+    "canvas": "^2.11.2",
+    "jest-canvas-mock": "^2.5.2",
+    "jest-static-stubs": "^0.0.1"
   }
 }

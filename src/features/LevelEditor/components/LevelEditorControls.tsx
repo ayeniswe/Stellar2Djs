@@ -13,10 +13,10 @@ type Props = {
 
 const LevelEditorControls: React.FC<Props> = ({ editor }) => {
     const {
-      toggleTrashmode,
+      toggleTrashMode,
       toggleClippingMode,
       toggleDragMode,
-      toggleEditMode,
+      toggleEditingMode,
       showDeleteConfirmation,
       clearCanvas,
     } = useControls(editor);
@@ -41,7 +41,7 @@ const LevelEditorControls: React.FC<Props> = ({ editor }) => {
                 <ToggleIcon
                     name='trash'
                     src={trashcan}
-                    fn={toggleTrashmode}
+                    fn={toggleTrashMode}
                     alt='trashcan'
                     title='trash mode'
                     keyShortcuts='Delete'
@@ -65,7 +65,7 @@ const LevelEditorControls: React.FC<Props> = ({ editor }) => {
                 <ToggleIcon
                     name='editing'
                     src={editpointer}
-                    fn={toggleEditMode}
+                    fn={toggleEditingMode}
                     width={6}
                     alt='pencil'
                     keyShortcuts='E'
