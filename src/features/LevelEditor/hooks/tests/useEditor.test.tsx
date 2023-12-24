@@ -77,7 +77,6 @@ describe('LevelEditor editor', () => {
         result.current.setTileBrush("1-2", "wall", { sx: 0, sy: 0, w: 0, h: 0, name: 'testtile' });
         expect(screen.getByLabelText("tile: barwindow_wall")).toHaveAttribute('style', '');
         expect(screen.getByLabelText("tile: damaged_wall")).toHaveAttribute('style', 'opacity: 1;');
-        screen.debug();
     });
 
     test('set background for tiles', async () => {
