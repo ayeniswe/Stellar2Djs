@@ -1,6 +1,6 @@
 #LevelEditor {
     background-color: var(--background-color);
-    background-image: url('../../../assets/images/bkg-editor.jpg');
+    background-image: url('../../../assets/images/background-editor.jpg');
     border: 3px solid var(--accent-color);
     border-radius: var(--window-border-radius);
     cursor: pointer;
@@ -91,7 +91,7 @@
 }
 
 .LevelEditor__content__tiles__tile {
-    background-color: transparent;
+    background-color: var(--background-color);
     background-size: cover;
     border: 4px solid var(--accent-color);
     border-radius: var(--window-border-radius);

@@ -6,6 +6,7 @@ enum MESSAGE {
     DRAG = 'Drag drawing mode is',
     EDITING = 'Editing mode is',
     FAILED_TEXTURE = 'Failed to load texture:',
+    TEXTURE_MISSING = 'Texture not found:',
     KEY_WAIT = 'Waiting for next key/mouse press...',
     LOADING_TEXTURE = 'Texture loaded...',
     REMOVE_POSITION = 'Removed texture at:',

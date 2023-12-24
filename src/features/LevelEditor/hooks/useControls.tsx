@@ -6,9 +6,6 @@ import { LevelEditorEffects } from '../../../libs/effects/effects';
  */
 const useControls = (editor: LevelEditor) => {
 
-    /**
-     * Show delete confirmation for 3 seconds.
-     */
     const showDeleteConfirmation = () => {
         editor.input.safety = false;
         setTimeout(() => {
@@ -21,7 +18,7 @@ const useControls = (editor: LevelEditor) => {
         editor.input.safety = true;
     }
 
-    const toggleTrashmode = () => {
+    const toggleTrashMode = () => {
         if (!editor.input.trash) {
             editor.input.trash = true
             LevelEditorEffects.applyTrashEffect();
@@ -31,7 +28,7 @@ const useControls = (editor: LevelEditor) => {
         }
     }
 
-    const toggleEditMode = () => {
+    const toggleEditingMode = () => {
         if (editor.input.editable) {
             editor.input.editable = false
             LevelEditorEffects.removeEditingEffect();
@@ -62,8 +59,8 @@ const useControls = (editor: LevelEditor) => {
     }
 
     return {
-        toggleTrashmode,
-        toggleEditMode,
+        toggleTrashMode,
+        toggleEditingMode,
         toggleClippingMode,
         toggleDragMode,
         showDeleteConfirmation,

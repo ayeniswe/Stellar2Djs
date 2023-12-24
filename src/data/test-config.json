@@ -1,13 +1,13 @@
 
 {
-    "name": "test",
+    "name": "heavenlyplaces",
     "version": "0.1.0",
     "textures": {
-        "tiles": {
+        "tilesets": {
             "1": {
-                "id": "dungeon",
+                "name": "dungeon",
                 "src": "tiles/dungeon.png",
-                "objects": {
+                "groups": {
                     "walls": {
                         "1-1": {
                             "name": "barwindow_wall",
@@ -453,9 +453,9 @@
                 }
             },
             "2": {
-                "id": "grassland",
+                "name": "grassland",
                 "src": "tiles/grassland.png",
-                "objects": {
+                "groups": {
                     "floors": {
                     }
                 }
@@ -465,7 +465,7 @@
             "1": {
                 "id": "player",
                 "src": "player.png",
-                "objects": {
+                "groups": {
                     
                 }
             }

@@ -44,7 +44,12 @@ class LevelEditorInput extends LevelEditorDesign {
             if (res.length !== 0) log(MESSAGE.REMOVE_POSITION, `X: ${res[0]}, Y: ${res[1]}`);
         } else {
             if (event.type === "mousemove" && !this.drag) return;
-            const res = this.add(event.offsetX, event.offsetY);
+            let res;
+            if (event.offsetX && event.offsetY){
+                res = this.add(event.offsetX, event.offsetY);
+            } else {
+                res = this.add(event.clientX, event.clientY);
+            }
             const isEmpty = res.length === 0;
             if (isEmpty && this.editable) warn(MESSAGE.BRUSH_NOT_SET);
             else if (isEmpty && !this.editable) warn(MESSAGE.EDITING, 'off');

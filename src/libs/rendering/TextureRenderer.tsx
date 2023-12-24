@@ -1,13 +1,13 @@
 import configuration from '../../data/config.json';
 import { Config, RevisionRecord, TexturesMapping, TextureSources } from '.';
 import { capitalize } from '../../utils/text';
-import { error, log, MESSAGE } from '../logging';
+import { error, log, MESSAGE, warn } from '../logging';
 
 class TextureRenderer {
     private __revisions: RevisionRecord[] = [];
     private __textureSources: TextureSources = {};
     private __texturesMapping: TexturesMapping = {};
-    private __config: Config = configuration;
+    private __config: Config = process.env.NODE_ENV === 'production' ? configuration : require('../../data/test-config.json');
     public ctx: CanvasRenderingContext2D;
 
     constructor(ctx: CanvasRenderingContext2D) {
@@ -30,21 +30,21 @@ class TextureRenderer {
             const sources = Object.keys(this.__config.textures[key]).length;
             for (let index = 1; index <= sources; index++) {
                 const texture = this.__config.textures[key][index];
-                const id = texture.id;
+                const name = texture.name;
                 const path = `assets/textures/${texture.src}`;
                 this.__textureSources = {
                     ...this.__textureSources,
-                    [id]: new Image(),
+                    [name]: new Image(),
                 };
                 try {
                     const url: string = (await import(`../../${path}`)).default;
-                    this.__textureSources[id].src = url;
-                    this.__textureSources[id].onload = () => {
+                    this.__textureSources[name].src = url;
+                    this.__textureSources[name].onload = () => {
                         log(MESSAGE.LOADING_TEXTURE, `${index} of ${sources}: ${capitalize(key)} `);
                     };
-                    this.__textureSources[id].onerror = () => error(MESSAGE.FAILED_TEXTURE, `${id} from path: ${path}`);
+                    this.__textureSources[name].onerror = () => error(MESSAGE.FAILED_TEXTURE, `${name} from path: ${path}`);
                 } catch {
-                    error(MESSAGE.FAILED_TEXTURE, `${id} from path: ${path}`);
+                    error(MESSAGE.FAILED_TEXTURE, `${name} from path: ${path}`);
                 }
             }
         }
@@ -116,8 +116,8 @@ class TextureRenderer {
         let srcID, h, w;
         try {
             srcID = textureID.split('-')[0];
-            h = this.__config.textures[type][srcID].objects[group][textureID].h;
-            w = this.__config.textures[type][srcID].objects[group][textureID].w;
+            h = this.__config.textures[type][srcID].groups[group][textureID].h;
+            w = this.__config.textures[type][srcID].groups[group][textureID].w;
         } catch (error) {
             console.error(`Texture ID: ${textureID} could not be found`);
         }
@@ -135,6 +135,10 @@ class TextureRenderer {
         this.ctx.clearRect(dx, dy, w, h);
     }
 
+    get textureSources() {
+        return this.__textureSources;
+    }
+    
     /**
      * @param {string} clipping - Allow clipping textures to nearest unit.
      * @param {string} type - The type of the texture.
@@ -146,17 +150,17 @@ class TextureRenderer {
      */
     addTexture(clipping: boolean, type: string, group: string, textureID: string, x: number, y: number): number[] {
         // Get the source ID, height, and width of the current brush state
-        const [srcID, h, w] = this.__getBrushInfo(type, group, textureID);
+        const [key, h, w] = this.__getBrushInfo(type, group, textureID);
         
         // Scaling and account for clipping if true
         const [dx, dy] = this.__scaling(x, y, w, h, clipping);
 
         // Only add the texture once
         if (!this.__posExists(dx, dy, w, h)) {
-            const src = this.__config.textures[type][srcID].id;
-            const name = this.__config.textures[type][srcID].objects[group][textureID].name;
-            const sx = this.__config.textures[type][srcID].objects[group][textureID].sx;
-            const sy = this.__config.textures[type][srcID].objects[group][textureID].sy;
+            const src = this.__config.textures[type][key].name;
+            const name = this.__config.textures[type][key].groups[group][textureID].name;
+            const sx = this.__config.textures[type][key].groups[group][textureID].sx;
+            const sy = this.__config.textures[type][key].groups[group][textureID].sy;
 
             // Store the texture by the x, y, w, h coordinates for uniqueness
             this.__texturesMapping[`${dx},${dy},${w},${h}`] = {
@@ -243,23 +247,35 @@ class TextureRenderer {
         return false;
     }
 
-    /**
-     * Renders the textures on the canvas using the provided rendering context.
-     */
+   /**
+    *This `render` function is responsible for rendering textures onto a canvas. Here's a breakdown of how it works:
+    
+    1. The function iterates over each key in the `__texturesMapping` object, representing different textures to be rendered.
+    
+    2. For each texture, it checks if the corresponding texture source is complete (loaded) by accessing `this.__textureSources[texture.src].complete`. If the texture source is not complete, it means the image is still loading, and the function proceeds to draw the image onto the canvas using the `drawImage` method.
+    
+    3. If the texture source is complete, it displays a warning message using the `warn` function, passing in a predefined `MESSAGE.TEXTURE_MISSING` constant and the source of the missing texture. After that, it sets the fill color to black using `this.ctx.fillStyle` and draws a black rectangle on the canvas using `this.ctx.fillRect`, with the position and dimensions specified by `texture.dx`, `texture.dy`, `texture.w`, and `texture.h`.
+   */
     render() {
         for (const key in this.__texturesMapping) {
             const texture = this.__texturesMapping[key];
-            this.ctx.drawImage(
-                this.__textureSources[texture.src!],
-                texture.sx,
-                texture.sy,
-                texture.w,
-                texture.h,
-                texture.dx,
-                texture.dy,
-                texture.w,
-                texture.h
-            );
+            if (this.__textureSources[texture.src].complete) {
+                this.ctx.drawImage(
+                    this.__textureSources[texture.src],
+                    texture.sx,
+                    texture.sy,
+                    texture.w,
+                    texture.h,
+                    texture.dx,
+                    texture.dy,
+                    texture.w,
+                    texture.h
+                );
+            } else {
+                warn(MESSAGE.TEXTURE_MISSING, texture.src);
+                this.ctx.fillStyle = 'black';
+                this.ctx.fillRect(texture.dx, texture.dy, texture.w, texture.h);
+            }
         }
     }
 

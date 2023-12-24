@@ -1,6 +1,6 @@
 import { MESSAGE, log } from '../../logging';
 import { Brush } from '.';
-import { TextureObject, TextureRenderer } from '../../rendering';
+import { TextureObject, TextureRenderer, TextureSources } from '../../rendering';
 import { signal } from '@preact/signals-react';
 
 class LevelEditorDesign {
@@ -10,7 +10,8 @@ class LevelEditorDesign {
     private __drag = signal(false);
     private __safety = signal(true); // prevent serious actions by accident
     private __ready = signal(false); // prevent input from being called before initilization
-    private __textureType = "tiles";
+    private __textureType = "tilesets";
+    private __textureSources: TextureSources = {};
     private __renderer: TextureRenderer;
     static brush: Brush;
  
@@ -20,6 +21,7 @@ class LevelEditorDesign {
 
     async initEditor() {
         await this.__renderer.initRenderer();
+        this.__textureSources = this.__renderer.textureSources;
     }
 
     /**
@@ -93,6 +95,10 @@ class LevelEditorDesign {
         log(MESSAGE.BRUSH_SELECTED, object.name);
     }
         
+    get textureSources() {
+        return this.__textureSources;
+    }
+
     get ready() {
         return this.__ready.value;
     }
