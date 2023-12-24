@@ -17,7 +17,7 @@ class TextureRenderer {
     /**
      * Initializes the renderer.
      */
-    async initRenderer() {
+    async init() {
         await this.__addAllSources();
     }
     

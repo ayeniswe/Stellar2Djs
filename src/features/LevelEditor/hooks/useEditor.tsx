@@ -1,9 +1,8 @@
 import configuration from '../../../data/config.json';
 import { Config, TextureObject, TextureObjects } from '../../../libs/rendering';
+import { LevelEditor } from '../../../main/';
 import { capitalize } from '../../../utils/text';
 import { computed, signal, useSignal } from '@preact/signals-react';
-import { LevelEditorDesign } from '../../../libs/design/level';
-import { LevelEditor } from '../../../main/LevelEditor';
 
 /**
  * This hook provides functionality to manage the tilesets, tiles, and editor tab.
@@ -43,7 +42,7 @@ const useEditor = (editor: LevelEditor) => {
      * If the context is available, it retrieves the image from `editor.input.textureSources` using the `TILESET_NAME` value and draws it on the canvas using `drawImage`.
      * Finally, it returns the data URL of the canvas image using `toDataURL`.
      */
-    const drawBackground = (object: TextureObject): string => {
+    const drawBackground =  (object: TextureObject): string => {
         const { sx, sy, w, h } = object
         const canvas = document.createElement('canvas');
         canvas.width = w;
@@ -51,7 +50,7 @@ const useEditor = (editor: LevelEditor) => {
         const ctx = canvas.getContext('2d');
         if (ctx) {
             let background = editor.input.textureSources[TILESET_NAME.value];
-            background.onload = () => ctx.drawImage(background, sx, sy, w, h);
+            ctx.drawImage(background, sx, sy, w, h, 0, 0, w, h);
             return canvas.toDataURL();
         }
         return '';
@@ -73,7 +72,7 @@ const useEditor = (editor: LevelEditor) => {
             const tile = document.getElementById(key);
             if (tile) {
                 const url = drawBackground(TILES.value[key]);
-                tile.style.backgroundImage = `url(${url})`;
+                tile.style.backgroundImage = `url("${url}")`;
             };
         };
     }
@@ -103,7 +102,7 @@ const useEditor = (editor: LevelEditor) => {
         document.getElementById(id)!.style.opacity = SELECTED_TILE_OPACITY;
         document.getElementById(id)!.ariaPressed = 'true';
         TILE.value = id;
-        LevelEditorDesign.setBrush(id, group, object);
+        LevelEditor.setBrush(id, group, object);
     }
 
     /**
@@ -127,7 +126,7 @@ const useEditor = (editor: LevelEditor) => {
         return Object.keys(tiles).map(key => {
             const [w, h, x, y, name] = [tiles[key].w, tiles[key].h, tiles[key].sx, tiles[key].sy, tiles[key].name];
             return (
-                <div
+                <img
                     id={key}
                     key={key}
                     title={`${w} x ${h}\n${x} , ${y}`}

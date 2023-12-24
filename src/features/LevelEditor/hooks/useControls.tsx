@@ -11,7 +11,6 @@ const useControls = (editor: LevelEditor) => {
      * After a 3-second delay, the safety flag is reset to true, indicating that it is safe to proceed with other actions.
      * This confirmation mechanism is typically used to prompt the user for confirmation before deleting an element.
      * Note: The safety flag is used to prevent accidental or unintended deletions.
-     * @returns {void}
      */
     const showDeleteConfirmation = (): void => {
         editor.input.safety = false;
@@ -26,7 +25,6 @@ const useControls = (editor: LevelEditor) => {
      * Removing the input elements effectively clears the canvas of any existing content.
      * The safety flag being set to true indicates that it is safe to proceed with other actions.
      * Note: The safety flag is used to prevent accidental or unintended actions.
-     * @returns {void}
      */
     const clearCanvas = (): void => {
         editor.input.removeAll();

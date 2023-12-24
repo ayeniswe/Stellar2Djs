@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import DesignMenu from "./features/LevelEditor";
+import LevelEditorUI from "./features/LevelEditor";
 import Canvas from "./main/Canvas";
 import { LevelEditor } from "./main/LevelEditor";
 
@@ -10,7 +10,7 @@ const Game = () => {
   const [height, setHeight] = useState(600);
   const [width, setWidth] = useState(800);
   // LevelEditor
-  const [lvl, setLvl] = useState<LevelEditor | null>(null);
+  const [editor, setEditor] = useState<LevelEditor | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -24,9 +24,9 @@ const Game = () => {
   useEffect(() => {
     if (ctx) {
       (async () => {
-        const newLvl = new LevelEditor(ctx, {});
-        await newLvl.init();
-        setLvl(newLvl);
+        const editor = new LevelEditor(ctx, {});
+        await editor.init();
+        setEditor(editor);
       })();
     }
   }, [ctx]);
@@ -34,7 +34,7 @@ const Game = () => {
   return (
     <div id="Game" className="Game">
       <Canvas reference={canvasRef} width={width} height={height}/>
-      {lvl && <DesignMenu editor={lvl} />}
+      {editor && <LevelEditorUI editor={editor} />}
     </div>
   );
 }

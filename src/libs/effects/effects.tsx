@@ -1,5 +1,5 @@
 import '../../assets/styles/Animation.css'
-import { LevelEditorDesign } from '../design/level'
+import { LevelEditor } from '../../main'
 
 /**
  * Applies an effect to the different modes for the editor. This will be used when UI or keyboard interactions are triggered.
@@ -27,7 +27,7 @@ class LevelEditorEffects {
     
     static createBrush(event: MouseEvent) {
         const brush = document.getElementById(this.brushId)!;
-        const { w, h } = LevelEditorDesign.brush.object;
+        const { w, h } = LevelEditor.brush.object;
         brush.style.display = 'flex';
         brush.style.left = `${event.clientX}px`;
         brush.style.top = `${event.clientY}px`;

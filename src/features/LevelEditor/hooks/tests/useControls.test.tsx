@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 import { act, renderHook } from '@testing-library/react';
-import { LevelEditor } from '../../../../main/LevelEditor';
+import { LevelEditor } from '../../../../main';
 import { useControls } from '../useControls';
 
 /*
