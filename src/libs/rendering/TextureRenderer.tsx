@@ -1,7 +1,7 @@
 import configuration from '../../data/config.json';
 import { Config, RevisionRecord, TexturesMapping, TextureSources } from '.';
 import { capitalize } from '../../utils/text';
-import { error, log, MESSAGE, warn } from '../logging';
+import { error, log, MESSAGE } from '../logging';
 
 class TextureRenderer {
     private __revisions: RevisionRecord[] = [];
@@ -22,9 +22,20 @@ class TextureRenderer {
     }
     
     /**
-     * Adds a new sources to the textureSources object.
+     * Adds all texture sources to the canvas.
+     *
+     * @returns {Promise<void>} Returns a promise that resolves when all texture sources have been added.
+     *
+     * @description
+     * This method iterates over each textures type and texture within the textures type
+     * For each texture, it retrieves the name and src (where file is found relative to the path).
+     * It adds an entry to the textures sources
+     * 
+     * NOTE: All textures should be loaded before dealing with application
+     * 
+     * @todo Allow application use while loading in background using web workers
      */
-    private async __addAllSources() {
+    private async __addAllSources(): Promise<void> {
         for (const key in this.__config.textures) {
             log(MESSAGE.ADDING_TEXTURE, `${capitalize(key)}`)
             const sources = Object.keys(this.__config.textures[key]).length;
@@ -51,13 +62,15 @@ class TextureRenderer {
     }
 
     /**
-     * Checks if an x, y position exists in rendering context.
+     * Checks if an position exists in texture mapping.
      *
-     * @param {number} x - The x-coordinate of the position.
-     * @param {number} y - The y-coordinate of the position.
-     * @param {number} w - The width of the position.
-     * @param {number} h - The height of the position.
+     * @param {number} x The x-coordinate of the position.
+     * @param {number} y The y-coordinate of the position.
+     * @param {number} w The width of the position.
+     * @param {number} h The height of the position.
      * @return {boolean} Returns true if the position exists, false otherwise.
+     * 
+     * NOTE: The key is generated from the destination coordinates (x and y) and dimensions (height and width).
      */
     private __posExists(x: number, y: number, w: number, h: number): boolean {
         return this.__texturesMapping[`${x},${y},${w},${h}`] ? true : false;
@@ -66,10 +79,10 @@ class TextureRenderer {
     /**
      * Scales the coordinates based on the canvas size
      *
-     * @param {number} x - The x coordinate.
-     * @param {number} y - The y coordinate.
-     * @param {number} w - The width.
-     * @param {number} h - The height.
+     * @param {number} x The x coordinate.
+     * @param {number} y The y coordinate.
+     * @param {number} w The width.
+     * @param {number} h The height.
      * @param {boolean} clipping - Whether clipping is enabled or not.
      * @return {number[]} The scaled coordinates.
      */
@@ -105,12 +118,17 @@ class TextureRenderer {
 
 
     /**
-     * Retrieves the brush information based on the provided type, group, and textureID.
+     * Retrieves brush information based on the provided type, group, and textureID.
      *
-     * @param {string} type - The type of brush.
-     * @param {string} group - The group of the brush.
+     * @param {string} type - The type of the texture.
+     * @param {string} group - The group of the texture.
      * @param {string} textureID - The ID of the texture.
-     * @return {Array} An array containing the source ID, height, and width of the brush.
+     * @returns {Array<any>} Returns an array containing the srcID, h, and w values of the texture.
+     *
+     * @description
+     * This method tries to retrieve the srcID, height (h), and width (w) values.
+     * 
+     *  NOTE: The srcID is always the first part of the textureID string.
      */
     private __getBrushInfo(type: string, group: string, textureID: string): Array<any> {
         let srcID, h, w;
@@ -125,7 +143,8 @@ class TextureRenderer {
     }
 
     /**
-     * Clears a part or the whole canvas.
+     * Clears any part of the canvas.
+     * 
      * @param {number} dx - The x-coordinate of the top-left corner of the area.
      * @param {number} dy - The y-coordinate of the top-left corner of the area.
      * @param {number} w - The width of the area.
@@ -134,24 +153,31 @@ class TextureRenderer {
     private __clearCanvas = (dx: number, dy: number, w: number, h: number) => {
         this.ctx.clearRect(dx, dy, w, h);
     }
-
-    get textureSources() {
-        return this.__textureSources;
-    }
     
     /**
-     * @param {string} clipping - Allow clipping textures to nearest unit.
+     * Adds a texture to the canvas.
+     *
+     * @param {boolean} clipping - Indicates whether clipping is applied.
      * @param {string} type - The type of the texture.
-     * @param {string} group - The group to which the texture belongs.
-     * @param {string} textureID - The texture id (includes the src id and object id respectively "src-obj").
-     * @param {number} x - The x-coordinate of the destination position.
-     * @param {number} y - The y-coordinate of the destination position.
-     * @returns {number[]} - Returns the location of the texture if it was added, empty array otherwise
+     * @param {string} group - The group of the texture.
+     * @param {string} textureID - The ID of the texture.
+     * @param {number} x - The x-coordinate of the texture.
+     * @param {number} y - The y-coordinate of the texture.
+     * @returns {number[]} Returns an array containing the x and y coordinates of the added texture, or an empty array if the texture was not added.
+     *
+     * @description
+     * This method retrieves the brush information.
+     * It then scales the x and y coordinates based on the dimensions of the texture.
+     * 
+     * NOTE: scaling only applies if clipping mode is on
+     * 
+     * If the texture does not already exist on the canvas, it retrieves the respective values from the config file.
+     * It then stores the texture in the textures mapping using the destination coordinates and dimensions as the key.
+     * Additionally, it stores an action object in the revisions array to keep track of the added texture.
      */
     addTexture(clipping: boolean, type: string, group: string, textureID: string, x: number, y: number): number[] {
         // Get the source ID, height, and width of the current brush state
         const [key, h, w] = this.__getBrushInfo(type, group, textureID);
-        
         // Scaling and account for clipping if true
         const [dx, dy] = this.__scaling(x, y, w, h, clipping);
 
@@ -194,13 +220,22 @@ class TextureRenderer {
     }
 
     /**
-     * @param {boolean} clipping - Whether or not to apply clipping.
+     * Removes a texture from the canvas.
+     *
+     * @param {boolean} clipping - Indicates whether clipping is applied.
      * @param {string} type - The type of the texture.
-     * @param {string} group - The group to which the texture belongs.
+     * @param {string} group - The group of the texture.
      * @param {string} textureID - The ID of the texture.
      * @param {number} x - The x-coordinate of the texture.
      * @param {number} y - The y-coordinate of the texture.
-     * @returns {number[]} - Returns location of the object where it was removed, empty array otherwise
+     * @returns {number[]} Returns an array containing the x and y coordinates of the removed texture, or an empty array if the texture was not removed.
+     *
+     * @description
+     * This method retrieves the height (h) and width (w) of the brush 
+     * It then scales the x and y coordinates based on the dimensions of the texture.
+     * If the destination coordinates (x, y) and dimensions (height, width) exists on the canvas, it clears the canvas at the specified destination coordinates and dimensions.
+     * It also deletes the corresponding texture mapping.
+     * Finally, it returns an array containing the x and y coordinates of the removed texture, or an empty array if the texture was not removed.
      */
     removeTexture(clipping: boolean, type: string, group: string, textureID: string, x: number, y: number): number[] {
         const [srcID, h, w] = this.__getBrushInfo(type, group, textureID);
@@ -213,12 +248,22 @@ class TextureRenderer {
         return [];
     }
 
-    removeAllTexture() {
-        this.__texturesMapping = {};
-        this.__clearCanvas(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-    }
- 
-    undoRevision() {
+    /**
+     * Undoes the last revision made to the canvas.
+     *
+     * @returns {boolean} Returns `true` if a revision was successfully undone, or `false` if there were no revisions to undo.
+     *
+     * @description
+     * This method checks if there are any revisions in the `this.__revisions` array by checking its length.
+     * If there are revisions, it pops the last revision from the array using the stack method.
+     * The code then checks if there is a valid `action` object obtained from the popped revision.
+     * Based on the action, it performs different actions:
+     * - `added`: it deletes the corresponding texture from the textures mapping and clears the canvas in that area.
+     * - `removed`: it adds the corresponding texture mapping back to the textures mapping.
+     * 
+     * NOTE: This method is only available to undo "added" actions
+     */
+    undoRevision(): boolean {
         if (this.__revisions.length > 0) {
             const action = this.__revisions.pop();
             if (action) {
@@ -247,50 +292,49 @@ class TextureRenderer {
         return false;
     }
 
-   /**
-    *This `render` function is responsible for rendering textures onto a canvas. Here's a breakdown of how it works:
-    
-    1. The function iterates over each key in the `__texturesMapping` object, representing different textures to be rendered.
-    
-    2. For each texture, it checks if the corresponding texture source is complete (loaded) by accessing `this.__textureSources[texture.src].complete`. If the texture source is not complete, it means the image is still loading, and the function proceeds to draw the image onto the canvas using the `drawImage` method.
-    
-    3. If the texture source is complete, it displays a warning message using the `warn` function, passing in a predefined `MESSAGE.TEXTURE_MISSING` constant and the source of the missing texture. After that, it sets the fill color to black using `this.ctx.fillStyle` and draws a black rectangle on the canvas using `this.ctx.fillRect`, with the position and dimensions specified by `texture.dx`, `texture.dy`, `texture.w`, and `texture.h`.
-   */
+    /**
+    * This mehtod is responsible for rendering textures onto a canvas.
+    *
+    * NOTE: this should be triggered on every frame update.
+    */
     render() {
         for (const key in this.__texturesMapping) {
             const texture = this.__texturesMapping[key];
-            if (this.__textureSources[texture.src].complete) {
-                this.ctx.drawImage(
-                    this.__textureSources[texture.src],
-                    texture.sx,
-                    texture.sy,
-                    texture.w,
-                    texture.h,
-                    texture.dx,
-                    texture.dy,
-                    texture.w,
-                    texture.h
-                );
-            } else {
-                warn(MESSAGE.TEXTURE_MISSING, texture.src);
-                this.ctx.fillStyle = 'black';
-                this.ctx.fillRect(texture.dx, texture.dy, texture.w, texture.h);
-            }
+            this.ctx.drawImage(
+                this.__textureSources[texture.src],
+                texture.sx,
+                texture.sy,
+                texture.w,
+                texture.h,
+                texture.dx,
+                texture.dy,
+                texture.w,
+                texture.h
+            );
         }
     }
 
-    saveTextureMapping() {
-        const data = new Blob([JSON.stringify(this.__texturesMapping)], { type: 'application/json' });
-        // Create a URL for the Blob
-        const url = URL.createObjectURL(data);
-        // Create a link element to trigger the download
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'demo.json';
-        link.click();
-        // Remove link
-        URL.revokeObjectURL(url);
+    removeAllTexture() {
+        this.__texturesMapping = {};
+        this.__clearCanvas(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     }
+
+    get textureSources() {
+        return this.__textureSources;
+    }
+ 
+    // saveTextureMapping() {
+    //     const data = new Blob([JSON.stringify(this.__texturesMapping)], { type: 'application/json' });
+    //     // Create a URL for the Blob
+    //     const url = URL.createObjectURL(data);
+    //     // Create a link element to trigger the download
+    //     const link = document.createElement('a');
+    //     link.href = url;
+    //     link.download = 'demo.json';
+    //     link.click();
+    //     // Remove link
+    //     URL.revokeObjectURL(url);
+    // }
 
 }
 

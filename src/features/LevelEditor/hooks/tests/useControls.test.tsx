@@ -3,8 +3,14 @@ import { act, renderHook } from '@testing-library/react';
 import { LevelEditor } from '../../../../main';
 import { useControls } from '../useControls';
 
+beforeAll(() => {
+    jest.spyOn(console,"warn").mockImplementation(() => {})
+    jest.spyOn(console,"log").mockImplementation(() => {})
+    jest.spyOn(console,"error").mockImplementation(() => {})
+})
+
 /*
-* Setup a canvas element for the Level Editor to use
+* Setup a canvas element and brush for the Level Editor to use
 */
 let context: CanvasRenderingContext2D;
 const canvas = document.createElement('canvas');
