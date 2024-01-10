@@ -1,8 +1,8 @@
 import { Brush  } from "./type";
-import { LevelEditor } from "./LevelEditor";
+import { SceneEditor } from "./SceneEditor";
 
 export {
-    LevelEditor
+    SceneEditor
 }
 
 export type {

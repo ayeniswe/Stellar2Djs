@@ -1,10 +1,10 @@
 import '../../assets/styles/Animation.css'
-import { LevelEditor } from '../../main'
+import { SceneEditor } from '../../main'
 
 /**
  * Applies an effect to the different modes for the editor. This will be used when UI or keyboard interactions are triggered.
  */
-class LevelEditorEffects {
+class SceneEditorEffects {
     static onColor = 'green'
     
     static brushId = 'Canvas-brush'
@@ -27,7 +27,7 @@ class LevelEditorEffects {
     
     static createBrush(event: MouseEvent) {
         const brush = document.getElementById(this.brushId)!;
-        const { w, h } = LevelEditor.brush.object;
+        const { w, h } = SceneEditor.brush.object;
         brush.style.display = 'flex';
         brush.style.left = `${event.clientX}px`;
         brush.style.top = `${event.clientY}px`;
@@ -76,5 +76,5 @@ class LevelEditorEffects {
 }
 
 export {
-    LevelEditorEffects
+    SceneEditorEffects
 }

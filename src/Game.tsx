@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import LevelEditorUI from "./features/LevelEditor";
+import SceneEditorUI from "./features/SceneEditor";
 import Canvas from "./main/Canvas";
-import { LevelEditor } from "./main/LevelEditor";
+import { SceneEditor } from "./main/SceneEditor";
 
 const Game = () => {
   // Canvas
@@ -9,8 +9,8 @@ const Game = () => {
   const [ctx, setContext] = useState<CanvasRenderingContext2D | null>(null)
   const [height, setHeight] = useState(600);
   const [width, setWidth] = useState(800);
-  // LevelEditor
-  const [editor, setEditor] = useState<LevelEditor | null>(null);
+  // SceneEditor
+  const [editor, setEditor] = useState<SceneEditor | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -24,7 +24,7 @@ const Game = () => {
   useEffect(() => {
     if (ctx) {
       (async () => {
-        const editor = new LevelEditor(ctx, {});
+        const editor = new SceneEditor(ctx, {});
         await editor.init();
         setEditor(editor);
       })();
@@ -34,7 +34,7 @@ const Game = () => {
   return (
     <div id="Game" className="Game">
       <Canvas reference={canvasRef} width={width} height={height}/>
-      {editor && <LevelEditorUI editor={editor} />}
+      {editor && <SceneEditorUI editor={editor} />}
     </div>
   );
 }

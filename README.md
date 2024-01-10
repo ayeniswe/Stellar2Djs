@@ -9,28 +9,42 @@ Stellar2D
 ## Features
 
 - [ ] **Scene Management:** Easily manage and navigate between game scenes for a seamless gaming experience.
-- [x] **Engine Shortcuts:** Allow developers to use keyboard shortcuts for the entire engine functionality
+- [ ] **Engine Shortcuts:** Allow developers to use keyboard shortcuts for the entire engine functionality
+  - [x] Object Placement
+- [ ] **Object Placement:** Create and place various game objects within scene.
+  - [ ] Characters
+  - [x] Items
+- [ ] **Object Manipulation:** Define their initial properties like position, size, rotation, and other attributes.
+  - [ ] Characters
+  - [ ] Items
+- [ ] **Layer Management:** Manage different layers for organizing and arranging objects.
+- [ ] **Camera Control:** Set and control the camera position and properties.
+- [ ] **Collison Detection:** Add colliders to objects for collision detection.
+- [ ] **Physic Detection:** Adjust physics properties like gravity, friction, and restitution.
+- [ ] **Animator:** Create and edit animations for sprites or objects.
 - [ ] **Asset Integration:** Integrate various assets seamlessly into your game world.
   - **Game Objects**
     - [ ] Characters
-    - [x] Items
+    - [ ] Items
     - [ ] Environment Elements
     - [ ] Special Effects
   - **Audio and Visuals**
     - [ ] Background Music
     - [ ] Sound Effects
     - [ ] Visual Effects
-- [ ] **Physics Engine:** Implement realistic physics for enhanced gameplay mechanics.
-- [ ] **Input Handling:** Efficiently handle user inputs for character control and interaction.
+- [ ] **Event Handling:** Efficiently handle user inputs for character control and interaction.
   - **Controls**
     - [ ] Keyboard
     - [ ] Mouse
     - [ ] Touchscreen
     - [ ] Gamepad
 - [ ] **Multi-platform Support:** Develop games that run seamlessly on various platforms.
+- [ ] **Play Testing:** Preview and playtest the game directly within the editor.
+- [ ] **Resource Management:** Import and manage assets such as sprites, textures, sounds, and fonts.
 - [ ] **Real-time Updates:** Implement real-time updates for dynamic changes within the game world.
 - [ ] **Customizable Alerts:** Allow developers to set alerts for specific in-game events or conditions.
 - [ ] **Engine API:** Allow developers to create functional scripts to control the entire game workflow
+
 ## Getting Started
 
 Follow these steps to set up the project on your local machine.
