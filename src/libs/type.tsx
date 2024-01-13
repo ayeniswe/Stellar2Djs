@@ -1,4 +1,4 @@
-import { TextureObject } from "../libs/rendering"
+import { TextureObject } from "./rendering"
 
 type Brush = {
     id: string

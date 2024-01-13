@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import SceneEditorUI from "./features/SceneEditor";
 import Canvas from "./main/Canvas";
-import { SceneEditor } from "./main/SceneEditor";
+import { SceneEditor } from "./libs/SceneEditor";
+import Toolbar from "./main/Toolbar";
 
-const Game = () => {
+const App = () => {
   // Canvas
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [ctx, setContext] = useState<CanvasRenderingContext2D | null>(null)
@@ -32,11 +33,12 @@ const Game = () => {
   }, [ctx]);
 
   return (
-    <div id="Game" className="Game">
+    <div id="App" className="App">
       <Canvas reference={canvasRef} width={width} height={height}/>
       {editor && <SceneEditorUI editor={editor} />}
+      <Toolbar/>
     </div>
   );
 }
 
-export default Game;
+export default App;

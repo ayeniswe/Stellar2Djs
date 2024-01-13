@@ -1,5 +1,5 @@
 import '../../assets/styles/Animation.css'
-import { SceneEditor } from '../../main'
+import { SceneEditor } from '..'
 
 /**
  * Applies an effect to the different modes for the editor. This will be used when UI or keyboard interactions are triggered.

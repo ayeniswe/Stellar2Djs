@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/extend-expect';
 import { renderHook, render, screen } from '@testing-library/react';
-import { SceneEditor } from '../../../../main/SceneEditor';
+import { SceneEditor } from '../../../../libs/SceneEditor';
 import { useEditor } from '../useEditor';
 
 beforeAll(() => {

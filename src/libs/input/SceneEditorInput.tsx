@@ -1,5 +1,5 @@
 import { KMMapping, Bindings } from ".";
-import { SceneEditor } from "../../main";
+import { SceneEditor } from "..";
 import { MESSAGE, log, warn } from "../logging";
 import { SceneEditorEffects } from "../effects/effects";
 import { signal } from "@preact/signals-react";

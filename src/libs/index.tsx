@@ -1,4 +1,4 @@
-import { Brush  } from "./type";
+import { Brush } from "./type";
 import { SceneEditor } from "./SceneEditor";
 
 export {
