@@ -41,6 +41,8 @@ code {
   height: 100vh;
   justify-content: center;
   overflow: hidden;
-  text-shadow: 0 0 2px var(--accent-color);
+  text-shadow: 0 1px 1px var(--accent-color);
+  -webkit-text-stroke-width: 0.1px;
+  -webkit-text-stroke-color: var(--accent-color);
   user-select: none;
 }

@@ -1,24 +1,82 @@
-.AnimationPlayer__speed {
-    align-items: center;
+.AnimationPlayer {
+    align-items:start;
+    border: none;
     display: flex;
-    font-size: large;
-    margin: 5px;
+    height: inherit;
+    width: inherit;
 }
 
-.AnimationPlayer__speed__buttons {
+.AnimationPlayer button {
+    background-color: transparent;
+    border: none;
+}
+
+.AnimationPlayer__timeline {
+    border: inset 3px var(--canvas-color);
+    height: 150px;
+    margin: 15px;
+    position: relative;
+    width: inherit;
+}
+
+.AnimationPlayer__timeline__progress {
+    background-color: var(--background-color);
+    bottom: 0;
     display: flex;
-    gap: 1px;
+    gap: 50px;
+    height: 25%;
+    position: absolute;
+    width: inherit;
+}
+
+.AnimationPlayer__timeline__progress__bar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.AnimationPlayer__timeline__progress__bar div {
+    background-color: var(--canvas-color);
+    height: 100%;
+    width: 2px;
+}
+
+.AnimationPlayer__controls {
+    display: flex;
+    flex-direction: column;
+}
+
+.AnimationPlayer__buttons {
+    display: flex;
     margin-left: 5px;
 }
 
-.AnimationPlayer__speed__buttons__button {
-    background-color: var(--background-color);
-    border: none;
+.AnimationPlayer__controls img {
     cursor: pointer;
-    height: 20px;
-    width: 25px;
 }
 
-.AnimationPlayer__speed__buttons__button__img {
-    width: calc(100% - 10px);
+.AnimationPlayer__controls__speed {
+    align-items: center;
+    display: flex;
+    font-size: 18px;
+    margin: 10px;
+    flex-shrink: 1;
+}
+
+.AnimationPlayer__controls__speed__display {
+    background-color: var(--canvas-color);
+    border: inset 3px var(--canvas-color);
+    padding: 2.5px;
+}
+
+.AnimationPlayer__controls__playback__buttons img {
+    width: 20px;
+}
+
+.AnimationPlayer__controls__speed__buttons {
+    flex-direction: column;
+}
+
+.AnimationPlayer__controls__speed__buttons img {
+    width: 10px;
 }
