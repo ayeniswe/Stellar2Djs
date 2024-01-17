@@ -6,7 +6,7 @@ import { useSignal } from "@preact/signals-react";
 const Toolbar = () => {
 
     useEffect(() => {
-        document.getElementById("ToolbarHandle")!.onmousedown = (e) => {
+        document.getElementById("Toolbar__handle")!.onmousedown = (e) => {
             const toolbar = document.getElementById("Toolbar")!;
             const currentY = e.clientY;
             const currentHeight = Number(window.getComputedStyle(toolbar).getPropertyValue("height").replace("px",""));
@@ -30,7 +30,7 @@ const Toolbar = () => {
 
     return (
         <div id="Toolbar">
-            <div id="ToolbarHandle"/>
+            <div id="Toolbar__handle"/>
             <div className="Toolbar__header">
                 <div className="Toolbar__header__button" onClick={(e) => openTab(e, <AnimationPlayer/>)}>
                     <span className="Toolbar__header__button__title">Animation Player</span>

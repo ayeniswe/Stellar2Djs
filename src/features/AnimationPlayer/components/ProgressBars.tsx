@@ -1,16 +1,24 @@
 import "../styles/AnimationPlayer.css";
 
-const ProgressBars = () => {
-    const numOfBars = 24;
-    const step = 5;
+interface Props {
+    scaling: number // px in seconds
+    step: number
+    width: number
+}
+
+const ProgressBars: React.FC<Props> = ({ scaling, step, width }) => {
+    const numOfBars = width / (scaling * step) + 1
     return (
         <>
-            <div/>{/* <initial progress bar> */}
-            {Array.from({ length: numOfBars }, (_, index) => (
-                <div key={index} className="AnimationPlayer__timeline__progress__bar">
-                    {(index + 1) * step}<div/>
-                </div>
-            ))}
+            {Array.from({ length: numOfBars }, (_, index) => {
+                if (index > 0) {
+                    return (
+                        <div key={index} className="ProgressBar" style={{ left: `${index * scaling * step}px`}}>
+                            <span className="ProgressBar__unit">{index * step}</span>
+                        </div>
+                    )
+                }
+            })}
         </>
     )
 }

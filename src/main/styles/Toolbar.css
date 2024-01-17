@@ -3,13 +3,13 @@
     bottom: 0;
     display: flex;
     flex-direction: column;
-    height: 160px;
+    height: 219px;
     overflow: hidden;
     position: absolute;
     width: 100%;
 }
 
-#ToolbarHandle {
+#Toolbar__handle {
     cursor: ns-resize;
     height: 2.5px;
     position: absolute;
@@ -17,7 +17,7 @@
     z-index: 2;
 }
 
-#ToolbarHandle:hover {
+#Toolbar__handle:hover {
     background-color: var(--drag-hover-color);
     transition: 0.2s;
 }
