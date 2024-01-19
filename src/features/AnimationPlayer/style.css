@@ -1,0 +1,110 @@
+.AnimationPlayer {
+    align-items:start;
+    border: none;
+    display: flex;
+    height: inherit;
+    width: inherit;
+}
+.AnimationPlayer button {
+    background-color: transparent;
+    border: none;
+}
+.AnimationPlayer__buttons {
+    display: flex;
+    margin-left: 5px;
+}
+.AnimationPlayer__display {
+    background-color: var(--canvas-color);
+    border: inset 3px var(--canvas-color);
+    margin-left: 5px;
+    padding: 2.5px;
+    text-align: center;
+    width: 50px;
+}
+/*////////////////
+//// Timeline ////
+////////////////*/
+.Timeline {
+    border: inset 3px var(--canvas-color);
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    height: 150px;
+    margin: 15px;
+    padding-top: 2px;
+    position: relative;
+    width: inherit;
+}
+.Timeline__slider {
+    background-color: var(--canvas-color);
+    box-shadow: 4px 0 1px var(--accent-color);
+    height: inherit;
+    position: relative;
+    width: 2px;
+    z-index: 2;
+}
+.Timeline__slider__thumb {
+    background-color: var(--canvas-color);
+    border-radius: 100%;
+    box-shadow: 4px 0 1px var(--accent-color);
+    cursor: pointer;
+    height: 10px;
+    position: relative;
+    right: 4px;
+    width: 10px;
+}
+.Timeline__progress {
+    background-color: var(--background-color);
+    bottom: 0;
+    display: flex;
+    height: 15%;
+    position: absolute;
+    width: inherit;
+    overflow-x: clip;
+}
+/*/////////////////
+// Progress Bar ///
+////////////////*/
+.ProgressBar {
+    align-items: center;
+    background-color: var(--canvas-color);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    opacity: 0.5;
+    position: absolute;
+    width: 2px;
+}
+.ProgressBar__unit {
+    margin-top: -15px;
+    position: relative;
+}
+/*/////////////////
+//// Controls ////
+////////////////*/
+.Controls {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.Controls img {
+    cursor: pointer;
+}
+.Controls__speed {
+    align-items: center;
+    display: flex;
+    font-size: 18px;
+    margin: 10px;
+    margin-bottom: 0;
+    flex-shrink: 1;
+}
+.Controls__playback__buttons img {
+    width: 20px;
+}
+.Controls__speed__buttons {
+    flex-direction: column;
+}
+.Controls__speed__buttons img {
+    width: 10px;
+}

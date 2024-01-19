@@ -1,4 +1,4 @@
-import "../styles/AnimationPlayer.css";
+import "../../style.css";
 
 interface Props {
     scaling: number // px in seconds

@@ -1,4 +1,4 @@
-import "./styles/AnimationPlayer.css";
+import "./style.css";
 import Timeline from "./components/Timeline";
 import Controls from "./components/Controls";
 

@@ -1,4 +1,4 @@
-import "../styles/AnimationPlayer.css";
+import "../style.css";
 import arrowUp from "../../../assets/images/icons/arrow-up.svg";
 import arrowDown from "../../../assets/images/icons/arrow-down.svg";
 import arrowLeft from "../../../assets/images/icons/arrow-left.png";
