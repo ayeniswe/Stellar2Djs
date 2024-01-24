@@ -5,26 +5,41 @@
     height: inherit;
     width: inherit;
 }
+.AnimationPlayerDisplay {
+    background-color: var(--canvas-color);
+    border: inset 3px var(--canvas-color);
+    text-align: center;
+    width: 50px;
+}
+.AnimationPlayerDisplay--margined {
+    margin: 5px;
+}
+.AnimationPlayerDisplay--noinset {
+    border: solid var(--canvas-color);
+}
+.AnimationPlayerButtons {
+    display: flex;
+    margin: 2px;
+}
 .AnimationPlayer button {
     background-color: transparent;
     border: none;
-}
-.AnimationPlayer__buttons {
+    border-radius: 100%;
     display: flex;
-    margin-left: 5px;
+    justify-content: center;
+    transition: 0.2s;
 }
-.AnimationPlayer__display {
-    background-color: var(--canvas-color);
-    border: inset 3px var(--canvas-color);
-    margin-left: 5px;
-    padding: 2.5px;
-    text-align: center;
-    width: 50px;
+.AnimationPlayerGroup {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 15px;
 }
 /*////////////////
 //// Timeline ////
 ////////////////*/
-.Timeline {
+#Timeline {
     border: inset 3px var(--canvas-color);
     display: flex;
     flex-direction: column;
@@ -35,7 +50,7 @@
     position: relative;
     width: inherit;
 }
-.Timeline__slider {
+#TimelineSlider {
     background-color: var(--canvas-color);
     box-shadow: 4px 0 1px var(--accent-color);
     height: inherit;
@@ -43,7 +58,7 @@
     width: 2px;
     z-index: 2;
 }
-.Timeline__slider__thumb {
+#TimelineSliderThumb {
     background-color: var(--canvas-color);
     border-radius: 100%;
     box-shadow: 4px 0 1px var(--accent-color);
@@ -53,7 +68,23 @@
     right: 4px;
     width: 10px;
 }
-.Timeline__progress {
+/* Frame Collection */
+.TimelineFrameCollection {
+    background-color: var(--canvas-color);
+    bottom: 0;
+    display: flex;
+    height: 25px;
+    opacity: 0.25;
+    position: absolute;
+    width: inherit;
+    z-index: 1;
+}
+.TimelineFrameCollection--transparent {
+    background-color: transparent;
+    opacity: 1;
+}
+/* Progress Bar */
+.Progress {
     background-color: var(--background-color);
     bottom: 0;
     display: flex;
@@ -62,10 +93,7 @@
     width: inherit;
     overflow-x: clip;
 }
-/*/////////////////
-// Progress Bar ///
-////////////////*/
-.ProgressBar {
+.Progress__bar {
     align-items: center;
     background-color: var(--canvas-color);
     display: flex;
@@ -75,7 +103,7 @@
     position: absolute;
     width: 2px;
 }
-.ProgressBar__unit {
+.Progress__bar__unit {
     margin-top: -15px;
     position: relative;
 }
@@ -86,25 +114,59 @@
     align-items: center;
     display: flex;
     flex-direction: column;
-    gap: 10px;
 }
 .Controls img {
     cursor: pointer;
 }
-.Controls__speed {
+/* FPS */
+.FPS {
     align-items: center;
     display: flex;
     font-size: 18px;
-    margin: 10px;
-    margin-bottom: 0;
-    flex-shrink: 1;
 }
-.Controls__playback__buttons img {
-    width: 20px;
-}
-.Controls__speed__buttons {
+.FPS__buttons {
     flex-direction: column;
 }
-.Controls__speed__buttons img {
-    width: 10px;
+.FPS__buttons img {
+    width: 13px;
+}
+.FPS__buttons button {
+    width: 15px;
+}
+.FPS__buttons button:hover {
+    background-color: var(--accent-color);
+}
+/* Playback */
+.Playback__buttons img {
+    width: 20px;
+}
+.Playback__buttons button {
+    width: 22px;
+}
+.Playback__buttons button:hover {
+    /* Hover should take precedence since a selected playback button will
+    have a background color or transparent on click */
+    background-color: var(--accent-color) !important;
+}
+/*////////////////////////
+/// Animation Display ///
+//////////////////////*/
+#AnimationDisplay {
+    width: 120px;
+}
+.AnimationDisplay--empty {
+    background-color: var(--canvas-color);
+    border: 2px dashed var(--accent-color);
+    text-align: center;
+}
+/*///////////////////
+/// SpriteManager ///
+///////////////////*/
+.SpriteManager__upload {
+    background-color: red;
+    width: inherit;
+    height: 25px;
+}
+.SpriteManager__upload input {
+    opacity: 0;
 }
