@@ -2,10 +2,7 @@ import "./styles/Toolbar.css";
 import { useEffect } from "react";
 import AnimationPlayer from "../features/AnimationPlayer";
 import { useSignal } from "@preact/signals-react";
-import AssetsManager from "../features/AssetManager";
-
 const Toolbar = () => {
-
     useEffect(() => {
         document.getElementById("Toolbar__handle")!.onmousedown = (e) => {
             const toolbar = document.getElementById("Toolbar")!;
@@ -19,7 +16,6 @@ const Toolbar = () => {
             document.onmousemove = null
         }
     },[])
-
     const tabContent = useSignal<JSX.Element>(<div/>);
     const tab = useSignal<HTMLDivElement>(document.createElement('div'));
     const openTab = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, content: JSX.Element) => {
@@ -28,16 +24,12 @@ const Toolbar = () => {
         tab.value.style.backgroundColor = "var(--hover-color)";
         tabContent.value = content
     }
-
     return (
         <div id="Toolbar">
             <div id="Toolbar__handle"/>
             <div className="Toolbar__header">
                 <div className="Toolbar__header__button" onClick={(e) => openTab(e, <AnimationPlayer/>)}>
                     <span className="Toolbar__header__button__title">Animation Player</span>
-                </div>
-                <div className="Toolbar__header__button" onClick={(e) => openTab(e, <AssetsManager/>)}>
-                    <span className="Toolbar__header__button__title">Assets Manager</span>
                 </div>
             </div>
             <div className="Toolbar__content">
@@ -46,5 +38,4 @@ const Toolbar = () => {
         </div>
     )
 }
-
 export default Toolbar
