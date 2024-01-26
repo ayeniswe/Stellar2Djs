@@ -1,0 +1,108 @@
+#SceneEditor {
+    background-color: var(--background-color);
+    background-image: url('../../assets/images/background-editor.jpg');
+    border: 3px solid var(--accent-color);
+    border-radius: var(--window-border-radius);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-height: 500px;
+}
+
+.SceneEditor__title {
+    text-align: center;
+    margin: 10px;
+}
+
+.SceneEditor__controls {
+    align-items: center;
+    display: flex;
+    gap: 10px;
+}
+
+.SceneEditor__button {
+    border-radius: var(--window-border-radius);
+    cursor: pointer;
+    margin-top: 10px;
+    text-align: center;
+    transition: 0.2s;
+    width: 75%;
+}
+
+.SceneEditor__button--serious {
+    color: var(--secondary-color);
+    background-color: var(--serious-color);
+}
+
+.SceneEditor__button--serious:hover {
+    transition: 0.2s;
+    background-color: var(--serious-hover-color);
+}
+
+.SceneEditor__delete-confirmation {
+    align-items: center;
+    background-color: var(--background-color);
+    border: 2px solid var(--accent-color);
+    border-radius: var(--window-border-radius);;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    padding: 10px;
+    text-align: center;
+    top: 50%;
+    transform: translate(-140%, -50%);
+    transition: 0.2s;
+}
+
+.SceneEditor__select {
+    text-align: center;
+    margin: 5px;
+    margin-bottom: 15px;
+}
+
+.SceneEditor__select__dropdown {
+    border-radius: var(--window-border-radius);
+    width: 75%;
+}
+
+.SceneEditor__content {
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: var(--secondary-color) transparent;
+}
+
+.SceneEditor__content__group {
+    margin: 10px;
+    text-align: center;
+}
+
+.SceneEditor__content__group__title {
+    margin: 0;
+    margin-bottom: 10px;
+}
+
+.SceneEditor__content__group__tiles {
+    display: grid;
+    column-gap: 10px;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    row-gap: 10px;
+}
+
+.SceneEditor__content__tiles__tile {
+    background-color: var(--background-color);
+    background-size: cover;
+    border: 4px solid var(--accent-color);
+    border-radius: var(--window-border-radius);
+    cursor: pointer;
+    height: 50px;
+    image-rendering: pixelated;
+    opacity: 0.5;
+    width: 50px;
+}
+
+.SceneEditor__content__tiles__tile:hover {
+    opacity: 1;
+    transition: 0.2s;
+}

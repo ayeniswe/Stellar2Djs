@@ -18,7 +18,7 @@
 }
 
 #Toolbar__handle:hover {
-    background-color: var(--drag-hover-color);
+    background-color: var(--hover2-color);
     transition: 0.2s;
 }
 
@@ -46,7 +46,7 @@
 }
 
 .Toolbar__header__button:hover {
-    background-color: var(--drag-hover-color);
+    background-color: var(--hover-color);
     transition: 0.2s;
 }
 

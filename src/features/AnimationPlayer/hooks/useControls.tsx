@@ -1,13 +1,12 @@
 import { useSignal } from "@preact/signals-react";
 import { setPosition } from "./utils/timeline";
-import { TimelineHook } from "../type";
+import { Timeline } from "./type";
 /**
  * Controls the features of the timeline
- * @param timeline - the inital timeline hook
  * @description
  * This hook need to be used in conjunction with an initialized Timeline hook to control the Timeline
  */
-const useControls = (timeline: TimelineHook) => {;
+const useControls = (timeline: Timeline) => {
     const PLAYING = useSignal<Boolean | null>(null);
     const LOOP = useSignal(false);
     const changeSliderDisplay = (value: string) => {
@@ -44,7 +43,7 @@ const useControls = (timeline: TimelineHook) => {;
                     const timeout = 1000 / Number(timeline.FPS.value);
                     setTimeout(() => {
                         timeline.moveSlider(timeline.SLIDER.value);
-                        timeline.moveFrame();
+                        timeline.moveFrame(1);
                         resolve(true);
                     }, timeout)
                 } else {
@@ -75,10 +74,10 @@ const useControls = (timeline: TimelineHook) => {;
         }
     }
     const playFastBackward = () => {
-        
+        timeline.moveFrame(-1);
     }
     const playFastForward = () => {
-        
+        timeline.moveFrame(1);
     }
     const repeat = () => {
         LOOP.value = !LOOP.value

@@ -1,14 +1,10 @@
 import { Signal } from "@preact/signals-react";
-type TimelineElements = {
-    slider: HTMLElement
-    sliderThumb: HTMLElement
-    timeline: HTMLElement
-    frameCollection: HTMLElement
-}
+import { TimelineElements } from "../components/Timeline/type";
+type Direction = "forward" | "backward";
 /**
  * This hook provides functionality for updating the timeline slider and displaying the current time in the timeline.
  */
-type TimelineHook = {
+type Timeline = {
     /**
      * Reset the timeline slider to the beginning.
      *
@@ -26,21 +22,16 @@ type TimelineHook = {
      * @description
      * This function returns all frames in the frame collection.
      */
-    showFrames: () => JSX.Element[];
+    showFrames: () => JSX.Element[] | undefined;
     /**
-     * Load a list of files into the frame collection.
+     * Remove the current frame from the frame collection
      * 
-     * @param {FileList} files - The files to load into the frame collection.
-     * @description
-     * This function takes a FileList as input and loads the files into the frame collection.
-     * Files must be of type `image/png`, `image/jpeg`, or `image/jpg`.
-     * The frames will fill the collection based on the fps value.
      */
-    loadFrame: (files: FileList) => void;
+    removeFrame: () => void;
     /**
-     * Move the slider to the next/prev frame.
+     * Move the slider by the given amount of frames.
      */
-    moveFrame: () => void;
+    moveFrame: (amount: number) => void;
     /**
      * Move the slider to the given position.
      *
@@ -51,20 +42,6 @@ type TimelineHook = {
      *
      */
     moveSlider: (value: number) => void;
-    /**
-     * Updates the slider display with the given value.
-     *
-     * @param {string} value - The value to update the slider with.
-     * @description
-     * This function takes a value as input and updates the slider based on the value.
-     * It first calculates the maximum time based on the width and scale values.
-     * Then it validates the input value using a regular expression pattern.
-     * If the value passes the validation and falls within the range of the minimum and maximum time,
-     * it updates the display value and adjusts the position of the slider accordingly.
-     * If the value is an empty string, it clears the display value.
-     *
-     */
-    changeSliderDisplay: (value: string) => void;
     /**
      * Initializes the timeline functionality
      * 
@@ -106,22 +83,27 @@ type TimelineHook = {
      */
     ELEMENTS: Signal<TimelineElements | null>;
     /**
-     * Represents the frames in the timeline
-     * @type {Signal<HTMLImageElement[]>}
+     * Represents the frames in the timeline 
+     * @description
+     * This list of frames is inherited from the current sprite animation
+     * @type {Signal<HTMLImageElement[] | undefined>}
      */
-    FRAMES: Signal<HTMLImageElement[]>;
+    FRAMES: Signal<HTMLImageElement[] | undefined>;
     /**
      * Represents the current frame to be displayed
-     * @type {Signal<HTMLImageElement>}
+     * @type {Signal<HTMLImageElement | undefined>}
      */
-    FRAME: Signal<HTMLImageElement>;
+    FRAME: Signal<HTMLImageElement | undefined>;
     /**
      * Represents the frames per second
      * @type {Signal<string>}
      */
     FPS: Signal<string>;
 }
-type ControlsHook = {
+/**
+ * This hook provides functionality for controlling the playback of the timeline.
+ */
+type Controls = {
     /**
      * Start the timeline playback
      *
@@ -201,92 +183,105 @@ type ControlsHook = {
      */
     LOOP: Signal<Boolean>;
 }
-type ProgressBarsProps = {
+/**
+ * This hook provides functionality for managing the sprite animation.
+ */
+type SpriteAnimation = {
     /**
-     * The scaling factor for the progress bars to represent a second. 
-     * @type {number}
+     * Show the list of sprite animations
      */
-    scaling: number // px in seconds
+    showSprites: () => JSX.Element[]
     /**
-     * The step size for each progress bar.
-     * @type {number}
+     * Create a new sprite animation
      */
-    step: number
+    createAnimation: () => void
     /**
-     * The total width of the container for the progress bars.
-     * @type {number}
+     * Save the current sprite in animation player
+     * @description
+     * If the sprite already exists, it will overwrite the existing frames. 
+     * If the sprite doesn't exist, it will create a new sprite with `Sprite` attributes.
      */
-    width: number
+    saveAnimation: () => void
+    /**
+     * Change the current sprite
+     *  
+     * @param {string} value - The index of the sprite animation
+     */
+    changeSprite: (value: number) => void
+    /**
+     * Change the name of the sprite animation
+     *  
+     * @param {string} name - The name of the sprite animation
+     * @returns {void}
+     */
+    changeName: (name: string) => void
+    /**
+     * Load a list of files into the frame collection.
+     * 
+     * @param {FileList} files - The files to load into the frame collection.
+     * @description
+     * This function takes a FileList as input and loads the files into the frame collection.
+     * Files must be of type `image/png`, `image/jpeg`, or `image/jpg`.
+     * The frames will fill the collection based on the fps value.
+     */
+    loadFrame: (files: FileList) => void;
+    /**
+     * Remove the frame from the sprite animation
+     * 
+     */
+    removeFrame: (index: number) => void;
+    /**
+     * Sprite animation unique name
+     * @type {Signal<string>}
+     */
+    NAME: Signal<string>;
+    /**
+     * The current sprite
+     * @type {Signal<Sprite | null>}
+     */
+    SPRITE: Signal<Sprite | null>;
+    /**
+     * The list of sprite animations objects
+     * @type {Signal<Sprite[]>}
+     */
+    SPRITES: Signal<Sprite[]>;
+    /**
+     * The current frame selected
+     * @type {Signal<number>}
+     */
+    CURRENT_FRAME: Signal<number>;
+    /**
+     * Indicates if sprite animation is currently being created
+     * @type {Signal<boolean>}
+     */
+    CREATING: Signal<boolean>;
+    /**
+     * Represents the frames in the current sprite animation
+     * @type {Signal<HTMLImageElement[]>}
+     */
+    FRAMES: Signal<HTMLImageElement[]>;
 }
-type TimelineProps = {
+type Sprite = {
     /**
-     * The lib of hooks for the Timeline 
-     * @type {TimelineHook}
+     * Represents the name of the sprite
+     * @type {Signal<HTMLImageElement[]>}
      */
-    hook: TimelineHook
-}
-type FrameCollectionProps = {
+    name: string,
     /**
-     * The inherited hook from the Timeline
-     * @type {TimelineHook}
+     * Represents the frames in the sprite
+     * @type {Signal<HTMLImageElement[]>}
      */
-    hook: TimelineHook
-}
-type ControlsProps = {
+    frames: HTMLImageElement[]
     /**
-     * The lib of hooks for the controls 
-     * @type {ControlsHook}
+     * Represents the id of the sprite
+     * @type {string | number}
      */
-    hook: ControlsHook
-    /**
-     * The lib of hooks for the Timeline 
-     * @type {TimelineHook}
-     */
-    timeline: TimelineHook
-}
-type PlaybackProps = {
-    /**
-     * The inherited hook from the Controls
-     * @type {ControlsHook}
-     */
-    hook: ControlsHook
-}
-type FPSProps = {
-    /**
-     * The inherited hook from the Controls
-     * @type {ControlsHook}
-     */
-    hook: ControlsHook
-    /**
-     * The lib of hooks for the Timeline 
-     * @type {TimelineHook}
-     */
-    timeline: TimelineHook
-}
-type AnimationDisplayProps = {
-    /**
-     * The lib of hooks for the Timeline 
-     * @type {TimelineHook}
-     */
-    timeline: TimelineHook
-}
-type SpriteManagerProps = {
-    /**
-     * The lib of hooks for the Timeline 
-     * @type {TimelineHook}
-     */
-    timeline: TimelineHook
+    id: string | number
 }
 export type {
-    TimelineElements,
-    TimelineHook,
-    ControlsHook,
-    TimelineProps,
-    ProgressBarsProps,
-    FrameCollectionProps,
-    PlaybackProps,
-    FPSProps,
-    ControlsProps,
-    SpriteManagerProps,
-    AnimationDisplayProps
+    Timeline,
+    Controls,
+    SpriteAnimation,
+    Direction,
+    Sprite
 }

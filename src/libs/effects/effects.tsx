@@ -1,4 +1,4 @@
-import '../../assets/styles/Animation.css'
+import '../../assets/styles.css'
 import { SceneEditor } from '..'
 
 /**

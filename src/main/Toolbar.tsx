@@ -2,6 +2,7 @@ import "./styles/Toolbar.css";
 import { useEffect } from "react";
 import AnimationPlayer from "../features/AnimationPlayer";
 import { useSignal } from "@preact/signals-react";
+import AssetsManager from "../features/AssetManager";
 
 const Toolbar = () => {
 
@@ -24,7 +25,7 @@ const Toolbar = () => {
     const openTab = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, content: JSX.Element) => {
         tab.value.style.backgroundColor = "";
         tab.value = e.currentTarget
-        tab.value.style.backgroundColor = "var(--drag-hover-color)";
+        tab.value.style.backgroundColor = "var(--hover-color)";
         tabContent.value = content
     }
 
@@ -34,6 +35,9 @@ const Toolbar = () => {
             <div className="Toolbar__header">
                 <div className="Toolbar__header__button" onClick={(e) => openTab(e, <AnimationPlayer/>)}>
                     <span className="Toolbar__header__button__title">Animation Player</span>
+                </div>
+                <div className="Toolbar__header__button" onClick={(e) => openTab(e, <AssetsManager/>)}>
+                    <span className="Toolbar__header__button__title">Assets Manager</span>
                 </div>
             </div>
             <div className="Toolbar__content">

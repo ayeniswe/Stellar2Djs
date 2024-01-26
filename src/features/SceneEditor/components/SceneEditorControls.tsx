@@ -1,4 +1,4 @@
-import '../styles/SceneEditor.css';
+import '../style.css';
 import trashcan from '../../../assets/images/icons/trashcan.svg';
 import scissors from '../../../assets/images/icons/scissors.svg';
 import dragpointer from '../../../assets/images/icons/dragpointer.svg';

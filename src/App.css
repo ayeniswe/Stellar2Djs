@@ -21,10 +21,13 @@ code {
   --accent-color: black;
   /* --background-color: white; */
   --background-color: rgb(32, 32, 32);
-  --canvas-color: gray;
+  --primary-color: gray;
+  --primary2-color: rgb(75, 75, 75);
+  --drag-hover-color: white;
   --game-height: 600px;
   --game-width: 800px;
-  --drag-hover-color: gray;
+  --hover-color: rgb(110, 110, 110);
+  --hover2-color: rgb(61, 61, 61);
   --serious-color: red;
   --serious-hover-color: darkred;
   --text-color: white;
@@ -48,6 +51,22 @@ code {
 }
 
 .App input {
+  color: var(--text-color);
+  font-family: PixelFont;
+  outline: none;
+  text-shadow: 0 1px 1px var(--accent-color);
+  -webkit-text-stroke-width: 0.1px;
+  -webkit-text-stroke-color: var(--accent-color);
+}
+.App button {
+  color: var(--text-color);
+  font-family: PixelFont;
+  outline: none;
+  text-shadow: 0 1px 1px var(--accent-color);
+  -webkit-text-stroke-width: 0.1px;
+  -webkit-text-stroke-color: var(--accent-color);
+}
+.App select {
   color: var(--text-color);
   font-family: PixelFont;
   outline: none;

@@ -1,0 +1,64 @@
+/*////////////
+/// Button ///
+////////////*/
+.Button {
+    cursor: pointer;
+    background-color: var(--primary-color) ;
+    padding: 2px;
+}
+.Button:hover {
+    background-color: var(--hover-color);
+    transition: 0.3s;
+}
+.Button input {
+    display: none;
+}
+.Button img {
+    width: 15px;
+}
+.Button--main button {
+    background-color: var(--primary2-color);
+}
+.Button--main:hover button {
+    background-color: var(--hover2-color);
+}
+.ButtonLabel {
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    gap: 5px;
+    justify-content: center;
+    padding: 1px;
+    white-space: nowrap;
+}
+/*////////////////
+/// ToggleIcon ///
+///////////////*/
+.ToggleImage {
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    gap: 10px;
+}
+.ToggleImage__circle {
+    background-color: var(--secondary-color);
+    border: 2px solid var(--accent-color);
+    border-radius: 10px;
+    color: var(--accent-color);
+    padding: 3px;
+}
+.ToggleImage__img {
+    animation: 0.5s infinite;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+/*////////////////
+/// Animation ///
+///////////////*/
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px) rotate(-5deg); }
+    50% { transform: translateX(5px) rotate(5deg); }
+    75% { transform: translateX(-5px) rotate(-5deg); }
+    100% { transform: translateX(0); }
+}

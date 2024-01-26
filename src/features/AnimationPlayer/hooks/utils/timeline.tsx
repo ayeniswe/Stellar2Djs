@@ -1,4 +1,4 @@
-import { getLeft, setLeft } from "../../../../utils/styleProps";
+import { setLeft } from "../../../../utils/styleProps";
 /**
  * Sets the inner display of timeline
  *

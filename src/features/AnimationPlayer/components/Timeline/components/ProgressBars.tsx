@@ -1,6 +1,6 @@
 import "../../../style.css";
 import { FC, memo } from "react";
-import { ProgressBarsProps } from "../../../type";
+import { ProgressBarsProps } from "../type";
 /**
  * Displays a series of progress bars.
  * @returns {JSX.Element} - The `memomized` rendered ProgressBars component.

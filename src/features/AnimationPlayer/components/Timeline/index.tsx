@@ -1,25 +1,26 @@
 import "../../style.css";
 import ProgressBars from "./components/ProgressBars";
 import { useEffect } from "react";
-import { TimelineProps } from "../../type";
 import FrameCollection from "./components/FrameCollection";
+import { useAppContext } from "../../../../context/appContext";
 /**
  * Displays the timeline for the length of the animation.
  * @returns {JSX.Element} - The rendered Timeline component.
  */
-const Timeline: React.FC<TimelineProps> = ({ hook }) => {
-    useEffect(() => hook.initialize(), [hook]);
+const Timeline = () => {
+    const { timeline, timelineControls } = useAppContext();
+    useEffect(() => timeline.initialize(), [timeline]);
     return (
         <div id="Timeline">
-            <FrameCollection hook={hook} />
-            <input className="AnimationPlayerDisplay AnimationPlayerDisplay--margined" onChange={(e) => hook.changeSliderDisplay(e.target.value)} value={hook.DISPLAY.value}/>
+            <FrameCollection/>
+            <input className="AnimationPlayerDisplay AnimationPlayerDisplay--margined" onChange={(e) => timelineControls.changeSliderDisplay(e.target.value)} value={timeline.DISPLAY.value}/>
             <div id="TimelineSlider">
                 <div id="TimelineSliderThumb"/>
             </div>
             <ProgressBars
-                scaling={hook.SCALE.value}
+                scaling={timeline.SCALE.value}
                 step={2}
-                width={hook.WIDTH.value}
+                width={timeline.WIDTH.value}
             />
         </div>
     )

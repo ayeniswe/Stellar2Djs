@@ -6,31 +6,32 @@ import arrowRightRightIcon from "../../../../../assets/images/icons/arrow-right-
 import playIcon from "../../../../../assets/images/icons/play.png";
 import stopIcon from "../../../../../assets/images/icons/stop.png";
 import repeatIcon from "../../../../../assets/images/icons/repeat.png";
-import { PlaybackProps } from "../../../type";
+import { useAppContext } from "../../../../../context/appContext";
 /**
  * The playback controls of the animation player.
  * @returns {JSX.Element} - The rendered Playback component.
  */
-const Playback: React.FC<PlaybackProps> = ({ hook }) => {
+const Playback = () => {
+    const { timelineControls } = useAppContext();
     return (
         <div className="Playback">
             <div className="Playback__buttons AnimationPlayerButtons ">
-                <button title="repeat" onClick={() => hook.repeat()} style={{ backgroundColor: `${hook.LOOP.value ? "var(--accent-color)" : "transparent"}`}}>
+                <button title="repeat" onClick={() => timelineControls.repeat()} style={{ backgroundColor: `${timelineControls.LOOP.value ? "var(--accent-color)" : "transparent"}`}}>
                     <img alt="animation repeat" src={repeatIcon}/>
                 </button>
-                <button title="play backward" onClick={() => hook.playBackward()}>
+                <button title="play backward" onClick={() => timelineControls.playBackward()}>
                     <img alt="animation play backward" src={arrowLeftIcon}/>
                 </button>
-                <button title="play previous frame" onClick={() => hook.playFastBackward()}>
+                <button title="play previous frame" onClick={() => timelineControls.playFastBackward()}>
                     <img alt="animation play previous frame" src={arrowLeftLeftIcon}/>
                 </button>
-                <button title={hook.PLAYING.value ? "stop" : "play"} onClick={() => hook.PLAYING.value ? hook.stop() : hook.play()}>
-                    <img alt={`animation ${hook.PLAYING.value ? "stop" : "play"}`} src={hook.PLAYING.value ? stopIcon : playIcon}/>
+                <button title={timelineControls.PLAYING.value ? "stop" : "play"} onClick={() => timelineControls.PLAYING.value ? timelineControls.stop() : timelineControls.play()}>
+                    <img alt={`animation ${timelineControls.PLAYING.value ? "stop" : "play"}`} src={timelineControls.PLAYING.value ? stopIcon : playIcon}/>
                 </button>
-                <button title="play next frame" onClick={() => hook.playFastForward()}>
+                <button title="play next frame" onClick={() => timelineControls.playFastForward()}>
                     <img alt="animation play next frame"  src={arrowRightRightIcon}/>
                 </button>
-                <button title="play forward" onClick={() => hook.playForward()}>
+                <button title="play forward" onClick={() => timelineControls.playForward()}>
                     <img alt="animation play forward" src={arrowRightIcon}/>
                 </button>
             </div>

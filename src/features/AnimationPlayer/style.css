@@ -6,52 +6,50 @@
     width: inherit;
 }
 .AnimationPlayerDisplay {
-    background-color: var(--canvas-color);
-    border: inset 3px var(--canvas-color);
+    background-color: var(--primary-color);
+    border: inset 6px var(--accent-color);
     text-align: center;
     width: 50px;
+}
+.AnimationPlayerDisplay--full {
+    width: 100%;
 }
 .AnimationPlayerDisplay--margined {
     margin: 5px;
 }
 .AnimationPlayerDisplay--noinset {
-    border: solid var(--canvas-color);
+    border: solid var(--primary-color);
 }
 .AnimationPlayerButtons {
     display: flex;
     margin: 2px;
 }
-.AnimationPlayer button {
-    background-color: transparent;
-    border: none;
-    border-radius: 100%;
-    display: flex;
-    justify-content: center;
-    transition: 0.2s;
-}
 .AnimationPlayerGroup {
     align-items: center;
     display: flex;
-    flex-direction: column;
     gap: 10px;
+}
+.AnimationPlayerGroup--margined {
     margin: 15px;
+}
+.AnimationPlayerGroup--col {
+    flex-direction: column;
 }
 /*////////////////
 //// Timeline ////
 ////////////////*/
 #Timeline {
-    border: inset 3px var(--canvas-color);
+    border: inset 3px var(--primary-color);
     display: flex;
     flex-direction: column;
     gap: 5px;
     height: 150px;
     margin: 15px;
-    padding-top: 2px;
     position: relative;
     width: inherit;
 }
 #TimelineSlider {
-    background-color: var(--canvas-color);
+    background-color: var(--primary-color);
     box-shadow: 4px 0 1px var(--accent-color);
     height: inherit;
     position: relative;
@@ -59,7 +57,7 @@
     z-index: 2;
 }
 #TimelineSliderThumb {
-    background-color: var(--canvas-color);
+    background-color: var(--primary-color);
     border-radius: 100%;
     box-shadow: 4px 0 1px var(--accent-color);
     cursor: pointer;
@@ -70,7 +68,7 @@
 }
 /* Frame Collection */
 .TimelineFrameCollection {
-    background-color: var(--canvas-color);
+    background-color: var(--primary-color);
     bottom: 0;
     display: flex;
     height: 25px;
@@ -95,7 +93,7 @@
 }
 .Progress__bar {
     align-items: center;
-    background-color: var(--canvas-color);
+    background-color: var(--primary-color);
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -131,6 +129,12 @@
     width: 13px;
 }
 .FPS__buttons button {
+    background-color: transparent;
+    border: none;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    transition: 0.2s;
     width: 15px;
 }
 .FPS__buttons button:hover {
@@ -141,6 +145,12 @@
     width: 20px;
 }
 .Playback__buttons button {
+    background-color: transparent;
+    border: none;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    transition: 0.2s;
     width: 22px;
 }
 .Playback__buttons button:hover {
@@ -151,22 +161,24 @@
 /*////////////////////////
 /// Animation Display ///
 //////////////////////*/
-#AnimationDisplay {
+.AnimationDisplay {
     width: 120px;
 }
-.AnimationDisplay--empty {
-    background-color: var(--canvas-color);
-    border: 2px dashed var(--accent-color);
-    text-align: center;
-}
-/*///////////////////
-/// SpriteManager ///
-///////////////////*/
-.SpriteManager__upload {
-    background-color: red;
+.AnimationDisplay img {
+    background-color: var(--primary-color);
+    border: 1px solid var(--accent-color);
     width: inherit;
-    height: 25px;
 }
-.SpriteManager__upload input {
-    opacity: 0;
+.AnimationDisplay--empty {
+    align-items: center;
+    background-color: var(--primary-color);
+    border: 2px dashed var(--accent-color);
+    display: flex;
+    font-size: small;
+    height: 100px;
+    text-align: center;
+    width: inherit;
 }
+/*////////////////////////
+/// Sprite Animation ////
+//////////////////////*/
