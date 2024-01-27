@@ -21,7 +21,7 @@ Stellar2D
 - [ ] **Camera Control:** Set and control the camera position and properties.
 - [ ] **Collison Detection:** Add colliders to objects for collision detection.
 - [ ] **Physic Detection:** Adjust physics properties like gravity, friction, and restitution.
-- [ ] **Animator:** Create and edit animations for sprites or objects.
+- [x] **Animator:** Create and edit animations for sprites or objects.
 - [ ] **Asset Integration:** Integrate various assets seamlessly into your game world.
   - **Game Objects**
     - [ ] Characters
