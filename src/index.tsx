@@ -1,10 +1,15 @@
 import ReactDOM from 'react-dom/client';
-import './assets/styles/Game.css';
-import Game from './Game';
+import './App.css';
+import App from './App';
+import { AppContextProvider } from './context/appContext';
 
 document.addEventListener('DOMContentLoaded', () => {
   const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
   );
-  root.render( <Game/> );
+  root.render(
+    <AppContextProvider>
+      <App/> 
+    </AppContextProvider>
+  );
 });

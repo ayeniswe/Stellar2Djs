@@ -1,4 +1,4 @@
-import '../assets/styles/Canvas.css';
+import './styles/Canvas.css';
 
 type Props = {
   reference : React.RefObject<HTMLCanvasElement>;

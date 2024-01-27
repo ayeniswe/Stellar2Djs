@@ -1,4 +1,4 @@
-import '../assets/styles/ToggleIcon.css';
+import '../assets/styles.css';
 
 type Props = {
   name: string

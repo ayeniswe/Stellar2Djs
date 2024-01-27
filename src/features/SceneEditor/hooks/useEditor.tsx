@@ -1,6 +1,6 @@
 import configuration from '../../../data/config.json';
 import { Config, TextureObject, TextureObjects } from '../../../libs/rendering';
-import { SceneEditor } from '../../../main/';
+import { SceneEditor } from '../../../libs';
 import { capitalize } from '../../../utils/text';
 import { computed, signal, useSignal } from '@preact/signals-react';
 

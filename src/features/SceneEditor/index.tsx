@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import './styles/SceneEditor.css';
-import { SceneEditor } from '../../main/SceneEditor';
+import './style.css';
+import { SceneEditor } from '../../libs/SceneEditor';
 import { useEditor } from './hooks/useEditor';
 import SceneEditorControls from './components/SceneEditorControls';
 

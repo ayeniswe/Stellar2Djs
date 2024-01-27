@@ -1,4 +1,4 @@
-import { SceneEditor } from '../../../main/SceneEditor';
+import { SceneEditor } from '../../../libs/SceneEditor';
 import { SceneEditorEffects } from '../../../libs/effects/effects';
 
 /**

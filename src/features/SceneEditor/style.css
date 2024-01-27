@@ -1,6 +1,6 @@
 #SceneEditor {
     background-color: var(--background-color);
-    background-image: url('../../../assets/images/background-editor.jpg');
+    background-image: url('../../assets/images/background-editor.jpg');
     border: 3px solid var(--accent-color);
     border-radius: var(--window-border-radius);
     cursor: pointer;

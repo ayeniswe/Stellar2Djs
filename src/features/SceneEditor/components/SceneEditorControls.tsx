@@ -1,9 +1,9 @@
-import '../styles/SceneEditor.css';
+import '../style.css';
 import trashcan from '../../../assets/images/icons/trashcan.svg';
 import scissors from '../../../assets/images/icons/scissors.svg';
 import dragpointer from '../../../assets/images/icons/dragpointer.svg';
 import editpointer from '../../../assets/images/icons/editpointer.svg';
-import { SceneEditor } from '../../../main/SceneEditor';
+import { SceneEditor } from '../../../libs/SceneEditor';
 import { useControls } from '../hooks/useControls';
 import ToggleIcon from '../../../components/ToggleIcon';
 

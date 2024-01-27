@@ -1,5 +1,5 @@
 #Canvas {
-    background-color: var(--canvas-color);
+    background-color: var(--primary-color);
     border: 3px solid var(--accent-color);
     border-radius: var(--window-border-radius);
     cursor: pointer;
