@@ -7,7 +7,7 @@ import { useControls } from '../hooks/useControls';
 import ToggleIcon from '../../../components/ToggleIcon';
 import { Scene } from '../hooks/type';
 type Props = {
-  scene: Scene
+  scene: Scene;
 }
 const Controls: React.FC<Props> = ({ scene }) => {
     const {

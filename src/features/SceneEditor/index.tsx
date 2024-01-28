@@ -35,7 +35,7 @@ const Scene: React.FC<Props> = ({ ctx, mapping, id }) => {
           setTilesBackground();
         })();
       }
-    }, [TILESET_KEY.value, setTilesBackground, setTileset, scene.attrs.input.ready]);
+    }, [TILESET_KEY.value, setTilesBackground, setTileset]);
     return (
       <div id="Scene">
         <h2 className='Scene__title' onClick={() => toggleEditorTab()}>

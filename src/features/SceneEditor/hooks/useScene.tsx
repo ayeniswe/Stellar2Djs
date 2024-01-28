@@ -2,7 +2,6 @@ import { KMMapping } from '../../../libs/input';
 import { useSignal } from '@preact/signals-react';
 import { useInput } from './useInput';
 import { useTextureRenderer } from '../../../libs/rendering';
-import { TextureRenderer } from '../../../libs/rendering/types';
 import { Brush, Input } from './type';
 /**
  * The hook is responsible for managing the scene behavior and provides a way to set and interact with the canvas brush.
@@ -11,11 +10,11 @@ import { Brush, Input } from './type';
  */
 const useScene = (ctx: CanvasRenderingContext2D, mapping: KMMapping, id?: string) =>{
     const __brush = useSignal<Brush | null>(null);
-    const __renderer = useSignal<TextureRenderer>(useTextureRenderer(ctx));
-    const __input = useSignal<Input>(useInput(ctx, __renderer.value, mapping, __brush, id));
+    const __renderer = useTextureRenderer(ctx);
+    const __input = useInput(ctx, __renderer, mapping, __brush, id);
     const attrs = {
         get input() {
-            return __input.value.input;
+            return __input.input;
         },
         get brush() {
             return __brush.value;
@@ -24,15 +23,15 @@ const useScene = (ctx: CanvasRenderingContext2D, mapping: KMMapping, id?: string
             __brush.value = value;
         },
         get textureSources() {
-            return __renderer.value.textureRenderer.textureSources;
+            return __renderer.textureRenderer.textureSources;
         }
     }
     const initialize = async (): Promise<void> => {
-        await __renderer.value.initialize()
-        await __input.value.initialize();
+        await __renderer.initialize()
+        await __input.initialize();
     }
     const clear = () => {
-        __input.value.removeAll();
+        __input.removeAll();
     }
     return {
         initialize,

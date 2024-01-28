@@ -46,7 +46,7 @@ const useTextureRenderer = (ctx: CanvasRenderingContext2D) => {
                     [name]: new Image(),
                 };
                 try {
-                    const url: string = (await import(`../../../${path}`)).default;
+                    const url: string = (await import(`../../${path}`)).default;
                     __textureSources.value[name].src = url;
                     __textureSources.value[name].onload = () => {
                         log(MESSAGE.LOADING_TEXTURE, `${index} of ${sources}: ${capitalize(key)} `);
