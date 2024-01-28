@@ -1,15 +1,11 @@
-import { Input } from "./lib/Input";
-import { Bindings } from "./lib/Bindings";
-import { SceneEditorInput } from "./SceneEditorInput";
+import { Input } from "./Input";
+import { Bindings } from "./Bindings";
 import { BindingsMapping, KMMapping, Mouse, Keyboard, KMInput, MouseInputToName } from "./types";
-
 export {
     Input,
     Bindings,
-    SceneEditorInput,
     MouseInputToName
 }
-
 export type {
     KMMapping,
     BindingsMapping,

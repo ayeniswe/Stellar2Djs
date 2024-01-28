@@ -1,33 +1,22 @@
 import configuration from '../../../data/config.json';
 import { Config, TextureObject, TextureObjects } from '../../../libs/rendering';
-import { SceneEditor } from '../../../libs';
 import { capitalize } from '../../../utils/text';
 import { computed, signal, useSignal } from '@preact/signals-react';
-
+import { SceneAttributes } from './type';
 /**
  * This hook provides functionality to manage the tilesets, tiles, and editor tab.
- * @param {SceneEditor} editor - The instance of the SceneEditor class representing the level editor.
- *
- * @module useEditor
- *
- * @description
- * The `editor` parameter is an instance of the SceneEditor class, which plays a crucial role in the functionality of these hooks.
- * It allows for integration with the Level Editor UI and enables access to its properties and methods.
- * By utilizing this hook, the Level Editor component gains the ability to determine if editor is ready to process input and retrieve preloaded textures.
+ * 
  */
-const useEditor = (editor: SceneEditor) => {
+const useEditor = (scene: SceneAttributes) => {
     let config: Config = process.env.NODE_ENV === 'production' ? configuration : require('../../../data/test-config.json');
     const TILESETS = config.textures.tilesets;
-
     const EDITOR_TAB = useSignal(false);
     const TILESET_KEY = useSignal("");
     const TILESET = useSignal<JSX.Element>(<></>);
-    const TILE = signal("");
+    const TILE = useSignal("");
     const TILES = signal<TextureObjects>({});
     const TILESET_NAME = computed(() => TILESETS[TILESET_KEY.value].name);
-
     const SELECTED_TILE_OPACITY = '1' // 100% opacity
-
     /**
      * Draws the background image on a canvas based on the given texture object.
      *
@@ -49,13 +38,12 @@ const useEditor = (editor: SceneEditor) => {
         canvas.height = h;
         const ctx = canvas.getContext('2d');
         if (ctx) {
-            let background = editor.input.textureSources[TILESET_NAME.value];
+            let background = scene.textureSources[TILESET_NAME.value];
             ctx.drawImage(background, sx, sy, w, h, 0, 0, w, h);
             return canvas.toDataURL();
         }
         return '';
     };
-
     /**
      * Sets the background image for each tile element based on the corresponding texture object.
      *
@@ -76,9 +64,8 @@ const useEditor = (editor: SceneEditor) => {
             };
         };
     }
-
     /**
-     * Sets the tile brush for the level editor.
+     * Sets the tile brush for the scene.
      *
      * @param {string} id - The ID of the tile element.
      * @param {string} group - The group of the tile.
@@ -90,7 +77,7 @@ const useEditor = (editor: SceneEditor) => {
      * It first resets the previously selected tile by removing the opacity and setting the `ariaPressed` attribute to 'false'.
      * Then, it sets the new tile by adding the specified opacity and setting the `ariaPressed` attribute to 'true'.
      * The function also updates the `TILE.value` variable to store the ID of the new tile.
-     * Finally, it calls the `SceneEditorDesign.setBrush` function to update the brush in the level editor. The `SceneEditorDesign.setBrush` static instance plays a crucial role in integration for rendering texture on canvas based on UI interaction.
+     * Finally, it calls the `SceneDesign.setBrush` function to update the brush in the level editor. The `SceneDesign.setBrush` static instance plays a crucial role in integration for rendering texture on canvas based on UI interaction.
      */
     const setTileBrush = (id: string, group: string, object: TextureObject): void => {
         // Reset previous tile
@@ -102,9 +89,8 @@ const useEditor = (editor: SceneEditor) => {
         document.getElementById(id)!.style.opacity = SELECTED_TILE_OPACITY;
         document.getElementById(id)!.ariaPressed = 'true';
         TILE.value = id;
-        SceneEditor.setBrush(id, group, object);
+        scene.brush = { id, group, object };
     }
-
     /**
      * Returns an array of JSX elements representing tiles based on the provided `tiles` object and `group` string.
      *
@@ -132,13 +118,12 @@ const useEditor = (editor: SceneEditor) => {
                     title={`${w} x ${h}\n${x} , ${y}`}
                     aria-label={`tile: ${name}`}
                     role='button'
-                    className='SceneEditor__content__tiles__tile'
+                    className='Scene__content__tiles__tile'
                     onClick={(e) =>setTileBrush(e.currentTarget.id, group, tiles[key])}
                  />
             );
         });
     }
-
     /**
      * Returns an array of JSX elements representing groups of tiles.
      *
@@ -154,37 +139,35 @@ const useEditor = (editor: SceneEditor) => {
         const groups = TILESETS[TILESET_KEY.value].groups;
         return Object.keys(groups).map(name => {
             return (
-                <div className='SceneEditor__content__group' key={name}>
-                    <h5 className='SceneEditor__content__group__title'>
+                <div className='Scene__content__group' key={name}>
+                    <h5 className='Scene__content__group__title'>
                         {capitalize(name)}
                     </h5>
-                    <div className='SceneEditor__content__group__tiles'>
+                    <div className='Scene__content__group__tiles'>
                         {getTiles(groups[name], name)}
                     </div>
                 </div>
             );
         });
     }
-
     /**
-     * Sets the tileset JSX element for the level editor.
+     * Sets the tileset JSX element for the scene.
      *
      * @returns {Promise<void>}
      *
      * @description
      * This function sets the `TILESET.value` variable to a JSX element representing the tileset.
-     * The JSX element is created with a container element having the CSS class `SceneEditor__content`.
+     * The JSX element is created with a container element having the CSS class `Scene__content`.
      * Inside the container, it includes the JSX elements representing the groups of tiles obtained from the `getGroups` function.
      * Note that the function is declared as `async`, because it is always called before `setTilesetBackground` which is dependent on all tile elements being visible.
      */
     const setTileset = async (): Promise<void> => {
         TILESET.value = (
-            <div className='SceneEditor__content'>
+            <div className='Scene__content'>
                 {getGroups()}
             </div>
         );
     }
-    
     /**
      * Returns an array of JSX elements representing the available tilesets.
      *
@@ -203,7 +186,6 @@ const useEditor = (editor: SceneEditor) => {
             );
         });
     }
-
     /**
      * Sets the value of the `TILESET_KEY.value` variable.
      *
@@ -217,14 +199,13 @@ const useEditor = (editor: SceneEditor) => {
     const setTilesetKey = (value: string): void => {
        TILESET_KEY.value = value;
     }
-
     /**
-     * Closes the editor tab.
+     * Closes the tab.
      *
      * @returns {void}
      *
      * @description
-     * This function performs the following actions to close the editor tab:
+     * This function performs the following actions to close the tab:
      * - Sets the value of the `EDITOR_TAB.value` variable to `false`.
      * - Clears the `TILESET.value` variable by assigning an empty JSX element.
      * - Clears the `TILESET_KEY.value` variable by assigning an empty string.
@@ -234,9 +215,8 @@ const useEditor = (editor: SceneEditor) => {
         EDITOR_TAB.value = false;
         TILESET.value = <></>;
         TILESET_KEY.value = '';
-        editor.input.ready = false;
+        scene.input.ready = false;
     }
-    
     /**
      * Toggles the state of the editor tab.
      *
@@ -244,21 +224,19 @@ const useEditor = (editor: SceneEditor) => {
      *
      * @description
      * This function checks the current value of the `EDITOR_TAB.value` variable.
-     * If it is `true`, it calls the `closeEditorTab` function to close the editor tab.
-     * If it is `false`, it sets the value of the `EDITOR_TAB.value` variable to `true` to open the editor tab.
+     * If it is `true`, it calls the `closeEditorTab` function to close the tab.
+     * If it is `false`, it sets the value of the `EDITOR_TAB.value` variable to `true` to open the tab.
      */
-   const toggleEditorTab = (): void => {
+    const toggleEditorTab = (): void => {
        if (EDITOR_TAB.value) {
            closeEditorTab();
         } else {
             EDITOR_TAB.value = true;
         }
     }
-    
     const showTileset = () => {
         return TILESET;
     }
-    
     return {
         setTileset,
         getTilesets,

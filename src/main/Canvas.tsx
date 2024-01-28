@@ -1,12 +1,10 @@
 import './styles/Canvas.css';
-
 type Props = {
-  reference : React.RefObject<HTMLCanvasElement>;
-  width : number;
-  height : number;
+  width : number
+  height : number
+  reference : React.RefObject<HTMLCanvasElement>
 }
-
-const Canvas: React.FC<Props> = ({reference, width, height}) => {
+const Canvas: React.FC<Props> = ({reference, width, height }) => {
     return (
       <>
         <div id="Canvas-brush"/>
@@ -14,5 +12,4 @@ const Canvas: React.FC<Props> = ({reference, width, height}) => {
       </>
     );
 }
-
 export default Canvas;

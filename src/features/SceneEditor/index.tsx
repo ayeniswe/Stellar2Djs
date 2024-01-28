@@ -1,15 +1,16 @@
 import { useEffect } from 'react';
 import './style.css';
-import { SceneEditor } from '../../libs/SceneEditor';
 import { useEditor } from './hooks/useEditor';
-import SceneEditorControls from './components/SceneEditorControls';
-
+import { useScene } from './hooks/useScene';
+import { KMMapping } from '../../libs/input';
+import Controls from './components/Controls';
 type Props = {
-  editor: SceneEditor
+  ctx: CanvasRenderingContext2D;
+  mapping: KMMapping;
+  id?: string;
 }
-
-const SceneEditorComp: React.FC<Props> = ({ editor }) => {
-
+const Scene: React.FC<Props> = ({ ctx, mapping, id }) => {
+    const scene = useScene(ctx, mapping, id);
     const {
       setTileset,
       setTilesetKey,
@@ -19,39 +20,41 @@ const SceneEditorComp: React.FC<Props> = ({ editor }) => {
       toggleEditorTab,
       TILESET_KEY,
       EDITOR_TAB,
-    } = useEditor(editor);
-
+    } = useEditor(scene.attrs);
+    useEffect(() => {
+      (async () => {
+        await scene.initialize();
+      })();
+    },[]);
     // This effect handles the initialization of the tileset chosen, set the background image of the tiles, and set the ready property of the editor input to receive input
     useEffect(() => {
       if (TILESET_KEY.value !== '') {
-        editor.input.ready = true;
+        scene.attrs.input.ready = true;
         (async () => {
           await setTileset();
           setTilesBackground();
         })();
       }
-    }, [TILESET_KEY.value, setTilesBackground, setTileset, editor.input]);
-
+    }, [TILESET_KEY.value, setTilesBackground, setTileset, scene.attrs.input.ready]);
     return (
-      <div id="SceneEditor">
-        <h2 className='SceneEditor__title' onClick={() => toggleEditorTab()}>
+      <div id="Scene">
+        <h2 className='Scene__title' onClick={() => toggleEditorTab()}>
           SCENE EDITOR
         </h2>
         {EDITOR_TAB.value &&
         <>
-          <h4 className='SceneEditor__select'>
+          <h4 className='Scene__select'>
             Select Tileset
-            <select value={TILESET_KEY.value} className='SceneEditor__select__dropdown' onChange={e => setTilesetKey(e.target.value)}>
+            <select value={TILESET_KEY.value} className='Scene__select__dropdown' onChange={e => setTilesetKey(e.target.value)}>
               <option value="" disabled>None</option>
               {getTilesets()}
             </select>
           </h4>
           {showTileset()}
-          {TILESET_KEY.value && <SceneEditorControls editor={editor}/>}
+          {TILESET_KEY.value && <Controls scene={scene}/>}
         </>
         }
       </div>
     );
 }
-
-export default SceneEditorComp;
+export default Scene;

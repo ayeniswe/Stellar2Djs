@@ -1,4 +1,4 @@
-#SceneEditor {
+#Scene {
     background-color: var(--background-color);
     background-image: url('../../assets/images/background-editor.jpg');
     border: 3px solid var(--accent-color);
@@ -10,18 +10,18 @@
     max-height: 500px;
 }
 
-.SceneEditor__title {
+.Scene__title {
     text-align: center;
     margin: 10px;
 }
 
-.SceneEditor__controls {
+.Scene__controls {
     align-items: center;
     display: flex;
     gap: 10px;
 }
 
-.SceneEditor__button {
+.Scene__button {
     border-radius: var(--window-border-radius);
     cursor: pointer;
     margin-top: 10px;
@@ -30,17 +30,17 @@
     width: 75%;
 }
 
-.SceneEditor__button--serious {
+.Scene__button--serious {
     color: var(--secondary-color);
     background-color: var(--serious-color);
 }
 
-.SceneEditor__button--serious:hover {
+.Scene__button--serious:hover {
     transition: 0.2s;
     background-color: var(--serious-hover-color);
 }
 
-.SceneEditor__delete-confirmation {
+.Scene__delete-confirmation {
     align-items: center;
     background-color: var(--background-color);
     border: 2px solid var(--accent-color);
@@ -55,42 +55,42 @@
     transition: 0.2s;
 }
 
-.SceneEditor__select {
+.Scene__select {
     text-align: center;
     margin: 5px;
     margin-bottom: 15px;
 }
 
-.SceneEditor__select__dropdown {
+.Scene__select__dropdown {
     border-radius: var(--window-border-radius);
     width: 75%;
 }
 
-.SceneEditor__content {
+.Scene__content {
     overflow-y: auto;
     overflow-x: hidden;
     scrollbar-width: thin;
     scrollbar-color: var(--secondary-color) transparent;
 }
 
-.SceneEditor__content__group {
+.Scene__content__group {
     margin: 10px;
     text-align: center;
 }
 
-.SceneEditor__content__group__title {
+.Scene__content__group__title {
     margin: 0;
     margin-bottom: 10px;
 }
 
-.SceneEditor__content__group__tiles {
+.Scene__content__group__tiles {
     display: grid;
     column-gap: 10px;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     row-gap: 10px;
 }
 
-.SceneEditor__content__tiles__tile {
+.Scene__content__tiles__tile {
     background-color: var(--background-color);
     background-size: cover;
     border: 4px solid var(--accent-color);
@@ -102,7 +102,7 @@
     width: 50px;
 }
 
-.SceneEditor__content__tiles__tile:hover {
+.Scene__content__tiles__tile:hover {
     opacity: 1;
     transition: 0.2s;
 }

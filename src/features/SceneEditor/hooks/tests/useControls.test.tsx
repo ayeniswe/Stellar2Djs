@@ -1,14 +1,12 @@
 import '@testing-library/jest-dom/extend-expect';
 import { act, renderHook } from '@testing-library/react';
-import { SceneEditor } from '../../../../libs';
 import { useControls } from '../useControls';
-
+import { useScene } from '../useScene';
 beforeAll(() => {
     jest.spyOn(console,"warn").mockImplementation(() => {})
     jest.spyOn(console,"log").mockImplementation(() => {})
     jest.spyOn(console,"error").mockImplementation(() => {})
 })
-
 /*
 * Setup a canvas element and brush for the Level Editor to use
 */
@@ -25,34 +23,30 @@ document.body.appendChild(canvas);
 document.body.appendChild(brush);
 context = canvas.getContext('2d')!;
 if (!context) throw new Error('Could not get 2d context');
-
 describe('SceneEditor controls', () => {
-
     test('show "DELETE ALL" confirmation prompt for 3 seconds', async () => {
-        const editor = new SceneEditor(context, {})
-        await editor.init();
-        const { result } = renderHook(() => useControls(editor));
+        const scene = renderHook(() => useScene(context, {})).result.current
+        await scene.initialize();
+        const { result } = renderHook(() => useControls(scene));
         jest.useFakeTimers();
         result.current.showDeleteConfirmation();
-        expect(editor.input.safety).toBe(false);
+        expect(scene.attrs.input.safety).toBe(false);
         act(() => jest.advanceTimersByTime(3000));
-        expect(editor.input.safety).toBe(true);
+        expect(scene.attrs.input.safety).toBe(true);
         jest.runOnlyPendingTimers();
         jest.useRealTimers();
     })
-
     test('clear canvas and set safety back', async () => {
-        const editor = new SceneEditor(context, {})
-        await editor.init();
-        const { result } = renderHook(() => useControls(editor));
+        const scene = renderHook(() => useScene(context, {})).result.current
+        await scene.initialize();
+        const { result } = renderHook(() => useControls(scene));
         result.current.clearCanvas();
-        expect(editor.input.safety).toBe(true);
+        expect(scene.attrs.input.safety).toBe(true);
     })
-
     test('toggle clipping mode', async () => {
-        const editor = new SceneEditor(context, {})
-        await editor.init();
-        const { result } = renderHook(() => useControls(editor));
+        const scene = renderHook(() => useScene(context, {})).result.current
+        await scene.initialize();
+        const { result } = renderHook(() => useControls(scene));
         const clippingModeStatus = document.createElement('div');
         const clippingModeButton = document.createElement('div');
         clippingModeStatus.id = 'toggle-clipping-status';
@@ -63,11 +57,10 @@ describe('SceneEditor controls', () => {
         result.current.toggleClippingMode();
         expect(clippingModeStatus).toHaveAttribute('style', '');
     })
-
     test('toggle drag mode', async () => {
-        const editor = new SceneEditor(context, {})
-        await editor.init();
-        const { result } = renderHook(() => useControls(editor));
+        const scene = renderHook(() => useScene(context, {})).result.current
+        await scene.initialize();
+        const { result } = renderHook(() => useControls(scene));
         const dragModeStatus = document.createElement('div');
         const dragModeButton = document.createElement('div');
         dragModeStatus.id = 'toggle-drag-status';
@@ -78,11 +71,10 @@ describe('SceneEditor controls', () => {
         result.current.toggleDragMode();
         expect(dragModeStatus).toHaveAttribute('style', '');
     })
-
     test('toggle editing mode', async () => {
-        const editor = new SceneEditor(context, {})
-        await editor.init();
-        const { result } = renderHook(() => useControls(editor));
+        const scene = renderHook(() => useScene(context, {})).result.current
+        await scene.initialize();
+        const { result } = renderHook(() => useControls(scene));
         const editingModeStatus = document.createElement('div');
         const editingModeButton = document.createElement('div');
         editingModeStatus.id = 'toggle-editing-status';
@@ -93,11 +85,10 @@ describe('SceneEditor controls', () => {
         result.current.toggleEditingMode();
         expect(editingModeStatus).toHaveAttribute('style', '');
     })
-
     test('toggle trash mode', async () => {
-        const editor = new SceneEditor(context, {})
-        await editor.init();
-        const { result } = renderHook(() => useControls(editor));
+        const scene = renderHook(() => useScene(context, {})).result.current
+        await scene.initialize();
+        const { result } = renderHook(() => useControls(scene));
         const trashModeIcon = document.createElement('img');
         const trashModeStatus = document.createElement('div');
         const trashModeButton = document.createElement('div');
