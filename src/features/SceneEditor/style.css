@@ -9,18 +9,15 @@
     align-items: center;
     max-height: 500px;
 }
-
 .Scene__title {
     text-align: center;
     margin: 10px;
 }
-
 .Scene__controls {
     align-items: center;
     display: flex;
     gap: 10px;
 }
-
 .Scene__button {
     border-radius: var(--window-border-radius);
     cursor: pointer;
@@ -29,17 +26,14 @@
     transition: 0.2s;
     width: 75%;
 }
-
 .Scene__button--serious {
     color: var(--secondary-color);
     background-color: var(--serious-color);
 }
-
 .Scene__button--serious:hover {
     transition: 0.2s;
     background-color: var(--serious-hover-color);
 }
-
 .Scene__delete-confirmation {
     align-items: center;
     background-color: var(--background-color);
@@ -54,42 +48,35 @@
     transform: translate(-140%, -50%);
     transition: 0.2s;
 }
-
 .Scene__select {
     text-align: center;
     margin: 5px;
     margin-bottom: 15px;
 }
-
 .Scene__select__dropdown {
     border-radius: var(--window-border-radius);
     width: 75%;
 }
-
 .Scene__content {
     overflow-y: auto;
     overflow-x: hidden;
     scrollbar-width: thin;
     scrollbar-color: var(--secondary-color) transparent;
 }
-
 .Scene__content__group {
     margin: 10px;
     text-align: center;
 }
-
 .Scene__content__group__title {
     margin: 0;
     margin-bottom: 10px;
 }
-
 .Scene__content__group__tiles {
     display: grid;
     column-gap: 10px;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     row-gap: 10px;
 }
-
 .Scene__content__tiles__tile {
     background-color: var(--background-color);
     background-size: cover;
@@ -101,7 +88,6 @@
     opacity: 0.5;
     width: 50px;
 }
-
 .Scene__content__tiles__tile:hover {
     opacity: 1;
     transition: 0.2s;

@@ -252,7 +252,6 @@ const useEditor = (scene: SceneAttributes) => {
         TILE
     }
 }
-
 export {
     useEditor
 }

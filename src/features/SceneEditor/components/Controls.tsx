@@ -5,7 +5,7 @@ import dragpointer from '../../../assets/images/icons/dragpointer.svg';
 import editpointer from '../../../assets/images/icons/editpointer.svg';
 import { useControls } from '../hooks/useControls';
 import ToggleIcon from '../../../components/ToggleIcon';
-import { Scene } from '../hooks/type';
+import { Control, Scene } from '../hooks/type';
 type Props = {
   scene: Scene;
 }
@@ -16,7 +16,7 @@ const Controls: React.FC<Props> = ({ scene }) => {
       toggleDragMode,
       toggleEditingMode,
       showDeleteConfirmation,
-    } = useControls(scene);
+    }: Control = useControls(scene);
     return (
         <>
             {scene.attrs.input.trash &&
@@ -35,37 +35,29 @@ const Controls: React.FC<Props> = ({ scene }) => {
             }
             <div className='Scene__controls'>
                 <ToggleIcon
-                    name='trash'
+                    name='trash mode'
                     src={trashcan}
                     fn={toggleTrashMode}
-                    alt='trashcan'
-                    title='trash mode'
                     keyShortcuts='Delete'
                 />
                 <ToggleIcon
-                    name='clipping'
+                    name='clipping mode'
                     src={scissors}
                     fn={toggleClippingMode}
-                    alt='scissors'
                     keyShortcuts='C'
-                    title='clipping mode'
                 />
                 <ToggleIcon
-                    name='drag'
+                    name='drag mode'
                     src={dragpointer}
                     fn={toggleDragMode}
-                    alt='drag pointer'
                     keyShortcuts='D'
-                    title='drag mode'
                 />
                 <ToggleIcon
-                    name='editing'
+                    name='editing mode'
                     src={editpointer}
                     fn={toggleEditingMode}
-                    width={6}
-                    alt='pencil'
                     keyShortcuts='E'
-                    title='editing mode'
+                    width={6}
                 />
             </div>
         </>

@@ -2,6 +2,7 @@ import "./styles/Toolbar.css";
 import { useEffect } from "react";
 import AnimationPlayer from "../features/AnimationPlayer";
 import { useSignal } from "@preact/signals-react";
+import Tilemap from "../features/Tilemap";
 const Toolbar = () => {
     useEffect(() => {
         document.getElementById("Toolbar__handle")!.onmousedown = (e) => {
@@ -30,6 +31,9 @@ const Toolbar = () => {
             <div className="Toolbar__header">
                 <div className="Toolbar__header__button" onClick={(e) => openTab(e, <AnimationPlayer/>)}>
                     <span className="Toolbar__header__button__title">Animation Player</span>
+                </div>
+                <div className="Toolbar__header__button" onClick={(e) => openTab(e, <Tilemap/>)}>
+                    <span className="Toolbar__header__button__title">Tilemap Editor</span>
                 </div>
             </div>
             <div className="Toolbar__content">

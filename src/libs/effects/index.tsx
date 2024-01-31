@@ -1,4 +1,4 @@
-import { UIEffects } from "./effects";
+import { iconEffects } from "./icons";
 export {
-    UIEffects
+    iconEffects
 }

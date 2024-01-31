@@ -2,11 +2,12 @@ import { KMMapping } from '../../../libs/input';
 import { useSignal } from '@preact/signals-react';
 import { useInput } from './useInput';
 import { useTextureRenderer } from '../../../libs/rendering';
-import { Brush, Input } from './type';
+import { Brush } from './type';
 /**
  * The hook is responsible for managing the scene behavior and provides a way to set and interact with the canvas brush.
- * 
- * @class
+ * @param ctx - The canvas rendering context
+ * @param renderer - The texture renderer
+ * @param id - The id of the element to track key/mouse mapping
  */
 const useScene = (ctx: CanvasRenderingContext2D, mapping: KMMapping, id?: string) =>{
     const __brush = useSignal<Brush | null>(null);

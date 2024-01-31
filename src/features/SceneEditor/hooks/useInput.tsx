@@ -1,16 +1,20 @@
 import { KMMapping, Bindings } from "../../../libs/input";
 import { MESSAGE, log, warn } from "../../../libs/logging";
-import { UIEffects } from "../../../libs/effects";
 import { Signal, useSignal } from "@preact/signals-react";
 import { TextureRenderer } from "../../../libs/rendering/types";
 import { Brush } from "./type";
+import { iconEffects } from "../../../libs/effects";
 /**
  * The hook is responsible for managing 
  * the scene user interaction and keybindings and 
  * provides a way to set and interact with the selected brush.
  * 
- * NOTE: The hook is not meant to be use with `useScene`.
- * @class
+ * @param ctx - The canvas rendering context
+ * @param renderer - The texture renderer
+ * @param mapping - The keymapping
+ * @param brush - The selected brush
+ * @param id - The id of the element to track key/mouse mapping
+ * 
  */
 const useInput = (ctx: CanvasRenderingContext2D, renderer: TextureRenderer, mapping: KMMapping, brush: Signal<Brush | null>, id?: string) => {
     const __editable = useSignal(false);
@@ -20,7 +24,7 @@ const useInput = (ctx: CanvasRenderingContext2D, renderer: TextureRenderer, mapp
     const __clip = useSignal(false);
     const __ready = useSignal(false);
     const BINDINGS = useSignal(new Bindings(mapping, id));
-    const { applyDragEffect, applyTrashEffect, applyClippingEffect, applyEditingEffect } = UIEffects();
+    const { applyDragEffect, applyTrashEffect, applyClippingEffect, applyEditingEffect } = iconEffects();
     const input = {
         get editable() {
             return __editable.value
@@ -203,46 +207,50 @@ const useInput = (ctx: CanvasRenderingContext2D, renderer: TextureRenderer, mapp
     // the scene is ready
     // *****************************************
     const handleTrashMode = () => {
-        if (!__ready.value) return;
+        const button = document.getElementById('trash mode');
+        if (!__ready.value || !button) return;
         if (__trash.value) {
             __trash.value = false;
-            applyTrashEffect(false);
+            applyTrashEffect(button, false);
         } else {
             __trash.value = true;
-            applyTrashEffect();
+            applyTrashEffect(button);
         }
         warn(MESSAGE.TRASH, __trash.value ? "on" : "off");
     }
     const handleEditingMode = () => {
-        if (!__ready.value) return;
+        const button = document.getElementById('editing mode');
+        if (!__ready.value || !button) return;
         if (__editable.value) {
             __editable.value = false;
-            applyEditingEffect(false);
+            applyEditingEffect(button, false);
         } else {
             __editable.value = true;
-            applyEditingEffect();
+            applyEditingEffect(button);
         }
         warn(MESSAGE.EDITING, __editable.value ? "on" : "off");
     }
     const handleClippingMode = () => {
-        if (!__ready.value) return;
+        const button = document.getElementById('clipping mode');
+        if (!__ready.value || !button) return;
         if (__clip.value) {
             __clip.value = false;
-            applyClippingEffect(false);
+            applyClippingEffect(button, false);
         } else {
             __clip.value = true;
-            applyClippingEffect();
+            applyClippingEffect(button);
         }
         warn(MESSAGE.CLIPPING, __clip.value ? "on" : "off");
     }
     const handleDragDrawingMode = () => {
-        if (!__ready.value) return;
+        const button = document.getElementById('drag mode');
+        if (!__ready.value || !button) return;
         if (__drag.value) {
             __drag.value = false;
-            applyDragEffect(false);
+            applyDragEffect(button, false);
         } else {
             __drag.value = true;
-            applyDragEffect();
+            applyDragEffect(button);
         }
         warn(MESSAGE.DRAG, __drag.value ? "on" : "off");
     }

@@ -1,4 +1,4 @@
-import { Brush, Input, Inputs, Scene, SceneAttributes, Tilesets } from "./type";
+import { Brush, Control, Input, Inputs, Scene, SceneAttributes, Tilesets } from "./type";
 import { useControls } from "./useControls";
 import { useEditor } from "./useEditor";
 import { useInput } from "./useInput";
@@ -7,6 +7,7 @@ export type {
     SceneAttributes,
     Scene,
     Brush,
+    Control,
     Input,
     Inputs,
     Tilesets

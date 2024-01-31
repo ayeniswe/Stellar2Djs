@@ -1,37 +1,22 @@
-import '../assets/styles.css';
-
-type Props = {
-  name: string
-  src: string
-  fn: Function
-  alt?: string
-  keyShortcuts?: string
-  title?: string
-  width?: number
-}
-
+import { useRef } from 'react';
+import './style.css';
+import { ToggleIconProps } from './type';
 /**
- * Creates a toggle icon that can be clicked to trigger
- * passed in function. Animation is supported for by
- * using `-icon` append to id to target the icon.
- * <br>
- * 
- * Example: `id='my-item'` to later target icon use `id='my-item-icon'`
- * @param {Props} name - The name of the toggle icon.
- * @param {Props} src - The source URL of the icon image.
- * @param {Props} fn - The function to be called when the icon is clicked.
- * @param {Props} alt - The alt text of the icon.
- * @param {Props} keyShortcuts - The keyboard shortcuts
- * @param {Props} title - The tooltip for icon
- * @param {Props} width - The width of the icon. The default is 15px.
+ * Creates a toggle icon button 
  */
-const ToggleIcon: React.FC<Props> = ({ name, src, fn, alt, title, keyShortcuts, width = 15 }) => {
+const ToggleIcon: React.FC<ToggleIconProps> = ({ name, src, fn, title, keyShortcuts, width = 15 }) => {
+    const button = useRef<HTMLButtonElement>(null);
+    const status = useRef<SVGCircleElement>(null);
+    const icon = useRef<HTMLImageElement>(null);
     return (
-        <div aria-keyshortcuts={keyShortcuts} title={title} aria-label={`${name} off`} id={`toggle-${name}-button`} role='button' className="ToggleImage" onClick={() => fn()}>
-          <div role='status' aria-label={`${name} status`} id={`toggle-${name}-status`} className='ToggleImage__circle'/>
-          <img alt={alt} id={`toggle-${name}-icon`} style={{width: `${width}px`}} className='ToggleImage__img' src={src} />
-        </div>
+        <button id={name} ref={button} className='ToggleIcon' aria-keyshortcuts={keyShortcuts} aria-label={`${name} off`} title={name} onClick={() => fn(button.current, status.current, icon.current)}>
+            {/* On/Off Status Circle */}
+            <svg width="10" height="10" viewBox="0 0 10 10">
+                <circle cx="5" cy="5" r="5" fill='black'/>
+                <circle data-testid={`${name} status`} ref={status} cx="5" cy="5" r="2.5" fill='white'/>
+            </svg>
+            <img ref={icon} style={{width: `${width}px`}} alt={name} src={src} />
+        </button>
     );
 }
-
 export default ToggleIcon;
