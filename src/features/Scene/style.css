@@ -21,6 +21,7 @@
 }
 .Scene__button {
     border-radius: var(--window-border-radius);
+    border: 2px solid var(--accent-color);
     cursor: pointer;
     margin-top: 10px;
     text-align: center;

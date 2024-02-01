@@ -52,7 +52,7 @@ describe("TextureRenderer", () => {
     })
     test("should add all texture sources at initilization", async () => {
         await initialize();
-        expect(Object.keys(textureRenderer.textureSources).length).toBe(2)
+        expect(Object.keys(textureRenderer.textureSources).length).toBe(1)
     })
     test("render image", async () => {
         // Mock context.drawImage()

@@ -21,14 +21,14 @@ const Controls = () => {
             {scene.attrs.input.trash &&
             <>
                 {scene.attrs.input.safety ?
-                <div role='button' aria-label='delete all placed tiles in canvas' className='Scene__button Scene__button--serious' onClick={() => showDeleteConfirmation()}>
+                <button aria-label='clear canvas' className='Scene__button Scene__button--serious' onClick={() => showDeleteConfirmation()}>
                     Delete All
-                </div>
+                </button>
                 :
-                <div role="dialog" className='Scene__delete-confirmation' aria-label='confirmation message to delete all placed tiles in canvas'>
+                <dialog className='Scene__delete-confirmation' aria-label='confirmation to clear canvas' open>
                     Are you sure? Action can't be UNDONE!
                     <div role='button' aria-label="yes to delete all confirmation message" onClick={() => scene.clear()} className='Scene__button Scene__button--serious'>Yes</div>
-                </div>
+                </dialog>
                 }
             </>
             }

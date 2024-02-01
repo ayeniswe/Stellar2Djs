@@ -73,15 +73,16 @@ const useTilemap = () => {
         return Object.keys(tiles).map(key => {
             const [w, h, x, y, name] = [tiles[key].w, tiles[key].h, tiles[key].sx, tiles[key].sy, tiles[key].name];
             return (
-                <img
+                <button
+                    className='TilemapTile'
                     id={key}
                     key={key}
                     title={`${w} x ${h}\n${x} , ${y}`}
                     aria-label={`tile: ${name}`}
-                    role='button'
-                    className='TilemapTile'
                     onClick={(e) =>setTileBrush(e.currentTarget.id, group, tiles[key])}
-                 />
+                >
+                    <img/>
+                </button>
             );
         });
     }
