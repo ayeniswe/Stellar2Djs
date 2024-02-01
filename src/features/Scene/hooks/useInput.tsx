@@ -9,21 +9,19 @@ import { iconEffects } from "../../../libs/effects";
  * the scene user interaction and keybindings and 
  * provides a way to set and interact with the selected brush.
  * 
- * @param ctx - The canvas rendering context
  * @param renderer - The texture renderer
  * @param mapping - The keymapping
  * @param brush - The selected brush
  * @param id - The id of the element to track key/mouse mapping
  * 
  */
-const useInput = (ctx: CanvasRenderingContext2D, renderer: TextureRenderer, mapping: KMMapping, brush: Signal<Brush | null>, id?: string) => {
+const useInput = (renderer: TextureRenderer, mapping: KMMapping, brush: Signal<Brush | null>, id?: string) => {
     const __editable = useSignal(false);
     const __drag = useSignal(false);
     const __safety = useSignal(true);
     const __trash = useSignal(false);
     const __clip = useSignal(false);
     const __ready = useSignal(false);
-    const BINDINGS = useSignal(new Bindings(mapping, id));
     const { applyDragEffect, applyTrashEffect, applyClippingEffect, applyEditingEffect } = iconEffects();
     const input = {
         get editable() {
@@ -64,15 +62,15 @@ const useInput = (ctx: CanvasRenderingContext2D, renderer: TextureRenderer, mapp
         },
     }
     const initialize = async (): Promise<void> => {
-        await renderer.initialize();
-        BINDINGS.value.addBinding(handleBrush.bind(this), [], ["mousemove"], false, "Canvas");
-        BINDINGS.value.addBinding(handleDrawing.bind(this), ['LeftButton'], ["mousedown", "mousemove"], false, "Canvas");
-        BINDINGS.value.addBinding(handleClippingMode.bind(this), ['c'], "keydown", true);
-        BINDINGS.value.addBinding(handleDragDrawingMode.bind(this), ['d'], "keydown", true);
-        BINDINGS.value.addBinding(handleEditingMode.bind(this), ['e'], "keydown", true);
-        BINDINGS.value.addBinding(handleTrashMode.bind(this), ['Delete'], "keydown", true);
-        BINDINGS.value.addBinding(handleClearCanvas.bind(this), ['Control','a'], "keydown", true);
-        BINDINGS.value.addBinding(handleUndo.bind(this), ['Control', 'z'], "keydown", false);
+        const bindings = new Bindings(mapping, id);
+        bindings.addBinding(handleBrush.bind(this), [], ["mousemove"], false, "Canvas");
+        bindings.addBinding(handleDrawing.bind(this), ['LeftButton'], ["mousedown", "mousemove"], false, "Canvas");
+        bindings.addBinding(handleClippingMode.bind(this), ['c'], "keydown", true);
+        bindings.addBinding(handleDragDrawingMode.bind(this), ['d'], "keydown", true);
+        bindings.addBinding(handleEditingMode.bind(this), ['e'], "keydown", true);
+        bindings.addBinding(handleTrashMode.bind(this), ['Delete'], "keydown", true);
+        bindings.addBinding(handleClearCanvas.bind(this), ['Control','a'], "keydown", true);
+        bindings.addBinding(handleUndo.bind(this), ['Control', 'z'], "keydown", false);
     }
     const removeAll = () => {
         renderer.removeAllTexture();
@@ -135,7 +133,7 @@ const useInput = (ctx: CanvasRenderingContext2D, renderer: TextureRenderer, mapp
         return [];
     }
     /**
-     * Handles the ability to undo actions, such as adding a tile onto the scene. 
+     * Handles the ability to undo actions, such as adding a tile onto the scene.
      *
      * NOTE: This method is only available if the scene is ready.
      * 

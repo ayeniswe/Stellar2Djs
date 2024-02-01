@@ -96,6 +96,7 @@ class Input {
             if (!Input.documentEventListenersAdded) {
                 document.addEventListener("keydown", this.__addKey(mapping));
                 document.addEventListener("keyup", this.__removeKey(mapping));
+                Input.documentEventListenersAdded = true;
             }
         }
     }

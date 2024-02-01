@@ -23,19 +23,19 @@ type Control = {
     /**
      * Toggles the trash modes in the scene.
      */ 
-    toggleTrashMode: (button: HTMLButtonElement) => void,
+    toggleTrashMode: (button: HTMLButtonElement) => void
     /**
      * Toggles the drag mode in the scene.
      */ 
-    toggleDragMode: (button: HTMLButtonElement) => void,
+    toggleDragMode: (button: HTMLButtonElement) => void
     /**
      * Toggles the clipping mode in the scene.
      */ 
-    toggleClippingMode: (button: HTMLButtonElement) => void,
+    toggleClippingMode: (button: HTMLButtonElement) => void
     /**
      * Toggles the editing mode in the scene.
      */ 
-    toggleEditingMode: (button: HTMLButtonElement) => void,
+    toggleEditingMode: (button: HTMLButtonElement) => void
     /**
      * Shows a delete confirmation in the scene.
      * This function temporarily disables the safety flag, indicating that it is safe to perform a delete operation.
@@ -43,7 +43,7 @@ type Control = {
      * This confirmation mechanism is typically used to prompt the user for confirmation before deleting an element.
      * Note: The safety flag is used to prevent accidental or unintended deletions.
      */
-    showDeleteConfirmation: () => void,
+    showDeleteConfirmation: () => void
     /**
      * Clears the canvas.
      * This function removes all drawn elements from the canvas and sets the safety flag to true.
@@ -105,20 +105,36 @@ type SceneAttributes = {
     /**
      * The current inputs being used in the scene.
      */
-    readonly input: Inputs;
+    readonly input: Inputs
     /**
      * The current texture sources stored in the scene.
      */
-    readonly textureSources: TextureSources;
+    readonly textureSources: TextureSources
+    /**
+     * The current rendering context of the scene.
+     */
+    readonly ctx: CanvasRenderingContext2D | null
     /**
      * The current brush being used in the scene.
      */
-    brush: Brush | null;
+    brush: Brush | null
+    /**
+     * The current width of the scene.
+     * 
+     * NOTE - can only be accessed if context is initialized
+     */
+    width: number
+    /**
+     * The current height of the scene.
+     * 
+     * NOTE - can only be accessed if context is initialized
+     */
+    height: number
 }
 type Tilesets = {
     [key: string]: {
-        html: JSX.Element,
-        src: string,
+        html: JSX.Element
+        src: string
     },
 }
 export type {

@@ -5,18 +5,17 @@ import dragpointer from '../../../assets/images/icons/dragpointer.svg';
 import editpointer from '../../../assets/images/icons/editpointer.svg';
 import { useControls } from '../hooks/useControls';
 import ToggleIcon from '../../../components/ToggleIcon';
-import { Control, Scene } from '../hooks/type';
-type Props = {
-  scene: Scene;
-}
-const Controls: React.FC<Props> = ({ scene }) => {
+import { Control } from '../hooks/type';
+import { useAppContext } from '../../../context/appContext';
+const Controls = () => {
+    const { scene } = useAppContext();
     const {
       toggleTrashMode,
       toggleClippingMode,
       toggleDragMode,
       toggleEditingMode,
       showDeleteConfirmation,
-    }: Control = useControls(scene);
+    }: Control = useControls();
     return (
         <>
             {scene.attrs.input.trash &&

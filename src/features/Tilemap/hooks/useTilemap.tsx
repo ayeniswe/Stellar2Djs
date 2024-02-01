@@ -1,13 +1,14 @@
+import { useAppContext } from '../../../context/appContext';
 import configuration from '../../../data/config.json';
 import { Config, TextureObject, TextureObjects } from '../../../libs/rendering';
 import { capitalize } from '../../../utils/text';
 import { computed, signal, useComputed, useSignal } from '@preact/signals-react';
-import { SceneAttributes } from '../../SceneEditor/hooks';
 /**
  * This hook provides functionality to manage the tilesets, tiles, and editor tab.
  * 
  */
 const useTilemap = () => {
+    const { scene } = useAppContext();
     let config: Config = process.env.NODE_ENV === 'production' ? configuration : require('../../../data/test-config.json');
     const TILESETS = config.textures.tilesets;
     const EMPTY = useComputed( () => { return !(Object.keys(TILESETS).length > 0) });
@@ -17,15 +18,15 @@ const useTilemap = () => {
     const TILES = signal<TextureObjects>({});
     const TILESET_NAME = computed(() => TILESETS[TILESET_KEY.value].name);
     const SELECTED_TILE_OPACITY = '1' // 100% opacity
-    const drawBackground =  (object: TextureObject): string => {
+    const drawBackground = (object: TextureObject): string => {
         const { sx, sy, w, h } = object
         const canvas = document.createElement('canvas');
         canvas.width = w;
         canvas.height = h;
         const ctx = canvas.getContext('2d');
         if (ctx) {
-            // let background = scene.textureSources[TILESET_NAME.value];
-            // ctx.drawImage(background, sx, sy, w, h, 0, 0, w, h);
+            let background = scene.attrs.textureSources[TILESET_NAME.value];
+            ctx.drawImage(background, sx, sy, w, h, 0, 0, w, h);
             return canvas.toDataURL();
         }
         return '';
@@ -49,7 +50,7 @@ const useTilemap = () => {
         document.getElementById(id)!.style.opacity = SELECTED_TILE_OPACITY;
         document.getElementById(id)!.ariaPressed = 'true';
         TILE.value = id;
-        // scene.brush = { id, group, object };
+        scene.attrs.brush = { id, group, object };
     }
     /**
      * Returns an array of JSX elements representing tiles based on the provided `tiles` object and `group` string.

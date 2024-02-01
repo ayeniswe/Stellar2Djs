@@ -9,7 +9,7 @@ class Bindings extends Input {
         super(mapping, id);
         this.__mapping = mapping;
     }
-    get bindings() : BindingsMapping {
+    get bindings(): BindingsMapping {
         return this.__bindings;
     }
     private checkBindingExists(binding: string) {

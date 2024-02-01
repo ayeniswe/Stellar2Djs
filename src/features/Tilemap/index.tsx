@@ -2,7 +2,9 @@ import './style.css';
 import { useEffect } from 'react';
 import { TilemapHook } from './hooks/type';
 import { useTilemap } from './hooks/useTilemap';
+import { useAppContext } from '../../context/appContext';
 const Tilemap = () => {
+    const { scene } = useAppContext();
     const {
       setTileset,
       setTilesetKey,
@@ -15,13 +17,13 @@ const Tilemap = () => {
     // This effect handles the initialization of the tileset chosen, set the background image of the tiles, and set the ready property of the editor input to receive input
     useEffect(() => {
       if (TILESET_KEY.value !== '') {
-        // scene.attrs.input.ready = true;
+        scene!.attrs.input.ready = true;
         (async () => {
           await setTileset();
           setTilesBackground();
         })();
       }
-    }, [TILESET_KEY.value, setTilesBackground, setTileset]);
+    }, [TILESET_KEY.value, setTilesBackground, setTileset, scene]);
     return (
       <div id="Tilemap">
           <h4 className='Tilemap__select'>
@@ -31,7 +33,7 @@ const Tilemap = () => {
               {getTilesets()}
             </select>
           </h4>
-          {TILESET_KEY.value ? 
+          {TILESET_KEY.value ?
           showTileset()
           :
           <h4 className='TilemapContent TilemapContent--empty'>

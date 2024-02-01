@@ -1,6 +1,5 @@
 import { Signal } from "@preact/signals-react"
-import { TextureObject, Textures } from "../../../libs/rendering"
-import { Tilesets } from "../../SceneEditor/hooks"
+import { TextureObject } from "../../../libs/rendering"
 type TilemapHook = {
     /**
      * Sets the tileset JSX element.

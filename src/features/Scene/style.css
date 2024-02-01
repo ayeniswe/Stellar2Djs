@@ -1,3 +1,4 @@
+
 #Scene {
     background-color: var(--background-color);
     background-image: url('../../assets/images/background-editor.jpg');
@@ -91,4 +92,34 @@
 .Scene__content__tiles__tile:hover {
     opacity: 1;
     transition: 0.2s;
+}
+/* Canvas */
+#Canvas {
+    background-color: var(--primary-color);
+    border: 3px solid var(--accent-color);
+    border-radius: var(--window-border-radius);
+    cursor: pointer;
+    height: var(--game-height);
+    image-rendering: pixelated;
+    width: var(--game-width);
+}
+
+#Canvas-brush {
+    background-color: var(--accent-color);
+    border-radius: var(--window-border-radius);
+    cursor: pointer;
+    display: none;
+    height: 32px;
+    opacity: 0.5;
+    position: absolute;
+    animation: 0.3s reveal;
+    width: 32px;
+}
+@keyframes reveal {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 0.5;
+    }
 }

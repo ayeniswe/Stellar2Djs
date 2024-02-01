@@ -1,6 +1,5 @@
 import { Brush, Control, Input, Inputs, Scene, SceneAttributes, Tilesets } from "./type";
 import { useControls } from "./useControls";
-import { useEditor } from "./useEditor";
 import { useInput } from "./useInput";
 import { useScene } from "./useScene";
 export type {
@@ -13,7 +12,6 @@ export type {
     Tilesets
 }
 export {
-    useEditor,
     useScene,
     useControls,
     useInput
