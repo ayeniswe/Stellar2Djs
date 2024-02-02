@@ -132,6 +132,9 @@ type SceneAttributes = {
     height: number
 }
 type Tilesets = {
+    /**
+     *  Tilesets in a json conifg format to render in the scene
+     */
     [key: string]: {
         html: JSX.Element
         src: string

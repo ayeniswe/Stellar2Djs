@@ -47,6 +47,18 @@
     animation: 0.5s infinite;
     margin-bottom: 10px;
     margin-top: 10px;
+    width: 40%;
+}
+.ToggleIconHolder {
+    align-items: center;
+    background-color: var(--background-color);
+    display: flex;
+    justify-content: center;
+    width: 40px;
+}
+.ToggleIconHolder:hover {
+    background-color: var(--hover-color);
+    transition: 0.2s;
 }
 /*////////////////
 /// Animation ///

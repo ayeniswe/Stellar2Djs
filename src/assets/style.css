@@ -8,3 +8,11 @@
     75% { transform: translateX(-5px) rotate(-5deg); }
     100% { transform: translateX(0); }
 }
+@keyframes reveal {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 0.5;
+    }
+}

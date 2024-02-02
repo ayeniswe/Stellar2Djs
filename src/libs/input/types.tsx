@@ -140,6 +140,7 @@ export type {
     KMMapping,
     BindingsMapping,
     Mouse,
+
     KMInput,
     Keyboard
 }

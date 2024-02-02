@@ -62,7 +62,7 @@ class Bindings extends Input {
             for (const type of types) {
                 if (this.checkBindingExists(`${key}+${type}`)) this.removeBinding(key);
                 this.__bindings[`${key}+${type}`] = {
-                    fn: this.__eventListener(fn, type, mapping, inputs, once, id),
+                    fn: this.createEventListener(fn, type, mapping, inputs, once, id),
                     id: id,
                     type: type
                 }
@@ -70,7 +70,7 @@ class Bindings extends Input {
         } else {
             if (this.checkBindingExists(key)) this.removeBinding(key);
             this.__bindings[key] = {
-                fn: this.__eventListener(fn, types, mapping, inputs, once, id),
+                fn: this.createEventListener(fn, types, mapping, inputs, once, id),
                 id: id,
                 type: types
             }

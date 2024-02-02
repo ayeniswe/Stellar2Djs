@@ -3,6 +3,7 @@ import { Config, RevisionRecord, TexturesMapping, TextureSources } from './types
 import { capitalize } from '../../utils/text';
 import { error, log, MESSAGE } from '../logging';
 import { useSignal } from '@preact/signals-react';
+import { getHeight, getWidth } from '../../utils/styleProps';
 const useTextureRenderer = (ctx: CanvasRenderingContext2D) => {
     const __revisions = useSignal<RevisionRecord[]>([]);
     const __textureSources = useSignal<TextureSources>({});
@@ -18,6 +19,7 @@ const useTextureRenderer = (ctx: CanvasRenderingContext2D) => {
     }
     const initialize = async () => {
         await addAllSources();
+        startListeners();
     }
     /**
      * Adds all texture sources to the canvas.
@@ -242,12 +244,23 @@ const useTextureRenderer = (ctx: CanvasRenderingContext2D) => {
         __textureMapping.value = {};
         clearCanvas(0, 0, ctx.canvas.width, ctx.canvas.height);
     }
+    /**
+     * Add a listener to listen for various rendering events
+     */
+    const startListeners = () => {
+        // Resizing application window
+        window.addEventListener("resize", () => {
+            ctx.canvas.width = getWidth(ctx.canvas).toNumber();
+            ctx.canvas.height = getHeight(ctx.canvas).toNumber();
+            render();
+        })
+    }
     return {
         initialize,
-        addTexture, 
-        removeTexture, 
+        addTexture,
+        removeTexture,
         undoRevision,
-        render, 
+        render,
         removeAllTexture,
         textureRenderer,
     };

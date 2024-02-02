@@ -1,23 +1,19 @@
-
-#Scene {
-    background-color: var(--background-color);
-    background-image: url('../../assets/images/background-editor.jpg');
-    border: 3px solid var(--accent-color);
-    border-radius: var(--window-border-radius);
+.Scene {
+    align-items: center;
+    background-image: url('../../assets/images/background.jpg');
     cursor: pointer;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    max-height: 500px;
+    height: 100%;
+    justify-content: center;
+    width: 100%;
 }
 .Scene__title {
     text-align: center;
     margin: 10px;
 }
 .Scene__controls {
-    align-items: center;
     display: flex;
-    gap: 10px;
+    flex-direction: column;
 }
 .Scene__button {
     border-radius: var(--window-border-radius);
@@ -97,14 +93,12 @@
 /* Canvas */
 #Canvas {
     background-color: var(--primary-color);
-    border: 3px solid var(--accent-color);
     border-radius: var(--window-border-radius);
     cursor: pointer;
-    height: var(--game-height);
+    height: 95%;
     image-rendering: pixelated;
-    width: var(--game-width);
+    width: 100%;
 }
-
 #Canvas-brush {
     background-color: var(--accent-color);
     border-radius: var(--window-border-radius);
@@ -115,12 +109,4 @@
     position: absolute;
     animation: 0.3s reveal;
     width: 32px;
-}
-@keyframes reveal {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 0.5;
-    }
 }

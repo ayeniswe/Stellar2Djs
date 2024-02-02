@@ -56,7 +56,6 @@ const Controls = () => {
                     src={editpointer}
                     fn={toggleEditingMode}
                     keyShortcuts='E'
-                    width={6}
                 />
             </div>
         </>

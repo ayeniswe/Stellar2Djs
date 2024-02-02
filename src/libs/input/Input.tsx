@@ -1,7 +1,7 @@
 import { KMMapping, Mouse, Keyboard, KMInput, MouseInputToName } from ".";
 import { MESSAGE, warn } from "../logging";
 /**
- * Handles tracking of keyboard/mouse inputs to specfic custom actions.
+ * Handles tracking of keyboard/mouse inputs to specific custom actions.
  * Initializes a keyboard listener for entire document when no id is specified. Element id can be specified for specific element keyboard listener.
  */
 class Input {
@@ -129,7 +129,7 @@ class Input {
      * @param {boolean} once - Fire the action once or repeatedly
      * @return {Function} - The bound function that was created to handle the keyboard event.
      */
-    protected __eventListener(fn: Function, type: Keyboard | Mouse, mapping: KMMapping, inputs: KMInput[], once: boolean, id?:string): Function {
+    public createEventListener(fn: Function, type: Keyboard | Mouse, mapping: KMMapping, inputs: KMInput[], once: boolean, id?:string): Function {
         const bound = this.__eventHandler(fn, mapping, inputs, once);
         if (id) {
             document.getElementById(id)?.addEventListener(type, bound);

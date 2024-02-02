@@ -4,7 +4,7 @@ import { ToggleIconProps } from './type';
 /**
  * Creates a toggle icon button 
  */
-const ToggleIcon: React.FC<ToggleIconProps> = ({ name, src, fn, title, keyShortcuts, width = 15 }) => {
+const ToggleIcon: React.FC<ToggleIconProps> = ({ name, src, fn, title, keyShortcuts}) => {
     const button = useRef<HTMLButtonElement>(null);
     const status = useRef<SVGCircleElement>(null);
     const icon = useRef<HTMLImageElement>(null);
@@ -15,7 +15,9 @@ const ToggleIcon: React.FC<ToggleIconProps> = ({ name, src, fn, title, keyShortc
                 <circle cx="5" cy="5" r="5" fill='black'/>
                 <circle data-testid={`${name} status`} ref={status} cx="5" cy="5" r="2.5" fill='white'/>
             </svg>
-            <img ref={icon} style={{width: `${width}px`}} alt={name} src={src} />
+            <div className='ToggleIconHolder'>
+                <img ref={icon} alt={name} src={src} />
+            </div>
         </button>
     );
 }

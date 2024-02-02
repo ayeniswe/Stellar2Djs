@@ -13,6 +13,21 @@ const getLeft = (element: HTMLElement, isComputed = true) => {
         toNumber
     };
 }
+const getHeight = (element: HTMLElement, isComputed = true) => {
+    let height: string;
+    if(isComputed){
+        height = window.getComputedStyle(element).getPropertyValue("height");
+    } else {
+        height = element.style.width;
+    }
+    const toNumber = () => {
+        return Number(height.replace("px",""));
+    }
+    return {
+        height,
+        toNumber
+    };
+}
 const getWidth = (element: HTMLElement, isComputed = true) => {
     let width: string;
     if(isComputed){
@@ -36,6 +51,7 @@ const setOpacity = (element: HTMLElement, value: number) => {
 }
 export {
     getWidth,
+    getHeight,
     getLeft,
     setLeft,
     setOpacity

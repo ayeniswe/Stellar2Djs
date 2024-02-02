@@ -37,10 +37,6 @@ type ToggleIconProps = {
      * The tooltip for icon
      */
      title?: string
-    /**
-     *  The width of the icon. The default is 15px.
-     */
-     width?: number
 }
 export type {
     ToggleIconProps,
