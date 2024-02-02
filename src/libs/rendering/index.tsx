@@ -1,10 +1,8 @@
-import { TextureRenderer } from './TextureRenderer';
 import { TextureAtlasMetadata, Texture, TextureSources,TextureObjects, Config, TexturesMapping, TextureObject, RevisionAction, RevisionRecord, Textures } from './types';
-
+import { useTextureRenderer } from './useTextureRenderer';
 export {
-    TextureRenderer
+    useTextureRenderer
 }
-
 export type {
     TextureAtlasMetadata,
     Texture,

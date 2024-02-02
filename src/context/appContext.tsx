@@ -1,29 +1,28 @@
 import { createContext, useContext } from "react";
-import useTimeline from "../features/AnimationPlayer/hooks/useTimeline";
-import useControls from "../features/AnimationPlayer/hooks/useControls";
-import { Controls, SpriteAnimation, Timeline } from "../features/AnimationPlayer/hooks/type";
-import useSpriteAnimation from "../features/AnimationPlayer/hooks/useSpriteAnimation";
-type AppContext = {
-    timeline: Timeline,
-    timelineControls: Controls
-    spriteAnimation: SpriteAnimation
-}
-const AppContext = createContext<AppContext | null>(null);
+import { AppContextProps } from "./type";
+import { useControls, useSpriteAnimation, useTimeline } from "../features/AnimationPlayer/hooks";
+import { useScene } from "../features/Scene/hooks";
+import { useToolbar } from "../features/Toolbar/hooks";
+const AppContext = createContext<AppContextProps | null>(null);
 const AppContextProvider = ({ children }: { children: JSX.Element }) => {
     const spriteAnimation = useSpriteAnimation();
     const timeline = useTimeline(spriteAnimation);
     const timelineControls = useControls(timeline);
+    const toolbar = useToolbar();
+    const scene = useScene(null); // should be replaced when scene component is rendered
     return (
-        <AppContext.Provider 
-            value={{ 
+        <AppContext.Provider
+            value={{
                 timeline,
                 timelineControls,
-                spriteAnimation
+                spriteAnimation,
+                scene,
+                toolbar
             }}>
             {children}
         </AppContext.Provider>
     )
-} 
+}
 const useAppContext = () => {
     const ctx = useContext(AppContext);
     if(!ctx) {
@@ -32,6 +31,7 @@ const useAppContext = () => {
     return ctx;
 }
 export {
-    AppContextProvider, 
+    AppContextProvider,
+    AppContext,
     useAppContext
 }

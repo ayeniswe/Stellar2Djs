@@ -1,6 +1,7 @@
 import { useSignal } from "@preact/signals-react";
 import { setPosition } from "./utils/timeline";
 import { Timeline } from "./type";
+import { ANIMATION_PLAYER } from "..";
 /**
  * Controls the features of the timeline
  * @description
@@ -16,7 +17,8 @@ const useControls = (timeline: Timeline) => {
         if(validateInput.test(value) && Number(value) <= maxTime && Number(value) >= minTime) {
             timeline.DISPLAY.value = value;
             const position = Number(timeline.DISPLAY.value) * timeline.SCALE.value;
-            setPosition(timeline.ELEMENTS.value!.slider, position);
+            const slider = document.getElementById(ANIMATION_PLAYER.TIMELINE_SLIDER)!;
+            setPosition(slider, position);
             timeline.SLIDER.value = position
         }
         else if (value === "") {

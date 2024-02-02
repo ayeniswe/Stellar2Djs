@@ -451,14 +451,6 @@
                         }
                     }
                 }
-            },
-            "2": {
-                "name": "grassland",
-                "src": "tiles/grassland.png",
-                "groups": {
-                    "floors": {
-                    }
-                }
             }
         }
     }
