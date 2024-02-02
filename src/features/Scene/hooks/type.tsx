@@ -89,9 +89,9 @@ type Scene = {
      * Initializes the scene.
      * 
      * Note: This method should be called before any operations or interactions with the scene to ensure that it is properly initialized.
-     * @returns {Promise<void>} A promise that resolves to void when the initialization process is complete.
+     * @returns {void} A promise that resolves to void when the initialization process is complete.
      */
-    initialize: () => Promise<void>
+    initialize: () => void
     /**
      * Clears the entire scene.
      */

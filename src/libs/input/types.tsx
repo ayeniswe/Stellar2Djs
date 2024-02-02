@@ -1,4 +1,3 @@
-
 type KMMapping = {
     [KM in KMInput]?: boolean
 }

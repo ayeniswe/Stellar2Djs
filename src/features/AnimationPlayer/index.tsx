@@ -7,6 +7,7 @@ import add from "../../assets/images/icons/add.png";
 import cancel from "../../assets/images/icons/delete.png";
 import { useAppContext } from "../../context/appContext";
 import Button from "../../components/Button";
+import { ANIMATION_PLAYER } from "./constants";
 /**
  * Plays one animation and displays a preview of the current frame.
  * @returns {JSX.Element} - The rendered AnimationPlayer component.
@@ -23,14 +24,14 @@ const AnimationPlayer = () => {
             <div className="AnimationPlayerGroup AnimationPlayerGroup--margined AnimationPlayerGroup--col">
                 <div className="AnimationPlayerGroup">
                     <Button 
-                        action={spriteAnimation.loadFrame} 
-                        imgSrc={add} 
+                        action={spriteAnimation.loadFrame}
+                        imgSrc={add}
                         label="Add Frame"
                         type="file"
                     />
                    <Button 
-                        action={timeline.removeFrame} 
-                        imgSrc={cancel} 
+                        action={timeline.removeFrame}
+                        imgSrc={cancel}
                         label="Delete Frame"
                     />
                 </div>
@@ -40,3 +41,6 @@ const AnimationPlayer = () => {
     )
 }
 export default AnimationPlayer
+export {
+    ANIMATION_PLAYER
+}

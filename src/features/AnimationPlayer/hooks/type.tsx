@@ -78,11 +78,6 @@ type Timeline = {
      */
     SLIDER: Signal<number>;
     /**
-     * Represents the timeline componenets
-     * @type {Signal<TimelineElements | null>}
-     */
-    ELEMENTS: Signal<TimelineElements | null>;
-    /**
      * Represents the frames in the timeline 
      * @description
      * This list of frames is inherited from the current sprite animation

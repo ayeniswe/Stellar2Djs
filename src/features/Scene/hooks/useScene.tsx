@@ -9,7 +9,7 @@ import { Brush } from './type';
 const useScene = (ctx: CanvasRenderingContext2D | null) => {
     const __brush = useSignal<Brush | null>(null);
     const __renderer = useTextureRenderer(ctx!);
-    const __input = useInput(__renderer, {}, __brush);
+    const __input = useInput(__renderer, __brush);
     const attrs = {
         get width() {
             if (!ctx) return -1;

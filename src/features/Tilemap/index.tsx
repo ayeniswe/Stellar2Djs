@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { TilemapHook } from './hooks/type';
 import { useTilemap } from './hooks/useTilemap';
 import { useAppContext } from '../../context/appContext';
+import { TILEMAP } from './constants';
 const Tilemap = () => {
     const { scene } = useAppContext();
     const {
@@ -25,7 +26,7 @@ const Tilemap = () => {
       }
     }, [TILESET_KEY.value, setTilesBackground, setTileset, scene]);
     return (
-      <div id="Tilemap">
+      <div className="Tilemap">
           <h4 className='Tilemap__select'>
             Select Tileset
             <select value={TILESET_KEY.value} onChange={e => setTilesetKey(e.target.value)}>
@@ -44,3 +45,6 @@ const Tilemap = () => {
     );
 }
 export default Tilemap;
+export {
+  TILEMAP
+}

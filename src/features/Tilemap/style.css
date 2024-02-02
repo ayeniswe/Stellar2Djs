@@ -1,4 +1,4 @@
-#Tilemap {
+.Tilemap {
     align-items: center;
     background-color: var(--background-color);
     background-image: url('../../assets/images/background-editor.jpg');

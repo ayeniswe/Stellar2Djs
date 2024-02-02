@@ -1,3 +1,4 @@
+import { ANIMATION_PLAYER } from "../../..";
 import { useAppContext } from "../../../../../context/appContext";
 import "../../../style.css";
 import { memo, useEffect } from "react";
@@ -11,7 +12,7 @@ const FrameCollection = memo(() => {
     return (
         <>
             <div className="TimelineFrameCollection"/> {/* 1st layer of frame collection to make it transparent*/}
-            <div id="TimelineFrameCollection" className="TimelineFrameCollection TimelineFrameCollection--transparent">
+            <div id={ANIMATION_PLAYER.TIMELINE_FRAME_COLLECTION} className="TimelineFrameCollection TimelineFrameCollection--transparent">
                 {timeline.showFrames()}
             </div>
         </>

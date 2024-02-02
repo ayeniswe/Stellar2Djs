@@ -3,6 +3,7 @@ import { getWidth } from "../../../utils/styleProps";
 import { setPosition, calculateDisplay } from "./utils/timeline";
 import { TimelineElements } from "../components/Timeline/type";
 import { SpriteAnimation } from "./type";
+import { ANIMATION_PLAYER } from "../constants";
 /**
  * Timeline attributes and some inside controls
  * @description
@@ -19,7 +20,8 @@ const useTimeline = (spriteAnimation: SpriteAnimation) => {
     const FRAMES = useComputed(() => { return spriteAnimation.FRAMES.value });
     const FRAME = useComputed(() => { return FRAMES.value?.[CURRENT_FRAME.value] });
     const moveSlider = (value: number) => {
-        setPosition(ELEMENTS.value!.slider, value);
+        const slider = document.getElementById(ANIMATION_PLAYER.TIMELINE_SLIDER)!;
+        setPosition(slider, value);
         SLIDER.value = value;
         DISPLAY.value = calculateDisplay(value, SCALE.value);
     }
@@ -50,28 +52,22 @@ const useTimeline = (spriteAnimation: SpriteAnimation) => {
     }
     const initialize = () => {
         // Get all elements the timeline utilizes
-        const slider = document.getElementById("TimelineSlider")
-        const sliderThumb = document.getElementById("TimelineSliderThumb");
-        const timeline = document.getElementById("Timeline");
-        const frameCollection = document.getElementById("TimelineFrameCollection");
+        const slider = document.getElementById(ANIMATION_PLAYER.TIMELINE_SLIDER);
+        const sliderThumb = document.getElementById(ANIMATION_PLAYER.TIMELINE_SLIDER_THUMB);
+        const timeline = document.getElementById(ANIMATION_PLAYER.TIMELINE);
+        const frameCollection = document.getElementById(ANIMATION_PLAYER.TIMELINE_FRAME_COLLECTION);
         // Check all elements do exists before storing them
         if (slider && sliderThumb && timeline && frameCollection) {
-            ELEMENTS.value = { 
-                slider,
-                sliderThumb,
-                timeline,
-                frameCollection
-            };
-            // Allow timeline and slider to resize with the window 
+            // Allow timeline and slider to resize with the window
             window.addEventListener("resize", () => {
-                WIDTH.value = getWidth(ELEMENTS.value!.timeline).toNumber(); 
+                WIDTH.value = getWidth(timeline).toNumber();
                 if(WIDTH.value <= SLIDER.value){
                     moveSlider(WIDTH.value);
                 }
             })
             // Allow the slider to be able to drag back n forth within the timeline dimensions
-            WIDTH.value = getWidth(ELEMENTS.value!.timeline).toNumber(); 
-            ELEMENTS.value.sliderThumb.onmousedown = (e) => {
+            WIDTH.value = getWidth(timeline).toNumber();
+            sliderThumb.onmousedown = (e) => {
             const startX = e.clientX;
             const sliderPosition = SLIDER.value;
             document.onmousemove = (e) => {

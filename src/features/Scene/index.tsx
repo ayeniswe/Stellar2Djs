@@ -18,9 +18,7 @@ const Scene = () => {
             ref.current.height = getHeight(ref.current).toNumber();
             ctx.value = ref.current.getContext('2d');
             // initialize scene
-            (async () => {
-                await app.scene.initialize();
-            })();
+            app.scene.initialize();
         }
     }, [ctx.value]);
     return (

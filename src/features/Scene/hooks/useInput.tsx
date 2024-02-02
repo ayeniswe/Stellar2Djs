@@ -1,4 +1,4 @@
-import { KMMapping, Bindings } from "../../../libs/input";
+import { Bindings } from "../../../libs/input";
 import { MESSAGE, log, warn } from "../../../libs/logging";
 import { Signal, useSignal } from "@preact/signals-react";
 import { TextureRenderer } from "../../../libs/rendering/types";
@@ -10,12 +10,10 @@ import { iconEffects } from "../../../libs/effects";
  * provides a way to set and interact with the selected brush.
  * 
  * @param renderer - The texture renderer
- * @param mapping - The keymapping
  * @param brush - The selected brush
- * @param id - The id of the element to track key/mouse mapping
  * 
  */
-const useInput = (renderer: TextureRenderer, mapping: KMMapping, brush: Signal<Brush | null>, id?: string) => {
+const useInput = (renderer: TextureRenderer, brush: Signal<Brush | null>) => {
     const __editable = useSignal(false);
     const __drag = useSignal(false);
     const __safety = useSignal(true);
@@ -61,15 +59,15 @@ const useInput = (renderer: TextureRenderer, mapping: KMMapping, brush: Signal<B
             __drag.value = value
         },
     }
-    const initialize = async (): Promise<void> => {
-        const bindings = new Bindings(mapping, id);
+    const initialize = (): void => {
+        const bindings = Bindings.getInstance();
         bindings.addBinding(handleBrush.bind(this), [], ["mousemove"], false, "Canvas");
         bindings.addBinding(handleDrawing.bind(this), ['LeftButton'], ["mousedown", "mousemove"], false, "Canvas");
-        bindings.addBinding(handleClippingMode.bind(this), ['c'], "keydown", true);
-        bindings.addBinding(handleDragDrawingMode.bind(this), ['d'], "keydown", true);
-        bindings.addBinding(handleEditingMode.bind(this), ['e'], "keydown", true);
-        bindings.addBinding(handleTrashMode.bind(this), ['Delete'], "keydown", true);
-        bindings.addBinding(handleClearCanvas.bind(this), ['Control','a'], "keydown", true);
+        bindings.addBinding(toggleClipMode.bind(this), ['c'], "keydown", true);
+        bindings.addBinding(toggleDragMode.bind(this), ['d'], "keydown", true);
+        bindings.addBinding(toggleEditMode.bind(this), ['e'], "keydown", true);
+        bindings.addBinding(toggleTrashMode.bind(this), ['Delete'], "keydown", true);
+        bindings.addBinding(clearCanvas.bind(this), ['Control','a'], "keydown", true);
         bindings.addBinding(handleUndo.bind(this), ['Control', 'z'], "keydown", false);
     }
     const removeAll = () => {
@@ -194,6 +192,9 @@ const useInput = (renderer: TextureRenderer, mapping: KMMapping, brush: Signal<B
             }
         }
     }
+    const handleToolbar = (): void => {
+        
+    }
     // *****************************************
     //        TOGGLE HANDLERS SECTION
     // *****************************************
@@ -204,7 +205,7 @@ const useInput = (renderer: TextureRenderer, mapping: KMMapping, brush: Signal<B
     // NOTE: These methods are only available if
     // the scene is ready
     // *****************************************
-    const handleTrashMode = () => {
+    const toggleTrashMode = () => {
         const button = document.getElementById('trash mode');
         if (!__ready.value || !button) return;
         if (__trash.value) {
@@ -216,7 +217,7 @@ const useInput = (renderer: TextureRenderer, mapping: KMMapping, brush: Signal<B
         }
         warn(MESSAGE.TRASH, __trash.value ? "on" : "off");
     }
-    const handleEditingMode = () => {
+    const toggleEditMode = () => {
         const button = document.getElementById('editing mode');
         if (!__ready.value || !button) return;
         if (__editable.value) {
@@ -228,7 +229,7 @@ const useInput = (renderer: TextureRenderer, mapping: KMMapping, brush: Signal<B
         }
         warn(MESSAGE.EDITING, __editable.value ? "on" : "off");
     }
-    const handleClippingMode = () => {
+    const toggleClipMode = () => {
         const button = document.getElementById('clipping mode');
         if (!__ready.value || !button) return;
         if (__clip.value) {
@@ -240,7 +241,7 @@ const useInput = (renderer: TextureRenderer, mapping: KMMapping, brush: Signal<B
         }
         warn(MESSAGE.CLIPPING, __clip.value ? "on" : "off");
     }
-    const handleDragDrawingMode = () => {
+    const toggleDragMode = () => {
         const button = document.getElementById('drag mode');
         if (!__ready.value || !button) return;
         if (__drag.value) {
@@ -259,12 +260,12 @@ const useInput = (renderer: TextureRenderer, mapping: KMMapping, brush: Signal<B
      *
      * NOTE: This method is only available if the editor is ready.
      */
-    const handleClearCanvas = () => {
+    const clearCanvas = () => {
         if (!__ready.value) return;
-        handleTrashMode();
+        toggleTrashMode();
         __safety.value = false;
         setTimeout(() => {
-            handleTrashMode();
+            toggleTrashMode();
             __safety.value = true;
         }, 3000);
     }
