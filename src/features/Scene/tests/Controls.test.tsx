@@ -5,7 +5,7 @@ import { AppContextProvider } from '../../../context/appContext';
 import Scene from '..';
 beforeAll(() => {
     jest.spyOn(console,"warn").mockImplementation(() => {})
-    jest.spyOn(console,"log").mockImplementation(() => {})
+    // jest.spyOn(console,"log").mockImplementation(() => {})
     jest.spyOn(console,"error").mockImplementation(() => {})
 })
 /*

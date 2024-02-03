@@ -8,13 +8,13 @@ const Toolbar = () => {
     const { toolbar } = useAppContext();
     useEffect(() => toolbar.initialize(),[]);
     return (
-        <div id={TOOLBAR.$}>
+        <div id={TOOLBAR.$} aria-keyshortcuts="t">
             <div id={TOOLBAR.HANDLE}/>
             <div className="header">
-                <button id={TOOLBAR.ANIMATION_PLAYER} onClick={(e) => toolbar.openTab(e.currentTarget, <AnimationPlayer/>)}>
+                <button id={TOOLBAR.ANIMATION_PLAYER} aria-keyshortcuts="a" onClick={(e) => toolbar.openTab(e.currentTarget, <AnimationPlayer/>)}>
                     Animation Player
                 </button>
-                <button id={TOOLBAR.TILEMAP_EDITOR} onClick={(e) => toolbar.openTab(e.currentTarget, <Tilemap/>)}>
+                <button id={TOOLBAR.TILEMAP_EDITOR} aria-keyshortcuts="m" onClick={(e) => toolbar.openTab(e.currentTarget, <Tilemap/>)}>
                     Tilemap Editor
                 </button>
             </div>
