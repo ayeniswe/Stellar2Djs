@@ -1,3 +1,4 @@
+import { SCENE } from '..';
 import '../style.css';
 type Props = {
   reference : React.RefObject<HTMLCanvasElement>
@@ -5,8 +6,8 @@ type Props = {
 const Canvas: React.FC<Props> = ({ reference }) => {
     return (
       <>
-        <div id="Canvas-brush"/>
-        <canvas aria-label='drawing canvas' id="Canvas" ref={reference} width={reference.current?.width} height={reference.current?.height} />
+        <div id={SCENE.BRUSH}/>
+        <canvas aria-label='drawing canvas' id={SCENE.CANVAS} ref={reference} width={reference.current?.width} height={reference.current?.height} />
       </>
     );
 }

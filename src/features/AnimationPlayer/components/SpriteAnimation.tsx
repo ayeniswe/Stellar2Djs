@@ -10,16 +10,16 @@ import "../style.css";
 const SpriteAnimation = () => {
     const { spriteAnimation } = useAppContext();
     return (
-        <div className="AnimationPlayerGroup AnimationPlayerGroup--col">
+        <div className="SpriteAnimation AnimationPlayerGroup AnimationPlayerGroup--col">
             {spriteAnimation.CREATING.value ? 
-            <input className="AnimationPlayerDisplay AnimationPlayerDisplay--full" onChange={(e) => spriteAnimation.changeName(e.target.value)} value={spriteAnimation.NAME.value}/>
+            <input className="display" onChange={(e) => spriteAnimation.changeName(e.target.value)} value={spriteAnimation.NAME.value}/>
             :
-            <select className="AnimationPlayerDisplay AnimationPlayerDisplay--full" value={spriteAnimation.SPRITE.value?.id} onChange={(e) => spriteAnimation.changeSprite(Number(e.target.value))}>
+            <select className="display" value={spriteAnimation.SPRITE.value?.id} onChange={(e) => spriteAnimation.changeSprite(Number(e.target.value))}>
                 {spriteAnimation.showSprites()}
             </select>
             }
             <div className="AnimationPlayerGroup">
-                <span className="Button--main">
+                <span className="ButtonMain">
                     <Button
                         action={() => { spriteAnimation.saveAnimation() }}
                         label="Save"

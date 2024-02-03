@@ -1,5 +1,4 @@
 import { useSignal } from "@preact/signals-react";
-import { useEffect } from "react";
 import { input } from "./input";
 const useToolbar = () => {
     const __tabContent = useSignal<JSX.Element>(<div/>);
@@ -21,18 +20,19 @@ const useToolbar = () => {
     const __input = input(attrs);
     const openTab = (element: HTMLElement , content: JSX.Element) => {
         if (__tab.value) {
-            __tab.value.style.backgroundColor = "";
+            __tab.value!.style.backgroundColor = "";
         }
         __tab.value = element;
         __tab.value.style.backgroundColor = "var(--hover-color)";
         __tabContent.value = content;
     }
-    useEffect(() => {
+    const initialize = () => {
         __input.initialize();
-    },[])
+    }
     return {
         attrs,
-        openTab
+        openTab,
+        initialize
     }
 }
 export {

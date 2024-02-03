@@ -12,8 +12,8 @@ const ProgressBars: FC<ProgressBarsProps> = memo(({ scaling, step, width }) => {
             {Array.from({ length: numOfBars }, (_, index) => {
                 if (index > 0) {
                     return (
-                        <div key={index} className="Progress__bar" style={{ left: `${index * scaling * step}px`}}>
-                            <span className="Progress__bar__unit">{index * step}</span>
+                        <div key={index} className="bar" style={{ left: `${index * scaling * step}px`}}>
+                            <span className="unit">{index * step}</span>
                         </div>
                     )
                 }

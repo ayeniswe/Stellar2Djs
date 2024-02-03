@@ -27,20 +27,22 @@ const Tilemap = () => {
     }, [TILESET_KEY.value, setTilesBackground, setTileset, scene]);
     return (
       <div className="Tilemap">
-          <h4 className='Tilemap__select'>
+          <h4 className='dropdown'>
             Select Tileset
             <select value={TILESET_KEY.value} onChange={e => setTilesetKey(e.target.value)}>
               <option value="" disabled>None</option>
               {getTilesets()}
             </select>
           </h4>
-          {TILESET_KEY.value ?
-          showTileset()
-          :
-          <h4 className='TilemapContent TilemapContent--empty'>
-            No Tileset {`${EMPTY.value ? 'Available' : 'Selected'}`}
-          </h4>
-          }
+          <div className="tileset">
+            {TILESET_KEY.value ?
+            showTileset()
+            :
+            <h2 className='empty'>
+              No Tileset {`${EMPTY.value ? 'Available' : 'Selected'}`}
+            </h2>
+            }
+          </div>
       </div>
     );
 }

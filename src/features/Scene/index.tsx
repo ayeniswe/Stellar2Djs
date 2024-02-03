@@ -5,6 +5,7 @@ import { useAppContext } from "../../context/appContext";
 import Controls from "./components/Controls";
 import { useScene } from "./hooks";
 import { getHeight, getWidth } from "../../utils/styleProps";
+import { SCENE } from "./constants";
 const Scene = () => {
     const ctx = useSignal<CanvasRenderingContext2D | null>(null);
     const ref = useRef<HTMLCanvasElement>(null);
@@ -29,3 +30,6 @@ const Scene = () => {
     );
 }
 export default Scene;
+export {
+    SCENE
+}

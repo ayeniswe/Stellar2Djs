@@ -6,8 +6,8 @@ const FPS = () => {
     const { timeline, timelineControls } = useAppContext();
     return (
         <div className="FPS">
-            FPS:<input className="AnimationPlayerDisplay AnimationPlayerDisplay--margined" disabled value={timeline.FPS.value}/>
-            <div className="FPS__buttons AnimationPlayerButtons">
+            FPS:<input className="display" disabled value={timeline.FPS.value}/>
+            <div className="buttons">
                 <button title="FPS up" onClick={() => timelineControls.changeFPS("up")}><img alt="animation FPS up" src={arrowUpIcon}/></button>
                 <button title="FPS down" onClick={() => timelineControls.changeFPS("down")}><img alt="animation FPS down" src={arrowDownIcon}/></button>
             </div>

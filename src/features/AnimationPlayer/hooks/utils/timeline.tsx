@@ -14,9 +14,10 @@ const calculateDisplay = (position: number, scale: number): string => {
  *
  * @param {HTMLElement} element - the HTML element to set the position for
  * @param {number} newPosition - the new position to set
- * @return {void} 
+ * @return {void}
  */
 const setPosition = (element: HTMLElement, newPosition: number): void => {
+    if (!element) return;
     setLeft(element, newPosition);
 }
 export {

@@ -1,6 +1,6 @@
 enum TOOLBAR {
     $ = "Toolbar",
-    HANDLE = "Toolbar__handle",
+    HANDLE = "ToolbarHandle",
     ANIMATION_PLAYER = "AnimationPlayer",
     TILEMAP_EDITOR = "TilemapEditor",
 }

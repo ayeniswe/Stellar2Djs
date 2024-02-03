@@ -8,7 +8,7 @@ import { ButtonProps } from "./type";
 const Button: FC<ButtonProps> = ({ action, label, imgSrc, type }) => {
     return (
         <button className="Button" onClick={() => type ? null : action()}>
-            <label className="ButtonLabel" htmlFor={type}>
+            <label htmlFor={type}>
                 {imgSrc && <img alt={label} src={imgSrc}/>}
                 {label}
                 {type === "file" && <input id="file" type="file" onChange={(e) => action(e.target.files)} multiple/>}
