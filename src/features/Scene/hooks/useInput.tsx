@@ -193,9 +193,6 @@ const useInput = (renderer: TextureRenderer, brush: Signal<Brush | null>) => {
             }
         }
     }
-    const handleToolbar = (): void => {
-        
-    }
     // *****************************************
     //        TOGGLE HANDLERS SECTION
     // *****************************************
@@ -243,6 +240,7 @@ const useInput = (renderer: TextureRenderer, brush: Signal<Brush | null>) => {
         warn(MESSAGE.CLIPPING, __clip.value ? "on" : "off");
     }
     const toggleDragMode = () => {
+        console.log(__drag.value)
         const button = document.getElementById('drag mode');
         if (!__ready.value || !button) return;
         if (__drag.value) {

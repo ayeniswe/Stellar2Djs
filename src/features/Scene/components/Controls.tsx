@@ -42,19 +42,19 @@ const Controls = () => {
                 name='clipping mode'
                 src={scissors}
                 fn={toggleClippingMode}
-                keyShortcuts='C'
+                keyShortcuts='c'
             />
             <ToggleIcon
                 name='drag mode'
                 src={dragpointer}
                 fn={toggleDragMode}
-                keyShortcuts='D'
+                keyShortcuts='d'
             />
             <ToggleIcon
                 name='editing mode'
                 src={editpointer}
                 fn={toggleEditingMode}
-                keyShortcuts='E'
+                keyShortcuts='e'
             />
         </div>
     );
