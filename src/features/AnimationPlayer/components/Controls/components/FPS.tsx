@@ -8,8 +8,8 @@ const FPS = () => {
         <div className="FPS">
             FPS:<input className="display" disabled value={timeline.FPS.value}/>
             <div className="buttons">
-                <button title="FPS up" onClick={() => timelineControls.changeFPS("up")}><img alt="animation FPS up" src={arrowUpIcon}/></button>
-                <button title="FPS down" onClick={() => timelineControls.changeFPS("down")}><img alt="animation FPS down" src={arrowDownIcon}/></button>
+                <button title="frames per second up" onClick={() => timelineControls.changeFPS("up")}><img alt="animation FPS up" src={arrowUpIcon}/></button>
+                <button title="frames per second down" onClick={() => timelineControls.changeFPS("down")}><img alt="animation FPS down" src={arrowDownIcon}/></button>
             </div>
         </div>
     )

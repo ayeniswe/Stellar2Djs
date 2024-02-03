@@ -24,12 +24,14 @@ const SpriteAnimation = () => {
                         action={() => { spriteAnimation.saveAnimation() }}
                         label="Save"
                         imgSrc={save}
+                        title="Save the current animation"
                     />
                 </span>
                 <Button
                     action={() => { spriteAnimation.createAnimation() }}
                     label="New"
                     imgSrc={add}
+                    title="Create a new animation"
                 />
             </div>
         </div>

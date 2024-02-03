@@ -15,6 +15,10 @@ type ButtonProps = {
      * The type of button
      */
     type?: "file"
+    /**
+     * The tooltip for button
+     */
+    title?: string
 }
 type ToggleIconProps = {
     /**
