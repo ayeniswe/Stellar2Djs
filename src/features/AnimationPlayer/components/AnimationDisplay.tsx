@@ -6,9 +6,9 @@ const AnimationDisplay = () => {
     return (
         <div className="AnimationDisplay">
             {timeline.FRAME.value ?
-            <img id={ANIMATION_PLAYER.DISPLAY} className="AnimationPlayerDisplay AnimationPlayerDisplay--noinset" src={ timeline.FRAME.value.src }/>
-            : 
-            <div className="AnimationDisplay--empty">No Animation Frames Found</div>
+            <img id={ANIMATION_PLAYER.DISPLAY} src={ timeline.FRAME.value.src }/>
+            :
+            <div className="empty">No Animation Frames Found</div>
             }
         </div>
     )

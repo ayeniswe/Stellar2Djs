@@ -4,6 +4,7 @@ import { Signal, useSignal } from "@preact/signals-react";
 import { TextureRenderer } from "../../../libs/rendering/types";
 import { Brush } from "./type";
 import { iconEffects } from "../../../libs/effects";
+import { SCENE } from "..";
 /**
  * The hook is responsible for managing 
  * the scene user interaction and keybindings and 
@@ -151,7 +152,7 @@ const useInput = (renderer: TextureRenderer, brush: Signal<Brush | null>) => {
      */
     const handleBrush = (event: MouseEvent): void => {
         if (!__ready.value || !brush.value) return;
-        const brushElement = document.getElementById('Canvas-brush')!;
+        const brushElement = document.getElementById(SCENE.BRUSH)!;
         const { w, h } = brush.value!.object;
         brushElement.style.display = 'flex';
         brushElement.style.left = `${event.clientX}px`;

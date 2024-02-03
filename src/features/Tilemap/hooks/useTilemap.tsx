@@ -74,7 +74,7 @@ const useTilemap = () => {
             const [w, h, x, y, name] = [tiles[key].w, tiles[key].h, tiles[key].sx, tiles[key].sy, tiles[key].name];
             return (
                 <button
-                    className='TilemapTile'
+                    className='tile'
                     id={key}
                     key={key}
                     title={`${w} x ${h}\n${x} , ${y}`}
@@ -101,11 +101,11 @@ const useTilemap = () => {
         const groups = TILESETS[TILESET_KEY.value].groups;
         return Object.keys(groups).map(name => {
             return (
-                <div className='TilemapGroup' key={name}>
-                    <h5 className='TilemapGroup__title'>
+                <div className='group' key={name}>
+                    <h5 className='title'>
                         {capitalize(name)}
                     </h5>
-                    <div className='TilemapGroup__tiles'>
+                    <div className='tiles'>
                         {getTiles(groups[name], name)}
                     </div>
                 </div>
@@ -114,9 +114,9 @@ const useTilemap = () => {
     }
     const setTileset = async (): Promise<void> => {
         TILESET.value = (
-            <div className='TilemapContent'>
+            <>
                 {getGroups()}
-            </div>
+            </>
         );
     }
     const getTilesets = (): JSX.Element[] => {

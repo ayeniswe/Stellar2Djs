@@ -14,7 +14,7 @@ const Timeline = () => {
     return (
         <div id={ANIMATION_PLAYER.TIMELINE}>
             <FrameCollection/>
-            <input className="AnimationPlayerDisplay AnimationPlayerDisplay--margined" onChange={(e) => timelineControls.changeSliderDisplay(e.target.value)} value={timeline.DISPLAY.value}/>
+            <input className="display" onChange={(e) => timelineControls.changeSliderDisplay(e.target.value)} value={timeline.DISPLAY.value}/>
             <div id={ANIMATION_PLAYER.TIMELINE_SLIDER}>
                 <div id={ANIMATION_PLAYER.TIMELINE_SLIDER_THUMB}/>
             </div>

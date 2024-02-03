@@ -5,10 +5,10 @@ import { ButtonProps } from "./type";
  * A button w/ a single action
  * @returns {JSX.Element} - The rendered Button component.
  */
-const Button: FC<ButtonProps> = ({ action, label, imgSrc, type }) => {
+const Button: FC<ButtonProps> = ({ action, label, imgSrc, type, title }) => {
     return (
-        <button className="Button" onClick={() => type ? null : action()}>
-            <label className="ButtonLabel" htmlFor={type}>
+        <button className="Button" title={title} onClick={() => type ? null : action()}>
+            <label htmlFor={type}>
                 {imgSrc && <img alt={label} src={imgSrc}/>}
                 {label}
                 {type === "file" && <input id="file" type="file" onChange={(e) => action(e.target.files)} multiple/>}

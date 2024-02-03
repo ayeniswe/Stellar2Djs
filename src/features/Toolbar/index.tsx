@@ -3,20 +3,22 @@ import AnimationPlayer from "../AnimationPlayer";
 import Tilemap from "../Tilemap";
 import { useAppContext } from "../../context/appContext";
 import { TOOLBAR } from "./constants";
+import { useEffect } from "react";
 const Toolbar = () => {
     const { toolbar } = useAppContext();
+    useEffect(() => toolbar.initialize(),[]);
     return (
         <div id={TOOLBAR.$}>
             <div id={TOOLBAR.HANDLE}/>
-            <div className="Toolbar__header">
-                <div id={TOOLBAR.ANIMATION_PLAYER} className="Toolbar__header__button" onClick={(e) => toolbar.openTab(e.currentTarget, <AnimationPlayer/>)}>
-                    <span className="Toolbar__header__button__title">Animation Player</span>
-                </div>
-                <div id={TOOLBAR.TILEMAP_EDITOR} className="Toolbar__header__button" onClick={(e) => toolbar.openTab(e.currentTarget, <Tilemap/>)}>
-                    <span className="Toolbar__header__button__title">TilemapEditor</span>
-                </div>
+            <div className="header">
+                <button id={TOOLBAR.ANIMATION_PLAYER} onClick={(e) => toolbar.openTab(e.currentTarget, <AnimationPlayer/>)}>
+                    Animation Player
+                </button>
+                <button id={TOOLBAR.TILEMAP_EDITOR} onClick={(e) => toolbar.openTab(e.currentTarget, <Tilemap/>)}>
+                    Tilemap Editor
+                </button>
             </div>
-            <div className="Toolbar__content">
+            <div className="content">
                 {toolbar.attrs.tabContent}
             </div>
         </div>

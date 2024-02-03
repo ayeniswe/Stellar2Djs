@@ -28,11 +28,13 @@ const AnimationPlayer = () => {
                         imgSrc={add}
                         label="Add Frame"
                         type="file"
+                        title="Add a new frame"
                     />
-                   <Button 
+                   <Button
                         action={timeline.removeFrame}
                         imgSrc={cancel}
                         label="Delete Frame"
+                        title="Delete the current frame"
                     />
                 </div>
                 <AnimationDisplay/>

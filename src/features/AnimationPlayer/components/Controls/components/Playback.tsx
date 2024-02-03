@@ -15,7 +15,7 @@ const Playback = () => {
     const { timelineControls } = useAppContext();
     return (
         <div className="Playback">
-            <div className="Playback__buttons AnimationPlayerButtons ">
+            <div className="buttons">
                 <button title="repeat" onClick={() => timelineControls.repeat()} style={{ backgroundColor: `${timelineControls.LOOP.value ? "var(--accent-color)" : "transparent"}`}}>
                     <img alt="animation repeat" src={repeatIcon}/>
                 </button>
@@ -29,7 +29,7 @@ const Playback = () => {
                     <img alt={`animation ${timelineControls.PLAYING.value ? "stop" : "play"}`} src={timelineControls.PLAYING.value ? stopIcon : playIcon}/>
                 </button>
                 <button title="play next frame" onClick={() => timelineControls.playFastForward()}>
-                    <img alt="animation play next frame"  src={arrowRightRightIcon}/>
+                    <img alt="animation play next frame" src={arrowRightRightIcon}/>
                 </button>
                 <button title="play forward" onClick={() => timelineControls.playForward()}>
                     <img alt="animation play forward" src={arrowRightIcon}/>

@@ -15,7 +15,7 @@ const ToggleIcon: React.FC<ToggleIconProps> = ({ name, src, fn, title, keyShortc
                 <circle cx="5" cy="5" r="5" fill='black'/>
                 <circle data-testid={`${name} status`} ref={status} cx="5" cy="5" r="2.5" fill='white'/>
             </svg>
-            <div className='ToggleIconHolder'>
+            <div>
                 <img ref={icon} alt={name} src={src} />
             </div>
         </button>
