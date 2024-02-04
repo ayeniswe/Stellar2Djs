@@ -19,12 +19,19 @@ const useToolbar = () => {
     }
     const __input = input(attrs);
     const openTab = (element: HTMLElement , content: JSX.Element) => {
-        if (__tab.value) {
+        // Closes the tab if it's already open
+        if (__tabContent.value.type === content.type) {
             __tab.value!.style.backgroundColor = "";
+            __tab.value = null;
+            __tabContent.value = <div/>;
+        } else {
+            if (__tab.value) {
+                __tab.value.style.backgroundColor = "";
+            }
+            __tab.value = element;
+            __tab.value.style.backgroundColor = "var(--hover-color)";
+            __tabContent.value = content;
         }
-        __tab.value = element;
-        __tab.value.style.backgroundColor = "var(--hover-color)";
-        __tabContent.value = content;
     }
     const initialize = () => {
         __input.initialize();

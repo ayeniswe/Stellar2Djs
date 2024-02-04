@@ -7,6 +7,7 @@ import { useControls } from '../hooks/useControls';
 import ToggleIcon from '../../../components/ToggleIcon';
 import { Control } from '../hooks/type';
 import { useAppContext } from '../../../context/appContext';
+import { SCENE } from '..';
 const Controls = () => {
     const { scene } = useAppContext();
     const {
@@ -33,28 +34,32 @@ const Controls = () => {
             </>
             }
             <ToggleIcon
-                name='trash mode'
+                name={SCENE.TRASH}
                 src={trashcan}
                 fn={toggleTrashMode}
                 keyShortcuts='Delete'
+                title='trash mode'
             />
             <ToggleIcon
-                name='clipping mode'
+                name={SCENE.CLIP}
                 src={scissors}
                 fn={toggleClippingMode}
                 keyShortcuts='c'
+                title='clipping mode'
             />
             <ToggleIcon
-                name='drag mode'
+                name={SCENE.DRAG}
                 src={dragpointer}
                 fn={toggleDragMode}
                 keyShortcuts='d'
+                title='drag mode'
             />
             <ToggleIcon
-                name='editing mode'
+                name={SCENE.EDIT}
                 src={editpointer}
                 fn={toggleEditingMode}
                 keyShortcuts='e'
+                title='editing mode'
             />
         </div>
     );

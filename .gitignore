@@ -1,3 +1,5 @@
 # dependencies
 /node_modules
-
+# testing
+/cypress/e2e/2-advanced-examples
+/cypress/fixtures/example.json
