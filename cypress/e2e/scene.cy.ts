@@ -137,6 +137,46 @@ context('Drawing on Scene', () => {
         })
       })
   })
+  it ('remove drawing on canvas', () => {
+      cy.get('[id="Canvas"]').as('canvas');
+      // Click on tile
+      cy.get('[id="1-1"]')
+        .click();
+      // Turn on edit mode
+      cy.get('[id="SceneEdit"]')
+        .click();
+      // Get blank canvas
+      cy.get('@canvas').then((canvas) => {
+        const element = canvas[0] as HTMLCanvasElement;
+        cy.wrap(element.toDataURL())
+          .as('beforeCanvas');
+      })
+      // Draw on canvas
+      cy.get('@canvas')
+        .click(100, 100);
+      // Check canvas is updated
+      cy.get('@canvas').then((canvas) => {
+        const element = canvas[0] as HTMLCanvasElement;
+        const afterCanvas = element.toDataURL();
+        cy.get("@beforeCanvas").then((beforeCanvas) => {
+          expect(afterCanvas).to.not.equal(beforeCanvas);
+        })
+      })
+      // Turn on trash mode
+      cy.get('[id="SceneTrash"]')
+      .click();
+      // Remove drawing on canvas
+      cy.get('@canvas')
+        .click(100, 100);
+      // Check canvas is in original state
+      cy.get('@canvas').then((canvas) => {
+        const element = canvas[0] as HTMLCanvasElement;
+        const afterCanvas = element.toDataURL();
+        cy.get("@beforeCanvas").then((beforeCanvas) => {
+          expect(afterCanvas).to.equal(beforeCanvas);
+        })
+      })
+  })
   it ('undo draw on canvas', () => {
     cy.get('[id="Canvas"]').as('canvas');
     // Click on tile
