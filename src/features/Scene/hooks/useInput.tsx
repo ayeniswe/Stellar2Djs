@@ -204,7 +204,7 @@ const useInput = (renderer: TextureRenderer, brush: Signal<Brush | null>) => {
     // the scene is ready
     // *****************************************
     const toggleTrashMode = () => {
-        const button = document.getElementById('trash mode');
+        const button = document.getElementById(SCENE.TRASH);
         if (!__ready.value || !button) return;
         if (__trash.value) {
             __trash.value = false;
@@ -216,7 +216,7 @@ const useInput = (renderer: TextureRenderer, brush: Signal<Brush | null>) => {
         warn(MESSAGE.TRASH, __trash.value ? "on" : "off");
     }
     const toggleEditMode = () => {
-        const button = document.getElementById('editing mode');
+        const button = document.getElementById(SCENE.EDIT);
         if (!__ready.value || !button) return;
         if (__editable.value) {
             __editable.value = false;
@@ -228,7 +228,7 @@ const useInput = (renderer: TextureRenderer, brush: Signal<Brush | null>) => {
         warn(MESSAGE.EDITING, __editable.value ? "on" : "off");
     }
     const toggleClipMode = () => {
-        const button = document.getElementById('clipping mode');
+        const button = document.getElementById(SCENE.CLIP);
         if (!__ready.value || !button) return;
         if (__clip.value) {
             __clip.value = false;
@@ -241,7 +241,7 @@ const useInput = (renderer: TextureRenderer, brush: Signal<Brush | null>) => {
     }
     const toggleDragMode = () => {
         console.log(__drag.value)
-        const button = document.getElementById('drag mode');
+        const button = document.getElementById(SCENE.DRAG);
         if (!__ready.value || !button) return;
         if (__drag.value) {
             __drag.value = false;

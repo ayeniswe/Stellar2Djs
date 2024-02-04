@@ -19,14 +19,16 @@
     .tileset {
         display: flex;
         height: inherit;
-        justify-content: center;
+        overflow: scroll;
         overflow: auto;
         scrollbar-color: var(--secondary-color) transparent;
         scrollbar-width: thin;
         width: 100%;
         .empty {
-            display: flex;
             align-items: center;
+            display: flex;
+            justify-content: center;
+            width: 100%;
         }
         .group {
             margin: 10px;
