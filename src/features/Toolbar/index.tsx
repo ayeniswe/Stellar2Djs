@@ -11,10 +11,10 @@ const Toolbar = () => {
         <div id={TOOLBAR.$} aria-keyshortcuts="t">
             <div id={TOOLBAR.HANDLE}/>
             <div className="header">
-                <button id={TOOLBAR.ANIMATION_PLAYER} aria-keyshortcuts="a" onClick={(e) => toolbar.openTab(e.currentTarget, <AnimationPlayer/>)}>
+                <button data-cy="animation" id={TOOLBAR.ANIMATION_PLAYER} aria-keyshortcuts="a" onClick={(e) => toolbar.openTab(e.currentTarget, <AnimationPlayer/>)}>
                     Animation Player
                 </button>
-                <button id={TOOLBAR.TILEMAP_EDITOR} aria-keyshortcuts="m" onClick={(e) => toolbar.openTab(e.currentTarget, <Tilemap/>)}>
+                <button data-cy="tilemap" id={TOOLBAR.TILEMAP_EDITOR} aria-keyshortcuts="m" onClick={(e) => toolbar.openTab(e.currentTarget, <Tilemap/>)}>
                     Tilemap Editor
                 </button>
             </div>

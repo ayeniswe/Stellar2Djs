@@ -77,6 +77,7 @@ const useTilemap = () => {
                     className='tile'
                     id={key}
                     key={key}
+                    data-cy={key}
                     title={`${w} x ${h}\n${x} , ${y}`}
                     aria-label={`tile: ${name}`}
                     onClick={(e) =>setTileBrush(e.currentTarget.id, group, tiles[key])}

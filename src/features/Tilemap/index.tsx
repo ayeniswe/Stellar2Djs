@@ -26,10 +26,10 @@ const Tilemap = () => {
       }
     }, [TILESET_KEY.value, setTilesBackground, setTileset, scene]);
     return (
-      <div className="Tilemap">
+      <div data-cy="tilemap-editor" className="Tilemap">
           <h4 className='dropdown'>
             Select Tileset
-            <select value={TILESET_KEY.value} onChange={e => setTilesetKey(e.target.value)}>
+            <select data-cy="tileset-select" value={TILESET_KEY.value} onChange={e => setTilesetKey(e.target.value)}>
               <option value="" disabled>None</option>
               {getTilesets()}
             </select>

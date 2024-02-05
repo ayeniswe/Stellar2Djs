@@ -19,6 +19,10 @@ type ButtonProps = {
      * The tooltip for button
      */
     title?: string
+    /**
+     * The cypress test id
+     */
+    cy?: string
 }
 type ToggleIconProps = {
     /**
@@ -41,6 +45,10 @@ type ToggleIconProps = {
      * The tooltip for icon
      */
      title?: string
+    /**
+     * The cypress test id
+     */
+     cy?: string
 }
 export type {
     ToggleIconProps,

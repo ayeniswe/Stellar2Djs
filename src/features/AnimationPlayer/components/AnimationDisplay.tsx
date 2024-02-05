@@ -6,7 +6,7 @@ const AnimationDisplay = () => {
     return (
         <div className="AnimationDisplay">
             {timeline.FRAME.value ?
-            <img id={ANIMATION_PLAYER.DISPLAY} src={ timeline.FRAME.value.src }/>
+            <img data-cy="animation-display" id={ANIMATION_PLAYER.DISPLAY} src={ timeline.FRAME.value.src }/>
             :
             <div className="empty">No Animation Frames Found</div>
             }
