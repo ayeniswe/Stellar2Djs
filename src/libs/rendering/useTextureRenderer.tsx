@@ -1,7 +1,6 @@
 import configuration from '../../data/config.json';
 import { Config, RevisionRecord, TexturesMapping, TextureSources } from './types';
 import { capitalize } from '../../utils/text';
-import { error, log, MESSAGE } from '../logging';
 import { useSignal } from '@preact/signals-react';
 import { getHeight, getWidth } from '../../utils/styleProps';
 const useTextureRenderer = (ctx: CanvasRenderingContext2D) => {
@@ -37,7 +36,6 @@ const useTextureRenderer = (ctx: CanvasRenderingContext2D) => {
      */
     const addAllSources = async (): Promise<void> => {
         for (const key in CONFIG.textures) {
-            log(MESSAGE.ADDING_TEXTURE, `${capitalize(key)}`);
             const sources = Object.keys(CONFIG.textures[key]).length;
             for (let index = 1; index <= sources; index++) {
                 const texture = CONFIG.textures[key][index];
@@ -51,11 +49,10 @@ const useTextureRenderer = (ctx: CanvasRenderingContext2D) => {
                     const url: string = (await import(`../../${path}`)).default;
                     __textureSources.value[name].src = url;
                     __textureSources.value[name].onload = () => {
-                        log(MESSAGE.LOADING_TEXTURE, `${index} of ${sources}: ${capitalize(key)} `);
+                        console.log(`Loaded "${name}" texture - ${index} of ${sources}`);
                     };
-                    __textureSources.value[name].onerror = () => error(MESSAGE.FAILED_TEXTURE, `${name} from path: ${path}`);
+                    __textureSources.value[name].onerror = () => console.error(`Failed to load "${name}" texture from ${path}`);
                 } catch {
-                    error(MESSAGE.FAILED_TEXTURE, `${name} from path: ${path}`);
                 }
             }
         }
