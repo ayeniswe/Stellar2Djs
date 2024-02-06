@@ -1,56 +1,82 @@
-/// <reference types="cypress" />
+/// <reference types='cypress' />
 context('Scene controls w/ keyshortcuts', () => {
   beforeEach(() => {
     cy.visit('localhost:3000');
     cy.openTilemapEditor('1');
   })
-  it('toggles trash mode', () => {
+  it('toggles trash mode w/ keyshortcut', () => {
     // Toggle on
     cy.get('body')
       .type('{del}');
-    cy.get('circle[id="SceneTrashStatus"]')
+    cy.getBySel('scene-trash-status')
       .should('have.attr', 'style', 'fill: green;');
     // Toggle off
     cy.get('body')
       .type('{del}');
-    cy.get('circle[id="SceneTrashStatus"]')
+    cy.getBySel('scene-trash-status')
       .should('have.attr', 'style', 'fill: white;');
   })
-  it('toggles drag mode', () => {
+  it('toggles drag mode w/ keyshortcut', () => {
     // Toggle on
     cy.get('body')
       .type('{d}');
-    cy.get('circle[id="SceneDragStatus"]')
+    cy.getBySel('scene-drag-status')
       .should('have.attr', 'style', 'fill: green;');
     // Toggle off
     cy.get('body')
       .type('{d}');
-    cy.get('circle[id="SceneDragStatus"]')
+    cy.getBySel('scene-drag-status')
       .should('have.attr', 'style', 'fill: white;');
   })
-  it('toggles edit mode', () => {
+  it('toggles edit mode w/ keyshortcut', () => {
     // Toggle on
     cy.get('body')
       .type('{e}');
-    cy.get('circle[id="SceneEditStatus"]')
+    cy.getBySel('scene-edit-status')
       .should('have.attr', 'style', 'fill: green;');
     // Toggle off
     cy.get('body')
       .type('{e}');
-    cy.get('circle[id="SceneEditStatus"]')
+    cy.getBySel('scene-edit-status')
       .should('have.attr', 'style', 'fill: white;');
   })
-  it('toggles clip mode', () => {
+  it('toggles clip mode w/ keyshortcut', () => {
     // Toggle on
     cy.get('body')
       .type('{c}');
-    cy.get('circle[id="SceneClipStatus"]')
+    cy.getBySel('scene-clip-status')
       .should('have.attr', 'style', 'fill: green;');
     // Toggle off
     cy.get('body')
       .type('{c}');
-    cy.get('circle[id="SceneClipStatus"]')
+    cy.getBySel('scene-clip-status')
       .should('have.attr', 'style', 'fill: white;');
+  })
+  it ('clear canvas w/ keyshortcut', () => {
+    cy.getBySel('canvas').as('canvas');
+    // Click on tile
+    cy.getBySel('1-1')
+      .click();
+    // Turn on edit mode
+    cy.getBySel('scene-edit')
+      .click();
+    // Get blank canvas
+    cy.get('@canvas')
+      .invoke('get', 0)
+      .invoke('toDataURL')
+      .as('beforeCanvas');
+    // Draw on canvas
+    cy.get('@canvas')
+      .click(100, 100);
+    // Clear canvas with keyshortcut 'Ctrl+a'
+    cy.get('body').type('{ctrl+a}');
+    // Check canvas is back to original state
+    cy.get<HTMLCanvasElement>('@canvas')
+      .then((canvas) => {
+        const afterCanvas = canvas[0].toDataURL();
+        cy.get('@beforeCanvas')
+          .should('equal', afterCanvas);
+    })
   })
 })
 context('Scene controls', () => {
@@ -59,50 +85,50 @@ context('Scene controls', () => {
   })
   it('toggles trash mode', () => {
     // Toggle on
-    cy.get('[id="SceneTrash"]')
+    cy.getBySel('scene-trash')
       .click();
-    cy.get('circle[id="SceneTrashStatus"]')
+    cy.getBySel('scene-trash-status')
       .should('have.attr', 'style', 'fill: green;');
     // Toggle off
-    cy.get('[id="SceneTrash"]')
+    cy.getBySel('scene-trash')
       .click();
-    cy.get('circle[id="SceneTrashStatus"]')
+    cy.getBySel('scene-trash-status')
       .should('have.attr', 'style', 'fill: white;');
   })
   it('toggles drag mode', () => {
     // Toggle on
-    cy.get('[id="SceneDrag"]')
+    cy.getBySel('scene-drag')
       .click();
-    cy.get('circle[id="SceneDragStatus"]')
+    cy.getBySel('scene-drag-status')
       .should('have.attr', 'style', 'fill: green;');
     // Toggle off
-    cy.get('[id="SceneDrag"]')
+    cy.getBySel('scene-drag')
       .click();
-    cy.get('circle[id="SceneDragStatus"]')
+    cy.getBySel('scene-drag-status')
       .should('have.attr', 'style', 'fill: white;');
   })
   it('toggles edit mode', () => {
     // Toggle on
-    cy.get('[id="SceneEdit"]')
+    cy.getBySel('scene-edit')
       .click();
-    cy.get('circle[id="SceneEditStatus"]')
+    cy.getBySel('scene-edit-status')
       .should('have.attr', 'style', 'fill: green;');
     // Toggle off
-    cy.get('[id="SceneEdit"]')
+    cy.getBySel('scene-edit')
       .click();
-    cy.get('circle[id="SceneEditStatus"]')
+    cy.getBySel('scene-edit-status')
       .should('have.attr', 'style', 'fill: white;');
   })
   it('toggles clip mode', () => {
     // Toggle on
-    cy.get('[id="SceneClip"]')
+    cy.getBySel('scene-clip')
       .click();
-    cy.get('circle[id="SceneClipStatus"]')
+    cy.getBySel('scene-clip-status')
       .should('have.attr', 'style', 'fill: green;');
     // Toggle off
-    cy.get('[id="SceneClip"]')
+    cy.getBySel('scene-clip')
       .click();
-    cy.get('circle[id="SceneClipStatus"]')
+    cy.getBySel('scene-clip-status')
       .should('have.attr', 'style', 'fill: white;');
   })
 })
@@ -111,176 +137,120 @@ context('Drawing on Scene', () => {
     cy.visit('localhost:3000');
     cy.openTilemapEditor('1');
   })
-  it ('draw on canvas', () => {
-      cy.get('[id="Canvas"]').as('canvas');
-      // Click on tile
-      cy.get('[id="1-1"]')
-        .click();
-      // Turn on edit mode
-      cy.get('[id="SceneEdit"]')
-        .click();
-      // Get blank canvas
-      cy.get('@canvas').then((canvas) => {
-        const element = canvas[0] as HTMLCanvasElement;
-        cy.wrap(element.toDataURL())
-          .as('beforeCanvas');
-      })
-      // Draw on canvas
-      cy.get('@canvas')
-        .click(100, 100);
-      // Check canvas is updated
-      cy.get('@canvas').then((canvas) => {
-        const element = canvas[0] as HTMLCanvasElement;
-        const afterCanvas = element.toDataURL();
-        cy.get("@beforeCanvas").then((beforeCanvas) => {
-          expect(afterCanvas).to.not.equal(beforeCanvas);
-        })
-      })
-  })
   it ('remove drawing on canvas', () => {
-      cy.get('[id="Canvas"]').as('canvas');
+      cy.get('canvas').as('canvas');
       // Click on tile
-      cy.get('[id="1-1"]')
+      cy.getBySel('1-1')
         .click();
       // Turn on edit mode
-      cy.get('[id="SceneEdit"]')
+      cy.getBySel('scene-edit')
         .click();
-      // Get blank canvas
-      cy.get('@canvas').then((canvas) => {
-        const element = canvas[0] as HTMLCanvasElement;
-        cy.wrap(element.toDataURL())
-          .as('beforeCanvas');
-      })
       // Draw on canvas
       cy.get('@canvas')
         .click(100, 100);
-      // Check canvas is updated
-      cy.get('@canvas').then((canvas) => {
-        const element = canvas[0] as HTMLCanvasElement;
-        const afterCanvas = element.toDataURL();
-        cy.get("@beforeCanvas").then((beforeCanvas) => {
-          expect(afterCanvas).to.not.equal(beforeCanvas);
-        })
-      })
+      // Get canvas metadata
+      cy.get('@canvas')
+        .invoke('get', 0)
+        .invoke('toDataURL').as('beforeCanvas');
       // Turn on trash mode
-      cy.get('[id="SceneTrash"]')
-      .click();
+      cy.getBySel('scene-trash')
+        .click();
       // Remove drawing on canvas
       cy.get('@canvas')
         .click(100, 100);
       // Check canvas is in original state
-      cy.get('@canvas').then((canvas) => {
-        const element = canvas[0] as HTMLCanvasElement;
-        const afterCanvas = element.toDataURL();
-        cy.get("@beforeCanvas").then((beforeCanvas) => {
-          expect(afterCanvas).to.equal(beforeCanvas);
-        })
-      })
+      cy.get('@canvas')
+        .invoke('get', 0)
+        .invoke('toDataURL')
+        .should('not.equal', '@beforeCanvas');
   })
-  it ('undo draw on canvas', () => {
-    cy.get('[id="Canvas"]').as('canvas');
+  it ('undo drawing on canvas', () => {
+    cy.getBySel('canvas').as('canvas');
     // Click on tile
-    cy.get('[id="1-1"]')
+    cy.getBySel('1-1')
       .click();
     // Turn on edit mode
-    cy.get('[id="SceneEdit"]')
+    cy.getBySel('scene-edit')
       .click();
-    // Get blank canvas
-    cy.get('@canvas').then((canvas) => {
-      const element = canvas[0] as HTMLCanvasElement;
-      cy.wrap(element.toDataURL())
-        .as('beforeCanvas');
-    })
     // Draw on canvas
     cy.get('@canvas')
       .click(100, 100);
-    // Check canvas is updated
-    cy.get('@canvas').then((canvas) => {
-      const element = canvas[0] as HTMLCanvasElement;
-      const afterCanvas = element.toDataURL();
-      cy.get("@beforeCanvas").then((beforeCanvas) => {
-        expect(afterCanvas).to.not.equal(beforeCanvas);
-      })
-    })
+    // Get canvas metadata
+    cy.get('@canvas')
+      .invoke('get', 0)
+      .invoke('toDataURL').as('beforeCanvas');
     // Undo canvas with keyshortcut 'Ctrl+z'
     cy.get('body').type('{ctrl+z}');
-    // Check canvas is back to original state
-    cy.get('@canvas').then((canvas) => {
-      const element = canvas[0] as HTMLCanvasElement;
-      const afterCanvas = element.toDataURL();
-      cy.get("@beforeCanvas").then((beforeCanvas) => {
-        expect(afterCanvas).to.equal(beforeCanvas);
-      })
-    })
+    // Check canvas is in original state
+    cy.get('@canvas')
+      .invoke('get', 0)
+      .invoke('toDataURL')
+      .should('not.equal', '@beforeCanvas');
   })
   it ('draw on canvas with clipping', () => {
-      cy.get('[id="Canvas"]').as('canvas');
+      cy.getBySel('canvas').as('canvas');
       // Click on tile
-      cy.get('[id="1-1"]')
+      cy.getBySel('1-1')
         .click();
       // Turn on edit mode
-      cy.get('[id="SceneEdit"]')
+      cy.getBySel('scene-edit')
         .click();
       // Draw on canvas without clipping
       cy.get('@canvas')
         .click(100, 100);
       cy.get('@canvas')
         .click(100, 140);
-      // Save state of canvas
-      cy.get('@canvas').then((canvas) => {
-        const element = canvas[0] as HTMLCanvasElement;
-        cy.wrap(element.toDataURL())
-          .as('beforeCanvas');
-      })
+      // Get canvas metadata
+      cy.get('@canvas')
+        .invoke('get', 0)
+        .invoke('toDataURL').as('beforeCanvas');
       // Wipe scene
       cy.clearScene();
       // Turn on clip mode
-      cy.get('[id="SceneClip"]')
+      cy.getBySel('scene-clip')
         .click();
       // Draw on canvas
       cy.get('@canvas')
         .click(100, 100);
       cy.get('@canvas')
         .click(100, 140);
-      // Compare canvas without clipping to current state with clipping
-      cy.get('@canvas').then((canvas) => {
-        const element = canvas[0] as HTMLCanvasElement;
-        const afterCanvas = element.toDataURL();
-        cy.get("@beforeCanvas").then((beforeCanvas) => {
-          expect(afterCanvas).to.not.equal(beforeCanvas);
-        })
-      })
+      // Check canvas is in original state
+      cy.get('@canvas')
+        .invoke('get', 0)
+        .invoke('toDataURL')
+        .should('not.equal', '@beforeCanvas');
   })
-  it ('clear canvas w/ keyshortcut', () => {
-    cy.get('[id="Canvas"]').as('canvas');
+  it('draw on canvas while dragging', () => {
+    cy.getBySel('canvas').as('canvas');
     // Click on tile
-    cy.get('[id="1-1"]')
+    cy.getBySel('1-1')
       .click();
     // Turn on edit mode
-    cy.get('[id="SceneEdit"]')
+    cy.getBySel('scene-edit')
       .click();
-    // Get blank canvas
-    cy.get('@canvas').then((canvas) => {
-      const element = canvas[0] as HTMLCanvasElement;
-      cy.wrap(element.toDataURL())
-        .as('beforeCanvas');
-    })
-    // Draw on canvas
+    // Turn on drag mode
+    cy.getBySel('scene-drag')
+      .click();
+    // Draw on canvas with dragging
     cy.get('@canvas')
-      .click(100, 100);
-    // Clear canvas with keyshortcut 'Ctrl+a'
-    cy.get('body').type('{ctrl+a}');
-    cy.get('.button').click();
-    // Check canvas is back to original state
-    cy.get('@canvas').then((canvas) => {
-      const element = canvas[0] as HTMLCanvasElement;
-      const afterCanvas = element.toDataURL();
-      cy.get("@beforeCanvas").then((beforeCanvas) => {
-        expect(afterCanvas).to.equal(beforeCanvas);
-      })
-    })
+      .trigger('mousedown', { button: 0, clientX: 100 })
+      .trigger('mousemove', { clientX: 110 })
+      .invoke('get', 0)
+      .invoke('toDataURL')
+      .as('beforeCanvas');
+    // Turn off drag mode
+    cy.getBySel('scene-drag')
+      .click();
+    // Clear canvas
+    cy.clearScene();
+    // Draw on canvas without dragging
+    cy.get('@canvas')
+      .trigger('mousedown', { button: 0, clientX: 100 })
+      .trigger('mousemove', { clientX: 110 })
+      .invoke('get', 0)
+      .invoke('toDataURL')
+      .should('not.equal', '@beforeCanvas');
   })
-  // TODO: Find how to test dragging
 })
 context('Scene dialogs', () => {
   beforeEach(() => {
@@ -292,7 +262,7 @@ context('Scene dialogs', () => {
     // Open straight to delete dialog Note: skips the delete button
     cy.get('body')
       .type('{ctrl+a}');
-    cy.get('.button').as('button');
+    cy.getBySel('scene-clear').as('button');
     cy.get('@button').should('exist');
     // Fast forward 3 seconds
     cy.tick(3000);

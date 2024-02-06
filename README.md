@@ -10,7 +10,8 @@ Stellar2D
 
 - [ ] **Scene Management:** Easily manage and navigate between game scenes for a seamless gaming experience.
 - [ ] **Engine Shortcuts:** Allow developers to use keyboard shortcuts for the entire engine functionality
-  - [x] Object Placement
+  - [x] Scene
+  - [x] Toolbar
 - [ ] **Object Placement:** Create and place various game objects within scene.
   - [ ] Characters
   - [x] Items

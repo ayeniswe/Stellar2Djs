@@ -1,4 +1,4 @@
-/// <reference types="cypress" />
+/// <reference types='cypress' />
 context('Tilemap editor', () => {
     beforeEach(() => {
       cy.visit('localhost:3000');
@@ -6,8 +6,8 @@ context('Tilemap editor', () => {
     })
     it('select multiple tiles', () => {
         // Store references to the tiles NOTE - doesn't matter which tile
-        cy.get('[id="1-1"]').as('tileOne');
-        cy.get('[id="1-2"]').as('tileTwo');
+        cy.getBySel('1-1').as('tileOne');
+        cy.getBySel('1-2').as('tileTwo');
         // Select tile one
         cy.get('@tileOne')
           .click()

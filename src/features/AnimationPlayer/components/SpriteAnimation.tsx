@@ -12,9 +12,9 @@ const SpriteAnimation = () => {
     return (
         <div className="SpriteAnimation AnimationPlayerGroup AnimationPlayerGroup--col">
             {spriteAnimation.CREATING.value ? 
-            <input className="display" onChange={(e) => spriteAnimation.changeName(e.target.value)} value={spriteAnimation.NAME.value}/>
+            <input data-cy="animation-name" className="display" onChange={(e) => spriteAnimation.changeName(e.target.value)} value={spriteAnimation.NAME.value}/>
             :
-            <select className="display" value={spriteAnimation.SPRITE.value?.id} onChange={(e) => spriteAnimation.changeSprite(Number(e.target.value))}>
+            <select data-cy="animation-name" className="display" value={spriteAnimation.SPRITE.value?.id} onChange={(e) => spriteAnimation.changeSprite(Number(e.target.value))}>
                 {spriteAnimation.showSprites()}
             </select>
             }
@@ -25,6 +25,7 @@ const SpriteAnimation = () => {
                         label="Save"
                         imgSrc={save}
                         title="Save the current animation"
+                        cy="save-animation"
                     />
                 </span>
                 <Button
@@ -32,6 +33,7 @@ const SpriteAnimation = () => {
                     label="New"
                     imgSrc={add}
                     title="Create a new animation"
+                    cy="create-animation"
                 />
             </div>
         </div>

@@ -22,13 +22,13 @@ const Controls = () => {
             {scene.attrs.input.trash &&
             <>
                 {scene.attrs.input.safety ?
-                <button aria-label='clear canvas' className="button" onClick={() => showDeleteConfirmation()}>
+                <button data-cy='scene-clear' aria-label='clear canvas' className="button" onClick={() => showDeleteConfirmation()}>
                     Delete All
                 </button>
                 :
-                <dialog className='dialog' aria-label='confirmation to clear canvas' open>
+                <dialog data-cy='scene-clear-confirmation' className='dialog' aria-label='confirmation to clear canvas' open>
                     Are you sure? Action can't be UNDONE!
-                    <button aria-label="yes to delete all confirmation message" onClick={() => scene.clear()} className="button">Yes</button>
+                    <button data-cy='scene-clear' aria-label="yes to delete all confirmation message" onClick={() => scene.clear()} className="button">Yes</button>
                 </dialog>
                 }
             </>
@@ -39,6 +39,7 @@ const Controls = () => {
                 fn={toggleTrashMode}
                 keyShortcuts='Delete'
                 title='trash mode'
+                cy='scene-trash'
             />
             <ToggleIcon
                 name={SCENE.CLIP}
@@ -46,6 +47,7 @@ const Controls = () => {
                 fn={toggleClippingMode}
                 keyShortcuts='c'
                 title='clipping mode'
+                cy='scene-clip'
             />
             <ToggleIcon
                 name={SCENE.DRAG}
@@ -53,6 +55,7 @@ const Controls = () => {
                 fn={toggleDragMode}
                 keyShortcuts='d'
                 title='drag mode'
+                cy='scene-drag'
             />
             <ToggleIcon
                 name={SCENE.EDIT}
@@ -60,6 +63,7 @@ const Controls = () => {
                 fn={toggleEditingMode}
                 keyShortcuts='e'
                 title='editing mode'
+                cy='scene-edit'
             />
         </div>
     );

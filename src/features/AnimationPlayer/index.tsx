@@ -15,7 +15,7 @@ import { ANIMATION_PLAYER } from "./constants";
 const AnimationPlayer = () => {
     const { timeline, spriteAnimation } = useAppContext();
     return (
-        <div className="AnimationPlayer">
+        <div data-cy="animation-player" className="AnimationPlayer">
             <div className="AnimationPlayerGroup AnimationPlayerGroup--col AnimationPlayerGroup--margined">
                 <Controls/>
                 <SpriteAnimation/>
@@ -29,12 +29,14 @@ const AnimationPlayer = () => {
                         label="Add Frame"
                         type="file"
                         title="Add a new frame"
+                        cy="add-animation-frame"
                     />
                    <Button
                         action={timeline.removeFrame}
                         imgSrc={cancel}
                         label="Delete Frame"
                         title="Delete the current frame"
+                        cy="delete-animation-frame"
                     />
                 </div>
                 <AnimationDisplay/>
