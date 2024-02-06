@@ -12,7 +12,7 @@ const FrameCollection = memo(() => {
     return (
         <>
             <div className="TimelineFrameCollection"/> {/* 1st layer of frame collection to make it transparent*/}
-            <div data-cy="timeline-frame-collection" id={ANIMATION_PLAYER.TIMELINE_FRAME_COLLECTION} className="TimelineFrameCollection transparent">
+            <div data-cy="animation-timeline-frame-collection" id={ANIMATION_PLAYER.TIMELINE_FRAME_COLLECTION} className="TimelineFrameCollection transparent">
                 {timeline.showFrames()}
             </div>
         </>

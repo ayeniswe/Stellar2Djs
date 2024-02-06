@@ -1,14 +1,4 @@
 /// <reference types="cypress" />
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 Cypress.Commands.add('openTilemapEditor', (value?: string) => {
     cy.getBySel('tilemap').click();
     if (!value) return;
@@ -20,13 +10,13 @@ Cypress.Commands.add('openAnimationPlayer', () => {
 Cypress.Commands.add('clearScene', () => {
     cy.getBySel('scene-trash').click();
     cy.getBySel('scene-clear').click();
-    cy.getBySel('scene-clear-confirmation').click();
+    cy.getBySel('scene-clear').click();
     cy.getBySel('scene-trash').click();
 });
 Cypress.Commands.add('getBySel', (selector, ...args) => {
     return cy.get(`[data-cy=${selector}]`, ...args)
 })
-Cypress.Commands.add('getCSS', (selector, property ) => {
+Cypress.Commands.add('getCSS', (selector, property) => {
     return cy.getBySel(selector).invoke("css", property);
 })
 Cypress.Commands.add('loadFiles', (folder) => {

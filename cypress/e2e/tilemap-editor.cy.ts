@@ -1,4 +1,4 @@
-/// <reference types="cypress" />
+/// <reference types='cypress' />
 context('Tilemap editor', () => {
     beforeEach(() => {
       cy.visit('localhost:3000');

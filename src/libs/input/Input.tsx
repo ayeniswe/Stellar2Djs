@@ -42,8 +42,13 @@ class Input {
     private __eventHandler = (fn: Function, mapping: KMMapping, allInputs: KMInput[], once: boolean) => {
         return (event: any) => {
             const action = () => {
-                if (event instanceof KeyboardEvent){
-                    if (allInputs.length === 1) {
+                if (allInputs.length > 1) {
+                    for (const key of allInputs) {
+                        if (!mapping[key]) return;
+                    }
+                    fn(event);
+                } else if (allInputs.length === 1) {
+                    if (event instanceof KeyboardEvent) {
                         if (!mapping[allInputs[0]]) return;
                         // Wait .15 seconds for next key press
                         setTimeout(() => {
@@ -53,27 +58,12 @@ class Input {
                             };
                             fn(event);
                         },150);
-                    } 
-                    else if (allInputs.length > 1) {
-                        for (const key of allInputs) {
-                            if (!mapping[key]) return;
-                        } 
-                        fn(event);
-                    }
-                }
-                else if (event instanceof MouseEvent) {
-                    if (allInputs.length === 1) {
+                    } else {
                         if (!mapping[allInputs[0]]) return;
                         fn(event);
-                    } 
-                    else if (allInputs.length > 1) {
-                        for (const key of allInputs) {
-                            if (!mapping[key]) return;
-                        }
-                        fn(event);
-                    } else {
-                        fn(event);
                     }
+                } else {
+                    fn(event);
                 }
             }
             if (!once) action();
@@ -129,13 +119,13 @@ class Input {
      * @param {boolean} once - Fire the action once or repeatedly
      * @return {Function} - The bound function that was created to handle the keyboard event.
      */
-    public createEventListener(fn: Function, type: Keyboard | Mouse, mapping: KMMapping, inputs: KMInput[], once: boolean, id?:string): Function {
+    public createEventListener(fn: Function, type: Keyboard | Mouse, mapping: KMMapping, inputs: KMInput[], once: boolean, id?: string): Function {
         const bound = this.__eventHandler(fn, mapping, inputs, once);
         if (id) {
             document.getElementById(id)?.addEventListener(type, bound);
         } else {
             document.addEventListener(type, bound);
-        };
+        }
         return bound;
     }
 }

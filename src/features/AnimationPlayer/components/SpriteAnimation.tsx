@@ -12,9 +12,9 @@ const SpriteAnimation = () => {
     return (
         <div className="SpriteAnimation AnimationPlayerGroup AnimationPlayerGroup--col">
             {spriteAnimation.CREATING.value ? 
-            <input data-cy="animation-name-display" className="display" onChange={(e) => spriteAnimation.changeName(e.target.value)} value={spriteAnimation.NAME.value}/>
+            <input data-cy="animation-name" className="display" onChange={(e) => spriteAnimation.changeName(e.target.value)} value={spriteAnimation.NAME.value}/>
             :
-            <select data-cy="animation-sprite-select" className="display" value={spriteAnimation.SPRITE.value?.id} onChange={(e) => spriteAnimation.changeSprite(Number(e.target.value))}>
+            <select data-cy="animation-name" className="display" value={spriteAnimation.SPRITE.value?.id} onChange={(e) => spriteAnimation.changeSprite(Number(e.target.value))}>
                 {spriteAnimation.showSprites()}
             </select>
             }

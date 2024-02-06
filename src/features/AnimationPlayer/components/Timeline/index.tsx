@@ -16,7 +16,7 @@ const Timeline = () => {
             <FrameCollection/>
             <input data-cy="animation-timeline-display" className="display" onChange={(e) => timelineControls.changeSliderDisplay(e.target.value)} value={timeline.DISPLAY.value}/>
             <div data-cy="animation-timeline-slider" id={ANIMATION_PLAYER.TIMELINE_SLIDER}>
-                <div id={ANIMATION_PLAYER.TIMELINE_SLIDER_THUMB}/>
+                <div data-cy="animation-timeline-slider-thumb" id={ANIMATION_PLAYER.TIMELINE_SLIDER_THUMB}/>
             </div>
             <ProgressBars
                 scaling={timeline.SCALE.value}

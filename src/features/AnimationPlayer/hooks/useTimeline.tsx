@@ -43,7 +43,7 @@ const useTimeline = (spriteAnimation: SpriteAnimation) => {
         return FRAMES.value?.map((frame, index) => (
             <img
                 key={index}
-                data-cy='timeline-frame'
+                data-cy='animation-timeline-frame'
                 src={frame.src}
                 style={{
                     width: `${SCALE.value / Number(FPS.value)}px`,
@@ -69,20 +69,18 @@ const useTimeline = (spriteAnimation: SpriteAnimation) => {
             // Allow the slider to be able to drag back n forth within the timeline dimensions
             WIDTH.value = getWidth(timeline).toNumber();
             sliderThumb.onmousedown = (e) => {
-            const startX = e.clientX;
-            const sliderPosition = SLIDER.value;
-            document.onmousemove = (e) => {
-                const newSliderPosition = sliderPosition - (startX - e.clientX);
-                if (newSliderPosition >= 0 && newSliderPosition <= WIDTH.value) {
-                    moveSlider(newSliderPosition);
+                const startX = e.clientX;
+                const sliderPosition = SLIDER.value;
+                document.onmousemove = (e) => {
+                    const newSliderPosition = sliderPosition - (startX - e.clientX);
+                    if (newSliderPosition >= 0 && newSliderPosition <= WIDTH.value) {
+                        moveSlider(newSliderPosition);
+                    }
+                }
+                document.onmouseup = (e) => {
+                    document.onmousemove = null
                 }
             }
-            document.onmouseup = (e) => {
-                document.onmousemove = null
-            }
-        }
-        } else {
-            throw new Error("Missing timeline element or id was changed")
         }
     }
     const reset = () => {

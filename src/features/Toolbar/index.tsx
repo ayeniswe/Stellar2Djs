@@ -8,8 +8,8 @@ const Toolbar = () => {
     const { toolbar } = useAppContext();
     useEffect(() => toolbar.initialize(),[]);
     return (
-        <div id={TOOLBAR.$} aria-keyshortcuts="t">
-            <div id={TOOLBAR.HANDLE}/>
+        <div data-cy="toolbar" id={TOOLBAR.$} aria-keyshortcuts="t">
+            <div data-cy="toolbar-handle" id={TOOLBAR.HANDLE}/>
             <div className="header">
                 <button data-cy="animation" id={TOOLBAR.ANIMATION_PLAYER} aria-keyshortcuts="a" onClick={(e) => toolbar.openTab(e.currentTarget, <AnimationPlayer/>)}>
                     Animation Player
