@@ -30,6 +30,11 @@ Cypress.Commands.add('loadFiles', (folder) => {
         })
       })
 })
+Cypress.Commands.add('moveSlider', (x: string) => {
+    cy.getBySel('animation-timeline-display')
+      .clear()
+      .type(x);
+})
 declare namespace Cypress {
     interface Chainable<Subject = any> {
         openTilemapEditor(value?: string): Chainable<void>;
@@ -49,5 +54,9 @@ declare namespace Cypress {
          * Note: The folder must be in `cypress/fixtures`
          */
         loadFiles(folder: string): Chainable<void>;
+        /**
+         * Move the timeline slider by changing the display value
+         */
+        moveSlider(x: string): Chainable<void>;
     }
 }

@@ -63,6 +63,22 @@ context('Playback controls', () => {
             .should('equal', intialSrc);
       });
     })
+    it('repeat animation player', () => {
+      // Timeline slider is at 0 position
+      cy.getCSS('animation-timeline-slider', 'left')
+        .should('equal', '0px');
+      // Turn on repeat
+      cy.getBySel('animation-repeat')
+        .click();
+      // Move slider near end Note - prevent long running test
+      cy.moveSlider('26');
+      // Play timeline slider at 26 `near end` position
+      cy.getBySel('animation-play')
+        .click()
+     // Check if roundtrip happened
+      cy.getCSS('animation-timeline-slider', 'left')
+        .should('equal', '0px');
+    })
     it('initial frames per second ', () => {
       // Initial frames per second
       cy.getBySel('animation-fps')
