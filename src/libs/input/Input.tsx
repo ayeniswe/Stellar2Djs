@@ -1,5 +1,4 @@
 import { KMMapping, Mouse, Keyboard, KMInput, MouseInputToName } from ".";
-import { MESSAGE, warn } from "../logging";
 /**
  * Handles tracking of keyboard/mouse inputs to specific custom actions.
  * Initializes a keyboard listener for entire document when no id is specified. Element id can be specified for specific element keyboard listener.
@@ -52,10 +51,7 @@ class Input {
                         if (!mapping[allInputs[0]]) return;
                         // Wait .15 seconds for next key press
                         setTimeout(() => {
-                            if (mapping[allInputs[0]]) {
-                                warn(MESSAGE.KEY_WAIT, allInputs[0]);
-                                return;
-                            };
+                            if (mapping[allInputs[0]]) return;
                             fn(event);
                         },150);
                     } else {

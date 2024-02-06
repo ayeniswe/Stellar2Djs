@@ -1,5 +1,4 @@
 import { Bindings } from "../../../libs/input";
-import { MESSAGE, log, warn } from "../../../libs/logging";
 import { Signal, useSignal } from "@preact/signals-react";
 import { TextureRenderer } from "../../../libs/rendering/types";
 import { Brush } from "./type";
@@ -140,9 +139,6 @@ const useInput = (renderer: TextureRenderer, brush: Signal<Brush | null>) => {
      */
     const handleUndo = (): void => {
         if (!__ready.value) return;
-        if (undo()) {
-            log(MESSAGE.UNDO);
-        }
     }
     /**
      * Handles the constant creation of a div to
@@ -172,9 +168,6 @@ const useInput = (renderer: TextureRenderer, brush: Signal<Brush | null>) => {
         if (!__ready.value) return;
         if (__trash.value) {
             const res = remove(event.offsetX, event.offsetY);
-            if (res.length !== 0) {
-                log(MESSAGE.REMOVE_POSITION, `X: ${res[0]}, Y: ${res[1]}`);
-            } 
         } else {
             if (event.type === "mousemove" && !__drag.value) return;
             let res;
@@ -182,14 +175,6 @@ const useInput = (renderer: TextureRenderer, brush: Signal<Brush | null>) => {
                 res = add(event.offsetX, event.offsetY);
             } else {
                 res = add(event.clientX, event.clientY);
-            }
-            const isEmpty = res.length === 0;
-            if (isEmpty && __editable.value) {
-                warn(MESSAGE.BRUSH_NOT_SET);
-            } else if (isEmpty && !__editable.value) {
-                warn(MESSAGE.EDITING, 'off');
-            } else if (!isEmpty) {
-                log(MESSAGE.RENDER_POSITION, `X: ${res[0]}, Y: ${res[1]}`);
             }
         }
     }
@@ -213,7 +198,6 @@ const useInput = (renderer: TextureRenderer, brush: Signal<Brush | null>) => {
             __trash.value = true;
             applyTrashEffect(button);
         }
-        warn(MESSAGE.TRASH, __trash.value ? "on" : "off");
     }
     const toggleEditMode = () => {
         const button = document.getElementById(SCENE.EDIT);
@@ -225,7 +209,6 @@ const useInput = (renderer: TextureRenderer, brush: Signal<Brush | null>) => {
             __editable.value = true;
             applyEditingEffect(button);
         }
-        warn(MESSAGE.EDITING, __editable.value ? "on" : "off");
     }
     const toggleClipMode = () => {
         const button = document.getElementById(SCENE.CLIP);
@@ -237,7 +220,6 @@ const useInput = (renderer: TextureRenderer, brush: Signal<Brush | null>) => {
             __clip.value = true;
             applyClippingEffect(button);
         }
-        warn(MESSAGE.CLIPPING, __clip.value ? "on" : "off");
     }
     const toggleDragMode = () => {
         console.log(__drag.value)
@@ -250,7 +232,6 @@ const useInput = (renderer: TextureRenderer, brush: Signal<Brush | null>) => {
             __drag.value = true;
             applyDragEffect(button);
         }
-        warn(MESSAGE.DRAG, __drag.value ? "on" : "off");
     }
     /**
      * Handles the clearing of the entire canvas in the scene.
