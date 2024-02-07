@@ -31,13 +31,18 @@ const useSpriteAnimation = () => {
     const loadFrame = (files: FileList) => {
         for (let index = 0; index < files.length; index++) {
             const reader = new FileReader;
+            const img = new Image();
             const file = files[index];
             reader.readAsDataURL(file);
             reader.onload = (e) => {
-                const img = new Image();
-                img.src = e.target!.result as string;
-                // TODO: better performance w/ linked list
-                FRAMES.value = [...FRAMES.value, img];
+                img.src = e.target?.result as string;
+                img.onload = () => {
+                    FRAMES.value = [...FRAMES.value, { 
+                        h: img.height,
+                        w: img.width,
+                        src: img.src
+                    }];
+                };
             }
         }
     }
@@ -68,9 +73,15 @@ const useSpriteAnimation = () => {
         SPRITE.value = null;
         CREATING.value = true;
     }
+    const handleSpriteDragDrop = (e: React.DragEvent<HTMLImageElement>) => {
+        e.dataTransfer.setData("application/sprite", JSON.stringify({
+            frames: FRAMES.value
+        }));
+    }
     return {
         changeName,
         changeSprite,
+        handleSpriteDragDrop,
         createAnimation,
         saveAnimation,
         removeFrame,

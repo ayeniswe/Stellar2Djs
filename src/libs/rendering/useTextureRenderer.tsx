@@ -111,30 +111,6 @@ const useTextureRenderer = (ctx: CanvasRenderingContext2D) => {
         return [dx, dy];
     }
     /**
-     * Retrieves brush information based on the provided type, group, and textureID.
-     *
-     * @param {string} type - The type of the texture.
-     * @param {string} group - The group of the texture.
-     * @param {string} textureID - The ID of the texture.
-     * @returns {Array<any>} Returns an array containing the srcID, h, and w values of the texture.
-     *
-     * @description
-     * This method tries to retrieve the srcID, height (h), and width (w) values.
-     * 
-     *  NOTE: The srcID is always the first part of the textureID string.
-     */
-    const getBrushInfo = (type: string, group: string, textureID: string): Array<any> => {
-        let srcID, h, w;
-        try {
-            srcID = textureID.split('-')[0];
-            h = CONFIG.textures[type][srcID].groups[group][textureID].h;
-            w = CONFIG.textures[type][srcID].groups[group][textureID].w;
-        } catch (error) {
-            console.error(`Texture ID: ${textureID} could not be found`);
-        }
-        return [srcID, h, w];
-    }
-    /**
      * Clears any part of the canvas.
      * 
      * @param {number} dx - The x-coordinate of the top-left corner of the area.
@@ -145,17 +121,11 @@ const useTextureRenderer = (ctx: CanvasRenderingContext2D) => {
     const clearCanvas = (dx: number, dy: number, w: number, h: number) => {
         ctx.clearRect(dx, dy, w, h);
     }
-    const addTexture = (clipping: boolean, type: string, group: string, textureID: string, x: number, y: number): number[] => {
-        // Get the source ID, height, and width of the current brush state
-        const [key, h, w] = getBrushInfo(type, group, textureID);
+    const addTexture = (src: string, name: string, clipping: boolean, x: number, y: number, h: number, w: number, sx = 0, sy = 0): number[] => {
         // Scaling and account for clipping if true
         const [dx, dy] = scaling(x, y, w, h, clipping);
         // Only add the texture once
         if (!posExists(dx, dy, w, h)) {
-            const src = CONFIG.textures[type][key].name;
-            const name = CONFIG.textures[type][key].groups[group][textureID].name;
-            const sx = CONFIG.textures[type][key].groups[group][textureID].sx;
-            const sy = CONFIG.textures[type][key].groups[group][textureID].sy;
             // Store the texture by the x, y, w, h coordinates for uniqueness
             __textureMapping.value[`${dx},${dy},${w},${h}`] = {
                 src: src,
@@ -183,8 +153,7 @@ const useTextureRenderer = (ctx: CanvasRenderingContext2D) => {
         }
         return [];
     }
-    const removeTexture = (clipping: boolean, type: string, group: string, textureID: string, x: number, y: number): number[] => {
-        const [srcID, h, w] = getBrushInfo(type, group, textureID);
+    const removeTexture = (src: string, name: string, clipping: boolean, x: number, y: number, h: number, w: number, sx = 0, sy = 0): number[] => {
         const [dx, dy] = scaling(x, y, w, h, clipping);
         if (posExists(dx, dy, w, h)) {
             clearCanvas(dx, dy, w, h);
@@ -224,17 +193,30 @@ const useTextureRenderer = (ctx: CanvasRenderingContext2D) => {
     const render = () => {
         for (const key in __textureMapping.value) {
             const texture = __textureMapping.value[key];
-            ctx.drawImage(
-                __textureSources.value[texture.src],
-                texture.sx,
-                texture.sy,
-                texture.w,
-                texture.h,
-                texture.dx,
-                texture.dy,
-                texture.w,
-                texture.h
-            );
+            let src;
+            // Texture is not loaded so load it
+            if (!__textureSources.value[texture.src]) {
+                src = new Image();
+                src.src = texture.src;
+                ctx.drawImage(
+                    src,
+                    texture.dx,
+                    texture.dy,
+                );
+            } else {
+                src = __textureSources.value[texture.src];
+                ctx.drawImage(
+                    src,
+                    texture.sx,
+                    texture.sy,
+                    texture.w,
+                    texture.h,
+                    texture.dx,
+                    texture.dy,
+                    texture.w,
+                    texture.h
+                );
+            }
         }
     }
     const removeAllTexture = () =>{

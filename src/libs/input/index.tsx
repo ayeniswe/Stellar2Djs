@@ -1,6 +1,6 @@
 import { Input } from "./Input";
 import { Bindings } from "./Bindings";
-import { BindingsMapping, KMMapping, Mouse, Keyboard, KMInput, MouseInputToName } from "./types";
+import { BindingsMapping, KMMapping, Mouse, Keyboard, KMInput, MouseInputToName, DND } from "./types";
 export {
     Input,
     Bindings,
@@ -10,6 +10,7 @@ export type {
     KMMapping,
     BindingsMapping,
     Mouse,
+    DND,
     KMInput,
     Keyboard
 }
