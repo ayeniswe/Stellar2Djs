@@ -1,13 +1,13 @@
-import { Input, BindingsMapping, Keyboard, KMInput, Mouse, KMMapping } from ".";
+import { Input, BindingsMapping, Keyboard, KMInput, Mouse, KMMapping, DND } from ".";
 /**
  * Sets up the bindings for the keyboard/mouse events to specific keys and/or mouse buttons.
  */
 class Bindings extends Input {
     static instance: Bindings | null = null;
     private __bindings: BindingsMapping = {}
-    private __mapping: KMMapping = {}
-    private constructor(mapping: KMMapping, id?: string) {
-        super(mapping, id);
+    private __mapping: KMMapping;
+    private constructor(mapping = {}) {
+        super(mapping);
         this.__mapping = mapping;
         Bindings.instance = this;
     }
@@ -15,7 +15,7 @@ class Bindings extends Input {
         return this.__bindings;
     }
     static getInstance() {
-        return Bindings.instance || new Bindings({});
+        return Bindings.instance || new Bindings();
     }
     private checkBindingExists(binding: string) {
         return (this.bindings[binding]) ? true : false;
@@ -55,7 +55,7 @@ class Bindings extends Input {
      * 
      * An optional `id` parameter can be provided to assign an identifier to the binding. This can be useful for targeting specific elements
      */
-    addBinding(fn: Function, inputs: KMInput[], types: Keyboard | Mouse | Mouse[], once: boolean = true, id: string = "") {
+    addBinding(fn: Function, inputs: KMInput[], types: Keyboard | Mouse | DND | Mouse[], once: boolean = true, id: string = "") {
         // Check if id exists; then switch mapping and
         // intialize new event listeners for element
         const mapping = id ? {} : this.__mapping;

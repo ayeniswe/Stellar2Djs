@@ -1,5 +1,4 @@
 import { Signal } from "@preact/signals-react";
-import { TimelineElements } from "../components/Timeline/type";
 type Direction = "forward" | "backward";
 /**
  * This hook provides functionality for updating the timeline slider and displaying the current time in the timeline.
@@ -78,17 +77,17 @@ type Timeline = {
      */
     SLIDER: Signal<number>;
     /**
-     * Represents the frames in the timeline 
+     * Represents the frames src in the timeline 
      * @description
-     * This list of frames is inherited from the current sprite animation
-     * @type {Signal<HTMLImageElement[] | undefined>}
+     * This list of frames src is inherited from the current sprite animation
+     * @type {Signal<ImageData[] | undefined>}
      */
-    FRAMES: Signal<HTMLImageElement[] | undefined>;
+    FRAMES: Signal<ImageData[] | undefined>;
     /**
      * Represents the current frame to be displayed
-     * @type {Signal<HTMLImageElement | undefined>}
+     * @type {Signal<ImageData | undefined>}
      */
-    FRAME: Signal<HTMLImageElement | undefined>;
+    FRAME: Signal<ImageData | undefined>;
     /**
      * Represents the frames per second
      * @type {Signal<string>}
@@ -226,6 +225,12 @@ type SpriteAnimation = {
      */
     removeFrame: (index: number) => void;
     /**
+     * Handle sprite drag drop from animation display
+     * 
+     * NOTE - data is JSON stringify is sent using `application/sprite` tag
+     */
+    handleSpriteDragDrop: (e: React.DragEvent<HTMLImageElement>) => void;
+    /**
      * Sprite animation unique name
      * @type {Signal<string>}
      */
@@ -251,10 +256,10 @@ type SpriteAnimation = {
      */
     CREATING: Signal<boolean>;
     /**
-     * Represents the frames in the current sprite animation
-     * @type {Signal<HTMLImageElement[]>}
+     * Represents the frames src in the current sprite animation
+     * @type {Signal<ImageData[]>}
      */
-    FRAMES: Signal<HTMLImageElement[]>;
+    FRAMES: Signal<ImageData[]>;
 }
 type Sprite = {
     /**
@@ -263,15 +268,20 @@ type Sprite = {
      */
     name: string,
     /**
-     * Represents the frames in the sprite
-     * @type {Signal<HTMLImageElement[]>}
+     * Represents the frames src in the sprite
+     * @type {Signal<ImageData[]>}
      */
-    frames: HTMLImageElement[]
+    frames: ImageData[]
     /**
      * Represents the id of the sprite
      * @type {string | number}
      */
     id: string | number
+}
+type ImageData = {
+    h: number,
+    w: number,
+    src: string
 }
 export type {
     Timeline,

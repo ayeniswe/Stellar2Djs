@@ -51,12 +51,15 @@ type TextureRenderer = {
      * Adds a texture to the canvas.
      *
      * @param {boolean} clipping - Indicates whether clipping is applied.
-     * @param {string} type - The type of the texture.
-     * @param {string} group - The group of the texture.
-     * @param {string} textureID - The ID of the texture.
+     * @param {string} src - The location path of the texture or the `data/image` url.
+     * @param {string} name - The name of the texture.
      * @param {number} x - The x-coordinate of the texture.
      * @param {number} y - The y-coordinate of the texture.
-     * @returns {number[]} Returns an array containing the x and y coordinates of the added texture, or an empty array if the texture was not added.
+     * @param {number} w - The width of the texture.
+     * @param {number} h - The height of the texture.
+     * @param {number} sx - The source x-coordinate of the texture.
+     * @param {number} sy - The source y-coordinate of the texture.
+     * @returns {number[]} Returns an array containing the x and y coordinates of the removed texture, or an empty array if the texture was not removed.
      *
      * @description
      * This method retrieves the brush information.
@@ -68,16 +71,19 @@ type TextureRenderer = {
      * It then stores the texture in the textures mapping using the destination coordinates and dimensions as the key.
      * Additionally, it stores an action object in the revisions array to keep track of the added texture.
      */
-    addTexture: (clipping: boolean, textureType: string, group: string, id: string, x: number, y: number) => number[],
+    addTexture: (src: string, name: string, clipping: boolean, x: number, y: number, h: number, w: number, sx?: number, sy?: number) => number[]
     /**
      * Removes a texture from the canvas.
      *
      * @param {boolean} clipping - Indicates whether clipping is applied.
-     * @param {string} type - The type of the texture.
-     * @param {string} group - The group of the texture.
-     * @param {string} textureID - The ID of the texture.
+     * @param {string} src - The location path of the texture or the `data/image` url.
+     * @param {string} name - The name of the texture.
      * @param {number} x - The x-coordinate of the texture.
      * @param {number} y - The y-coordinate of the texture.
+     * @param {number} w - The width of the texture.
+     * @param {number} h - The height of the texture.
+     * @param {number} sx - The source x-coordinate of the texture.
+     * @param {number} sy - The source y-coordinate of the texture.
      * @returns {number[]} Returns an array containing the x and y coordinates of the removed texture, or an empty array if the texture was not removed.
      *
      * @description
@@ -87,7 +93,7 @@ type TextureRenderer = {
      * It also deletes the corresponding texture mapping.
      * Finally, it returns an array containing the x and y coordinates of the removed texture, or an empty array if the texture was not removed.
      */
-    removeTexture: (clipping: boolean, textureType: string, group: string, id: string, x: number, y: number) => number[],
+    removeTexture: (src: string, name: string, clipping: boolean, x: number, y: number, h: number, w: number, sx?: number, sy?: number) => number[],
     /**
      * Undoes the last revision made to the canvas.
      *
@@ -111,7 +117,12 @@ type TextureRenderer = {
     /**
     * This mehtod is responsible for rendering textures onto a canvas.
     *
-    * NOTE: this should be triggered on every frame update.
+    * Description:
+    * This method is used to render textures onto a canvas.
+    * It retrieves the textures from the textures mapping and decides if
+    * the texture source image is already in cache to render from otherwise it will be loaded as a new image.
+    * 
+    * NOTE: The load a new image is typically done from drag and drop events
     */
     render: () => void
     /**

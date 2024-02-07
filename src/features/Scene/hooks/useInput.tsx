@@ -1,6 +1,7 @@
+import configuration from '../../../data/test-config.json';
 import { Bindings } from "../../../libs/input";
 import { Signal, useSignal } from "@preact/signals-react";
-import { TextureRenderer } from "../../../libs/rendering/types";
+import { Config, TextureRenderer } from "../../../libs/rendering/types";
 import { Brush } from "./type";
 import { iconEffects } from "../../../libs/effects";
 import { SCENE } from "..";
@@ -14,6 +15,7 @@ import { SCENE } from "..";
  * 
  */
 const useInput = (renderer: TextureRenderer, brush: Signal<Brush | null>) => {
+    const config: Config = configuration;
     const __editable = useSignal(false);
     const __drag = useSignal(false);
     const __safety = useSignal(true);
@@ -61,74 +63,18 @@ const useInput = (renderer: TextureRenderer, brush: Signal<Brush | null>) => {
     }
     const initialize = (): void => {
         const bindings = Bindings.getInstance();
-        bindings.addBinding(handleBrush.bind(this), [], ["mousemove"], false, "Canvas");
-        bindings.addBinding(handleDrawing.bind(this), ['LeftButton'], ["mousedown", "mousemove"], false, "Canvas");
-        bindings.addBinding(toggleClipMode.bind(this), ['c'], "keydown", true);
-        bindings.addBinding(toggleDragMode.bind(this), ['d'], "keydown", true);
-        bindings.addBinding(toggleEditMode.bind(this), ['e'], "keydown", true);
-        bindings.addBinding(toggleTrashMode.bind(this), ['Delete'], "keydown", true);
-        bindings.addBinding(clearCanvas.bind(this), ['Control','a'], "keydown", true);
-        bindings.addBinding(handleUndo.bind(this), ['Control', 'z'], "keydown", false);
+        bindings.addBinding(handleDropSprite.bind(this), [], 'drop', false, SCENE.CANVAS);
+        bindings.addBinding(handleBrush.bind(this), [], ['mousemove'], false, SCENE.CANVAS);
+        bindings.addBinding(handleDrawing.bind(this), ['LeftButton'], ['mousedown', 'mousemove'], false, SCENE.CANVAS);
+        bindings.addBinding(toggleClipMode.bind(this), ['c'], 'keydown', true);
+        bindings.addBinding(toggleDragMode.bind(this), ['d'], 'keydown', true);
+        bindings.addBinding(toggleEditMode.bind(this), ['e'], 'keydown', true);
+        bindings.addBinding(toggleTrashMode.bind(this), ['Delete'], 'keydown', true);
+        bindings.addBinding(clearCanvas.bind(this), ['Control','a'], 'keydown', true);
+        bindings.addBinding(handleUndo.bind(this), ['Control', 'z'], 'keydown', false);
     }
     const removeAll = () => {
         renderer.removeAllTexture();
-    }
-    /**
-     * Undo the previous action in the scene.
-     * This method calls the `undoRevision` method of the renderer, which attempts to revert the scene state to the previous revision.
-     * If the `undoRevision` method returns true, indicating a successful undo, the method calls the `render` method of the renderer to update the sc display.
-     * If the `undoRevision` method returns false, indicating no revision to undo, the method returns false to indicate that no undo operation was performed.
-     * @returns {boolean} True if an undo operation was performed successfully, otherwise false.
-     */
-    const undo = (): boolean => {
-        if (renderer.undoRevision()) {
-            renderer.render();
-            return true;
-        }
-        return false;
-    }
-    /**
-     * Adds a texture to the scene at the specified coordinates.
-     * This method adds a texture to the scene if the scene is in an editable state and a brush is selected.
-     * The texture is added based on the current state of the `brush`.
-     * After adding the texture, the method renders the scene display and returns an array containing the result of the addition.
-     * If the addition is successful and results in changes to the scene, the method returns an array with the added texture information.
-     * If the addition is not possible or no changes are made, the method returns an empty array.
-     * @param {number} x - The x-coordinate of the texture.
-     * @param {number} y - The y-coordinate of the texture.
-     * @returns {number[]} An array containing the result of the addition, or an empty array if no changes were made.
-     * 
-     * NOTE: the default texture type is always `tilesets`. Since this is a scene, that will only be responsible for the tilesets.
-     */
-    const add = (x: number, y: number): number[] => {
-        if (__editable.value && brush.value) {
-            const res = renderer.addTexture(__clip.value, "tilesets", brush.value.group, brush.value.id, x, y);
-            if (res.length > 0) {
-                renderer.render();
-            }
-            return res;
-        }
-        return [];
-    }
-    /**
-     * Removes a texture from the scene at the specified coordinates.
-     *
-     * This method is a simliar to the `add` method.
-     * @param {number} x - The x-coordinate of the texture to remove.
-     * @param {number} y - The y-coordinate of the texture to remove.
-     * @returns {number[]} An array containing the result of the removal, or an empty array if no changes were made.
-     *
-     * NOTE: the default texture type is always `tilesets`. Since this is a scene, that will only be responsible for the tilesets.
-     */
-    const remove = (x: number, y: number): number[] => {
-        if (brush.value) {
-            const res = renderer.removeTexture(__clip.value, "tilesets", brush.value.group, brush.value.id, x, y);
-            if (res.length > 0) {
-                renderer.render();
-            }
-            return res;
-        }
-        return [];
     }
     /**
      * Handles the ability to undo actions, such as adding a tile onto the scene.
@@ -138,7 +84,9 @@ const useInput = (renderer: TextureRenderer, brush: Signal<Brush | null>) => {
      * NOTE: The method does not allow redo, such as undoing a previous undo action.
      */
     const handleUndo = (): void => {
-        if (!__ready.value) return;
+        if (renderer.undoRevision()) {
+            renderer.render();
+        }
     }
     /**
      * Handles the constant creation of a div to
@@ -165,18 +113,28 @@ const useInput = (renderer: TextureRenderer, brush: Signal<Brush | null>) => {
      * NOTE: This method is only available if the scene is ready.
      */
     const handleDrawing = (event: MouseEvent): void => {
-        if (!__ready.value) return;
+        if (!__ready.value || !brush.value) return;
+        const { id, object } = brush.value;
+        const { name, h, w, sx, sy } = object;
+        const src = config.textures["tilesets"][id.split("-")[0]].name;
         if (__trash.value) {
-            const res = remove(event.offsetX, event.offsetY);
+            if (event.type === "mousemove" && !__drag.value) return;
+            renderer.removeTexture(src, name, __clip.value, event.offsetX, event.offsetY, h, w, sx, sy);
         } else {
             if (event.type === "mousemove" && !__drag.value) return;
-            let res;
-            if (event.offsetX && event.offsetY){
-                res = add(event.offsetX, event.offsetY);
-            } else {
-                res = add(event.clientX, event.clientY);
-            }
+            renderer.addTexture(src, name, __clip.value, event.offsetX, event.offsetY, h, w, sx, sy);
         }
+        renderer.render();
+    }
+    /**
+     * Handles the dropping of a sprite onto the scene.
+     * 
+     */
+    const handleDropSprite = (e: DragEvent): void => {
+        e.preventDefault();
+        const frames = JSON.parse(e.dataTransfer!.getData("application/sprite")).frames;
+        renderer.addTexture(frames[0].src, "sprite", __clip.value, e.offsetX, e.offsetY, frames[0].w, frames[0].h);
+        renderer.render();
     }
     // *****************************************
     //        TOGGLE HANDLERS SECTION
@@ -190,7 +148,7 @@ const useInput = (renderer: TextureRenderer, brush: Signal<Brush | null>) => {
     // *****************************************
     const toggleTrashMode = () => {
         const button = document.getElementById(SCENE.TRASH);
-        if (!__ready.value || !button) return;
+        if (!button) return;
         if (__trash.value) {
             __trash.value = false;
             applyTrashEffect(button, false);
@@ -212,7 +170,7 @@ const useInput = (renderer: TextureRenderer, brush: Signal<Brush | null>) => {
     }
     const toggleClipMode = () => {
         const button = document.getElementById(SCENE.CLIP);
-        if (!__ready.value || !button) return;
+        if (!button) return;
         if (__clip.value) {
             __clip.value = false;
             applyClippingEffect(button, false);
@@ -222,7 +180,6 @@ const useInput = (renderer: TextureRenderer, brush: Signal<Brush | null>) => {
         }
     }
     const toggleDragMode = () => {
-        console.log(__drag.value)
         const button = document.getElementById(SCENE.DRAG);
         if (!__ready.value || !button) return;
         if (__drag.value) {
@@ -241,7 +198,6 @@ const useInput = (renderer: TextureRenderer, brush: Signal<Brush | null>) => {
      * NOTE: This method is only available if the editor is ready.
      */
     const clearCanvas = () => {
-        if (!__ready.value) return;
         toggleTrashMode();
         __safety.value = false;
         setTimeout(() => {

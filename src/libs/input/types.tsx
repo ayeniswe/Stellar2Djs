@@ -5,7 +5,7 @@ type BindingsMapping = {
     [key: string]: {
         fn: Function,
         id: string,
-        type: Keyboard | Mouse
+        type: Keyboard | Mouse | DND
     }
 }
 enum MouseInputToName {
@@ -131,6 +131,15 @@ type Mouse =
   | "mouseup"
   | "wheel"
 
+type DND =
+  | "drag"
+  | "dragend"
+  | "dragenter"
+  | "drop"
+  | "dragleave"
+  | "dragover"
+  | "dragstart"
+  
 type Keyboard =
   | "keydown"
   | "keyup"
@@ -139,7 +148,7 @@ export type {
     KMMapping,
     BindingsMapping,
     Mouse,
-
+    DND,
     KMInput,
     Keyboard
 }

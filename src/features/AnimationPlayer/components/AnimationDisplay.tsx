@@ -2,11 +2,11 @@ import { ANIMATION_PLAYER } from "..";
 import { useAppContext } from "../../../context/appContext";
 import "../style.css";
 const AnimationDisplay = () => {
-    const { timeline } = useAppContext();
+    const { timeline, spriteAnimation } = useAppContext();
     return (
-        <div className="AnimationDisplay">
+        <div id={ANIMATION_PLAYER.DISPLAY} className="AnimationDisplay">
             {timeline.FRAME.value ?
-            <img data-cy="animation-display" id={ANIMATION_PLAYER.DISPLAY} src={ timeline.FRAME.value.src }/>
+            <img data-cy="animation-display" src={timeline.FRAME.value.src} onDragStart={(e) => spriteAnimation.handleSpriteDragDrop(e)}/>
             :
             <div className="empty">No Animation Frames Found</div>
             }

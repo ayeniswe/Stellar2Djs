@@ -18,7 +18,7 @@ const useTimeline = (spriteAnimation: SpriteAnimation) => {
     const FPS = useSignal("30");
     const CURRENT_FRAME = useSignal(0);
     const FRAMES = useComputed(() => { return spriteAnimation.FRAMES.value });
-    const FRAME = useComputed(() => { return FRAMES.value?.[CURRENT_FRAME.value] });
+    const FRAME = useComputed(() => { return FRAMES.value[CURRENT_FRAME.value] });
     const moveSlider = (value: number) => {
         const slider = document.getElementById(ANIMATION_PLAYER.TIMELINE_SLIDER)!;
         setPosition(slider, value);

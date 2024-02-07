@@ -269,3 +269,32 @@ context('Scene dialogs', () => {
     cy.get('@button').should('not.exist');
   })
 })
+context('Scene interaction', () => {
+  beforeEach(() => {
+    cy.visit('localhost:3000');
+    cy.openAnimationPlayer();
+  })
+  it('drag and drop on canvas', () => {
+    cy.getBySel('canvas').as('canvas');
+    // Add mock image from fixtures folder
+    cy.fixture('sprites/1.jpg', null).as('1');
+    // Select mock image from fixtures folder
+    cy.getBySel('add-animation-frame-file')
+      .selectFile('@1', { force: true });
+    // Check canvas has no image
+    cy.get('@canvas')
+      .invoke('get', 0)
+      .invoke('toDataURL').as('beforeCanvas');
+    // Drag and drop on canvas
+    const dataTransfer = new DataTransfer();
+    cy.getBySel('animation-display')
+      .trigger('dragstart' , { dataTransfer});
+    cy.getBySel('canvas')
+      .trigger('drop' , { dataTransfer})
+   // Check canvas has new image dropped
+    cy.get('@canvas')
+      .invoke('get', 0)
+      .invoke('toDataURL')
+      .should('not.equal', '@beforeCanvas');
+  })
+})
