@@ -64,14 +64,13 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
      *
      * @param {number} x The x-coordinate of the position.
      * @param {number} y The y-coordinate of the position.
-     * @param {number} w The width of the position.
-     * @param {number} h The height of the position.
+     * @param {number} l The actual layer of the position.
      * @return {boolean} Returns true if the position exists, false otherwise.
      * 
      * NOTE: The key is generated from the destination coordinates (x and y) and dimensions (height and width).
      */
-    const posExists = (x: number, y: number, w: number, h: number): boolean => {
-        return __textureMapping.value[ckey(x, y, w, h)] ? true : false;
+    const posExists = (x: number, y: number, l: number): boolean => {
+        return __textureMapping.value[ckey(x, y, l)] ? true : false;
     }
     /**
      * Scales the coordinates based on the canvas size
@@ -81,9 +80,10 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
      * @param {number} w The width.
      * @param {number} h The height.
      * @param {boolean} clipping - Whether clipping is enabled or not.
+     * @param {boolean} l - The actual layer of the position.
      * @return {number[]} The scaled coordinates.
      */
-    const scaling = (x: number, y: number, w: number, h: number, clipping: boolean): number[] => {
+    const scaling = (x: number, y: number, w: number, h: number, clipping: boolean, l: number): number[] => {
         const inBoundsY = (h: number, y: number) => {
             return y >= ctx.canvas.height - h ? ctx.canvas.height - h : y < 0 ? 0 : y;
         }
@@ -104,8 +104,8 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
         if (clipping) {
             dx = clipX(w, inBoundsX(w, x));
             dy = clipY(h, inBoundsY(h, y));
-            if (posExists(dx, dy, w, h) && x < dx) dx = inBoundsX(w, dx - w);
-            if (posExists(dx, dy, w, h) && y < dy) dy = inBoundsY(w, dy - h);
+            if (posExists(dx, dy, l) && x < dx) dx = inBoundsX(w, dx - w);
+            if (posExists(dx, dy, l) && y < dy) dy = inBoundsY(w, dy - h);
         } else {
             dx = inBoundsX(w, x);
             dy = inBoundsY(h, y);
@@ -125,35 +125,42 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
     }
     /**
      * Generates a unique key for a texture based on the position and dimensions.
+     * @param {number} dx - The x-coordinate of the top-left corner of the area.
+     * @param {number} dy - The y-coordinate of the top-left corner of the area.
+     * @param {number} layer - The layer the texture is on.
      */
-    const ckey = (dx: number, dy: number, w: number, h: number) => {
-        return `${dx},${dy},${w},${h}`;
+    const ckey = (dx: number, dy: number, layer: number = 1) => {
+        return `${dx},${dy}-${layer}`;
     }
-    const addTexture = (src: string, name: string, clipping: boolean, x: number, y: number, w: number, h: number, sx = 0, sy = 0): number[] => {
+    const addTexture = (src: string, name: string, clipping: boolean, x: number, y: number, w: number, h: number, sx = 0, sy = 0, l = 1): number[] => {
         // Scaling and account for clipping if true
-        const [dx, dy] = scaling(x, y, w, h, clipping);
-        // Store the texture by the name
-        let texture;
-        if (sx !== 0 && sy !== 0) {
-            const preloadTexture = __textureSources.value[src];
-            texture = new Tile(ctx, preloadTexture, name, dx, dy, w, h, sx, sy);
+        const [dx, dy] = scaling(x, y, w, h, clipping, l);
+        if (posExists(dx, dy, l)) {
+            addTexture(src, name, clipping, dx, dy, w, h, sx, sy, l+1);
+            return [];
         } else {
-            texture = new Sprite(ctx, src, name, dx, dy, w, h);
+            // Store the texture by the name
+            let texture;
+            if (sx !== 0 && sy !== 0) {
+                const preloadTexture = __textureSources.value[src];
+                texture = new Tile(ctx, preloadTexture, name, dx, dy, w, h, sx, sy, l);
+            } else {
+                texture = new Sprite(ctx, src, name, dx, dy, w, h, l);
+            }
+            __textureMapping.value[ckey( dx, dy, l )] = texture;
+            // Store action in history
+            __revisions.value.push({
+                texture: texture,
+                action: "added"
+            });
+            return [dx, dy];
         }
-        console.log(ckey( dx, dy, w, h ));
-        __textureMapping.value[ckey( dx, dy, w, h )] = texture;
-        // Store action in history
-        __revisions.value.push({
-            texture: texture,
-            action: "added"
-        });
-        return [dx, dy];
     }
-    const removeTexture = (clipping: boolean, x: number, y: number, h: number, w: number): number[] => {
-        const [dx, dy] = scaling(x, y, w, h, clipping);
-        if (posExists(dx, dy, w, h)) {
+    const removeTexture = (clipping: boolean, x: number, y: number, h: number, w: number, l = 1): number[] => {
+        const [dx, dy] = scaling(x, y, w, h, clipping, l);
+        if (posExists(dx, dy, l)) {
             clearCanvas(dx, dy, w, h);
-            delete __textureMapping.value[ckey( dx, dy, w, h )];
+            delete __textureMapping.value[ckey( dx, dy )];
             return [dx, dy];
         }
         return [];
@@ -161,10 +168,10 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
     const undoRevision = () => {
         const action = __revisions.value.pop();
         if (action) {
-            const { name, dx, dy, w, h } = action.texture;
+            const { l, dx, dy, w, h } = action.texture;
             switch (action.action) {
                 case "added":
-                    delete __textureMapping.value[ckey( dx, dy, w, h )];
+                    delete __textureMapping.value[ckey( dx, dy, l)];
                     clearCanvas(dx, dy, w, h);
                     break;
                 default:

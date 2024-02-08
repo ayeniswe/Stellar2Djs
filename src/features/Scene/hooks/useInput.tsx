@@ -63,6 +63,7 @@ const useInput = (renderer: Texture, brush: Signal<Brush | null>) => {
     }
     const initialize = (): void => {
         const bindings = Bindings.getInstance();
+        bindings.addBinding(handleSelection.bind(this), [], 'dblclick', false, SCENE.CANVAS);
         bindings.addBinding(handleDropSprite.bind(this), [], 'drop', false, SCENE.CANVAS);
         bindings.addBinding(handleBrush.bind(this), [], ['mousemove'], false, SCENE.CANVAS);
         bindings.addBinding(handleDrawing.bind(this), ['LeftButton'], ['mousedown', 'mousemove'], false, SCENE.CANVAS);
@@ -72,6 +73,9 @@ const useInput = (renderer: Texture, brush: Signal<Brush | null>) => {
         bindings.addBinding(toggleTrashMode.bind(this), ['Delete'], 'keydown', true);
         bindings.addBinding(clearCanvas.bind(this), ['Control','a'], 'keydown', true);
         bindings.addBinding(handleUndo.bind(this), ['Control', 'z'], 'keydown', false);
+    }
+    const handleSelection = (event: any): void => {
+        console.log(event.offsetX, event.offsetY);
     }
     const removeAll = () => {
         renderer.removeAllTexture();
@@ -112,7 +116,7 @@ const useInput = (renderer: Texture, brush: Signal<Brush | null>) => {
      * NOTE: This method is only available if the scene is ready.
      */
     const handleDrawing = (event: MouseEvent): void => {
-        if (!__ready.value || !brush.value) return;
+        if (!__ready.value || !brush.value || !__editable.value) return;
         const { id, object } = brush.value;
         const { name, h, w, sx, sy } = object;
         const src = config.textures["tilesets"][id.split("-")[0]].name;

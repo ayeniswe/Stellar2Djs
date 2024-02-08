@@ -9,6 +9,7 @@ abstract class TextureObject {
     abstract readonly dy: number;
     abstract readonly w: number;
     abstract readonly h: number;
+    abstract l: number;
     abstract _scale: [boolean, boolean];
     protected abstract save: () => void;
     abstract render: () => void;

@@ -7,11 +7,12 @@ class Tile extends TextureObject {
     readonly #sx: number;
     readonly #sy: number;
     _scale: [boolean, boolean] = [false, false];
+    l: number = 1;
     dx: number;
     dy: number;
     w: number;
     h: number;
-    constructor(ctx: CanvasRenderingContext2D, frame: HTMLImageElement, name: string, dx: number, dy: number, w: number, h: number, sx: number, sy: number) {
+    constructor(ctx: CanvasRenderingContext2D, frame: HTMLImageElement, name: string, dx: number, dy: number, w: number, h: number, sx: number, sy: number, l: number) {
         super();
         this.ctx = ctx;
         this.name = name;
@@ -21,6 +22,7 @@ class Tile extends TextureObject {
         this.dy = dy;
         this.w = w;
         this.h = h;
+        this.l = l;
         // Create tile texture
         this.#frame = frame;
         const canvas = document.createElement("canvas");

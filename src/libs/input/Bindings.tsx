@@ -59,20 +59,22 @@ class Bindings extends Input {
         // Check if id exists; then switch mapping and
         // intialize new event listeners for element
         const mapping = id ? {} : this.__mapping;
-        if (id) new Input(mapping, id);
-        // Join inputs together to create a key lookup
-        const key = inputs.join(",");
+        if (id) new Input(mapping, id);        
         // Add bindings per type if more than one
         if (Array.isArray(types)) {
             for (const type of types) {
-                if (this.checkBindingExists(`${key}+${type}`)) this.removeBinding(key);
-                this.__bindings[`${key}+${type}`] = {
+                // Join inputs , types and id together to create a key lookup
+                const key = `${inputs.join(",")}+${type}+${id ? `+${id}` : ""}`;
+                if (this.checkBindingExists(key)) this.removeBinding(key);
+                this.__bindings[key] = {
                     fn: this.createEventListener(fn, type, mapping, inputs, once, id),
                     id: id,
                     type: type
                 }
             }
         } else {
+            // Join inputs , types and id together to create a key lookup
+            const key = `${inputs.join(",")}+${types}${id ? `+${id}`: ""}`;
             if (this.checkBindingExists(key)) this.removeBinding(key);
             this.__bindings[key] = {
                 fn: this.createEventListener(fn, types, mapping, inputs, once, id),

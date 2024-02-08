@@ -5,11 +5,12 @@ class Sprite extends TextureObject {
     readonly texture: CanvasRenderingContext2D;
     readonly #frame: HTMLImageElement;
     _scale: [boolean, boolean] = [false, false];
+    l: number = 1;
     dx: number;
     dy: number;
     w: number;
     h: number;
-    constructor(ctx: CanvasRenderingContext2D, src: string, name: string, dx: number, dy: number, w: number, h: number) {
+    constructor(ctx: CanvasRenderingContext2D, src: string, name: string, dx: number, dy: number, w: number, h: number, l: number) {
         super();
         this.ctx = ctx;
         this.name = name;
@@ -17,6 +18,7 @@ class Sprite extends TextureObject {
         this.dy = dy;
         this.w = w;
         this.h = h;
+        this.l = l;
         // Create sprite texture
         this.#frame = new Image();
         this.#frame.src = src;
