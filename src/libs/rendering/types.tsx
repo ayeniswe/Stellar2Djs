@@ -1,36 +1,25 @@
-type TextureAtlasMetadata = {
-    name: string,
-    src: string,
-}
-type Texture = TextureAtlasMetadata & {
-    sx: number,
-    sy: number,
-    w: number,
-    h: number
-    dx: number,
-    dy: number,
-}
+import { TextureObject } from "../object/TextureObject"
 type TexturesMapping = {
-    [key: string]: Texture
+    [key: string]: TextureObject
 }
 type TextureSources = {
     [key: string]: HTMLImageElement
 }
-type TextureObject = {
+type TextureItem = {
     name: string;
     sx: number;
     sy: number;
     w: number;
     h: number;
 }
-type TextureObjects = {
-    [key: string]: TextureObject
+type TextureItems = {
+    [key: string]: TextureItem
 }
 type Textures = {
     name: string;
     src: string;
     groups: {
-        [key: string]: TextureObjects
+        [key: string]: TextureItems
     };
 }
 type Config = {
@@ -43,10 +32,11 @@ type Config = {
     };
 }
 type RevisionAction = "added" | "removed"
-type RevisionRecord = Texture & {
+type RevisionRecord = {
+    texture: TextureObject,
     action: RevisionAction
 }
-type TextureRenderer = {
+type Texture = {
     /**
      * Adds a texture to the canvas.
      *
@@ -71,19 +61,15 @@ type TextureRenderer = {
      * It then stores the texture in the textures mapping using the destination coordinates and dimensions as the key.
      * Additionally, it stores an action object in the revisions array to keep track of the added texture.
      */
-    addTexture: (src: string, name: string, clipping: boolean, x: number, y: number, h: number, w: number, sx?: number, sy?: number) => number[]
+    addTexture: (src: string, name: string, clipping: boolean, x: number, y: number, w: number, h: number, sx?: number, sy?: number) => number[]
     /**
      * Removes a texture from the canvas.
      *
      * @param {boolean} clipping - Indicates whether clipping is applied.
-     * @param {string} src - The location path of the texture or the `data/image` url.
-     * @param {string} name - The name of the texture.
      * @param {number} x - The x-coordinate of the texture.
      * @param {number} y - The y-coordinate of the texture.
-     * @param {number} w - The width of the texture.
      * @param {number} h - The height of the texture.
-     * @param {number} sx - The source x-coordinate of the texture.
-     * @param {number} sy - The source y-coordinate of the texture.
+     * @param {number} w - The width of the texture.
      * @returns {number[]} Returns an array containing the x and y coordinates of the removed texture, or an empty array if the texture was not removed.
      *
      * @description
@@ -93,7 +79,7 @@ type TextureRenderer = {
      * It also deletes the corresponding texture mapping.
      * Finally, it returns an array containing the x and y coordinates of the removed texture, or an empty array if the texture was not removed.
      */
-    removeTexture: (src: string, name: string, clipping: boolean, x: number, y: number, h: number, w: number, sx?: number, sy?: number) => number[],
+    removeTexture: (clipping: boolean, x: number, y: number, w: number, h: number) => number[],
     /**
      * Undoes the last revision made to the canvas.
      *
@@ -109,7 +95,7 @@ type TextureRenderer = {
      * 
      * NOTE: This method is only available to undo "added" actions
      */
-    undoRevision: () => boolean,
+    undoRevision: () => void,
     /**
     * Removes all textures from the canvas.
     */
@@ -141,14 +127,12 @@ type TextureRenderer = {
     }
 }
 export type {
-    TextureRenderer,
-    TextureAtlasMetadata,
     Texture,
     TextureSources,
-    TextureObjects,
+    TextureItem,
+    TextureItems,
     Config,
     TexturesMapping,
-    TextureObject,
     RevisionAction,
     RevisionRecord,
     Textures

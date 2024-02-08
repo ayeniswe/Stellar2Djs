@@ -1,6 +1,6 @@
 import { useAppContext } from '../../../context/appContext';
 import configuration from '../../../data/config.json';
-import { Config, TextureObject, TextureObjects } from '../../../libs/rendering';
+import { Config, TextureItem, TextureItems } from '../../../libs/rendering';
 import { capitalize } from '../../../utils/text';
 import { computed, signal, useComputed, useSignal } from '@preact/signals-react';
 /**
@@ -15,10 +15,10 @@ const useTilemap = () => {
     const TILESET_KEY = useSignal("");
     const TILESET = useSignal<JSX.Element>(<></>);
     const TILE = useSignal("");
-    const TILES = signal<TextureObjects>({});
+    const TILES = signal<TextureItems>({});
     const TILESET_NAME = computed(() => TILESETS[TILESET_KEY.value].name);
     const SELECTED_TILE_OPACITY = '1' // 100% opacity
-    const drawBackground = (object: TextureObject): string => {
+    const drawBackground = (object: TextureItem): string => {
         const { sx, sy, w, h } = object
         const canvas = document.createElement('canvas');
         canvas.width = w;
@@ -40,7 +40,7 @@ const useTilemap = () => {
             };
         };
     }
-    const setTileBrush = (id: string, group: string, object: TextureObject): void => {
+    const setTileBrush = (id: string, group: string, object: TextureItem): void => {
         // Reset previous tile
         if (TILE.value) {
             document.getElementById(TILE.value)!.style.opacity = "";
@@ -55,7 +55,7 @@ const useTilemap = () => {
     /**
      * Returns an array of JSX elements representing tiles based on the provided `tiles` object and `group` string.
      *
-     * @param {TextureObjects} tiles - The object containing the texture objects for the tiles.
+     * @param {TextureItems} tiles - The object containing the texture objects for the tiles.
      * @param {string} group - The group of the tiles.
      * @returns {Array<JSX.Element>} An array of JSX elements representing the tiles.
      *
@@ -65,7 +65,7 @@ const useTilemap = () => {
      * It returns a JSX element representing the tile, with the extracted information used to set the `id`, `key`, `title`, `aria-label`, `role`, and `className` attributes.
      * It also attaches an `onClick` event listener that calls the `setTileBrush` function with the current tile's ID, the provided `group`, and the corresponding texture object.
      */
-    const getTiles = (tiles: TextureObjects , group: string): Array<JSX.Element> => {
+    const getTiles = (tiles: TextureItems , group: string): Array<JSX.Element> => {
         TILES.value = {
             ...TILES.value,
             ...tiles

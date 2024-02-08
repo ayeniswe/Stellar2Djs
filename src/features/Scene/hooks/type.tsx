@@ -1,4 +1,4 @@
-import { TextureObject, TextureSources } from "../../../libs/rendering"
+import { TextureItem, TextureSources } from "../../../libs/rendering"
 type Input = {
     /**
      * Removes all textures from the scene
@@ -82,7 +82,7 @@ type Inputs = {
 type Brush = {
     id: string
     group: string
-    object: TextureObject
+    object: TextureItem
 }
 type Scene = {
     /**
