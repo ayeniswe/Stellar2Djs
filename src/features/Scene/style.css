@@ -22,6 +22,7 @@
         height: 32px;
         opacity: 0.5;
         position: absolute;
+        pointer-events: none;
         animation: 0.3s reveal;
         width: 32px;
     }

@@ -2,14 +2,17 @@ import { Config, RevisionRecord, TexturesMapping, TextureSources } from './types
 import { useSignal } from '@preact/signals-react';
 import { getHeight, getWidth } from '../../utils/styleProps';
 import { Sprite, Tile } from '../object';
+import { TextureObject } from '../object/TextureObject';
+import { SCENE } from '../../features/Scene';
 const useTexture = (ctx: CanvasRenderingContext2D) => {
-    const __revisions = useSignal<RevisionRecord[]>([]);
-    const __textureSources = useSignal<TextureSources>({});
-    const __textureMapping = useSignal<TexturesMapping>({});
+    const revisions = useSignal<RevisionRecord[]>([]);
+    const sources = useSignal<TextureSources>({});
+    const mapping = useSignal<TexturesMapping>({});
+    const pixelMap = new Map<string, TextureObject>();
     const CONFIG: Config = process.env.NODE_ENV === 'production' ? require('../../data/config.json') : require('../../data/test-config.json');
     const textureRenderer = {
         get textureSources() {
-            return __textureSources.value
+            return sources.value
         },
         get ctx() {
             return ctx
@@ -38,22 +41,22 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
      */
     const addAllSources = async (): Promise<void> => {
         for (const key in CONFIG.textures) {
-            const sources = Object.keys(CONFIG.textures[key]).length;
-            for (let index = 1; index <= sources; index++) {
+            const total = Object.keys(CONFIG.textures[key]).length;
+            for (let index = 1; index <= total; index++) {
                 const texture = CONFIG.textures[key][index];
                 const name = texture.name;
                 const path = `assets/textures/${texture.src}`;
-                __textureSources.value = {
-                    ...__textureSources.value,
+                sources.value = {
+                    ...sources.value,
                     [name]: new Image(),
                 };
                 try {
                     const url: string = (await import(`../../${path}`)).default;
-                    __textureSources.value[name].src = url;
-                    __textureSources.value[name].onload = () => {
-                        console.log(`Loaded "${name}" texture - ${index} of ${sources}`);
+                    sources.value[name].src = url;
+                    sources.value[name].onload = () => {
+                        console.log(`Loaded "${name}" texture - ${index} of ${total}`);
                     };
-                    __textureSources.value[name].onerror = () => console.error(`Failed to load "${name}" texture from ${path}`);
+                    sources.value[name].onerror = () => console.error(`Failed to load "${name}" texture from ${path}`);
                 } catch {
                 }
             }
@@ -70,7 +73,7 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
      * NOTE: The key is generated from the destination coordinates (x and y) and dimensions (height and width).
      */
     const posExists = (x: number, y: number, l: number): boolean => {
-        return __textureMapping.value[ckey(x, y, l)] ? true : false;
+        return mapping.value[ckey(x, y, l)] ? true : false;
     }
     /**
      * Scales the coordinates based on the canvas size
@@ -124,13 +127,32 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
         ctx.clearRect(dx, dy, w, h);
     }
     /**
-     * Generates a unique key for a texture based on the position and dimensions.
+     * Generates a unique key for a texture based on the position and layer.
      * @param {number} dx - The x-coordinate of the top-left corner of the area.
      * @param {number} dy - The y-coordinate of the top-left corner of the area.
      * @param {number} layer - The layer the texture is on.
      */
     const ckey = (dx: number, dy: number, layer: number = 1) => {
         return `${dx},${dy}-${layer}`;
+    }
+    /**
+     * Add to pixels mapping for texture selection bounding box
+     */
+    const addPixels = (texture: TextureObject) => {
+        const { l, w, h, dx, dy } = texture;
+        for (let i = dx; i <= dx+w; i++) {
+            for (let j = dy; j <= dy+h; j++) {
+                pixelMap.set(ckey(i, j, l), texture);
+            }
+        }
+    }
+    const removePixels = (texture: TextureObject) => {
+        const { l, w, h, dx, dy } = texture;
+        for (let i = dx; i <= dx+w; i++) {
+            for (let j = dy; j <= dy+h; j++) {
+                pixelMap.delete(ckey(i, j, l));
+            }
+        }
     }
     const addTexture = (src: string, name: string, clipping: boolean, x: number, y: number, w: number, h: number, sx = 0, sy = 0, l = 1): number[] => {
         // Scaling and account for clipping if true
@@ -141,37 +163,40 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
         } else {
             // Store the texture by the name
             let texture;
-            if (sx !== 0 && sy !== 0) {
-                const preloadTexture = __textureSources.value[src];
+            if (sx !== 0 || sy !== 0) {
+                const preloadTexture = sources.value[src];
                 texture = new Tile(ctx, preloadTexture, name, dx, dy, w, h, sx, sy, l);
             } else {
                 texture = new Sprite(ctx, src, name, dx, dy, w, h, l);
             }
-            __textureMapping.value[ckey( dx, dy, l )] = texture;
+            // Store pixel mapping for selection
+            addPixels(texture);
+            mapping.value[ckey( dx, dy, l )] = texture;
             // Store action in history
-            __revisions.value.push({
+            revisions.value.push({
                 texture: texture,
                 action: "added"
             });
             return [dx, dy];
         }
     }
-    const removeTexture = (clipping: boolean, x: number, y: number, h: number, w: number, l = 1): number[] => {
-        const [dx, dy] = scaling(x, y, w, h, clipping, l);
-        if (posExists(dx, dy, l)) {
-            clearCanvas(dx, dy, w, h);
-            delete __textureMapping.value[ckey( dx, dy )];
-            return [dx, dy];
-        }
-        return [];
+    const removeTexture = (x: number, y: number, l = 1) => {
+        const key = ckey(x, y, l);
+        const texture = pixelMap.get(key)
+        if (!texture) return [];
+        const {dx, dy, w, h} = texture;
+        removePixels(texture);
+        delete mapping.value[ckey(dx, dy, l)];
+        clearCanvas(dx, dy, w, h);
     }
     const undoRevision = () => {
-        const action = __revisions.value.pop();
+        const action = revisions.value.pop();
         if (action) {
             const { l, dx, dy, w, h } = action.texture;
             switch (action.action) {
                 case "added":
-                    delete __textureMapping.value[ckey( dx, dy, l)];
+                    removePixels(action.texture);
+                    delete mapping.value[ckey( dx, dy, l)];
                     clearCanvas(dx, dy, w, h);
                     break;
                 default:
@@ -180,14 +205,39 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
         }
     }
     const render = () => {
-        for (const key in __textureMapping.value) {
-            const texture = __textureMapping.value[key];
+        for (const key in mapping.value) {
+            const texture = mapping.value[key];
             texture.render();
         }
     }
     const removeAllTexture = () =>{
-        __textureMapping.value = {};
+        mapping.value = {};
         clearCanvas(0, 0, ctx.canvas.width, ctx.canvas.height);
+    }
+    const selectTexture = (x: number, y: number, l: number = 1): TextureObject | undefined => {
+        // Check if texture exists in pixel boundings
+        const key = ckey(x, y, l);
+        const texture = pixelMap.get(key);
+        if (!texture) return;
+        // Set grabbing cursor
+        document.getElementById(SCENE.CANVAS)!.style.cursor = 'grab';
+        ctx.canvas.onmouseup = (e) => {
+            ctx.canvas.onmouseup = null;
+            // Remove old pixel boundings and position
+            const {l, w, h, dx, dy} = texture;
+            removePixels(texture);
+            delete mapping.value[ckey(dx, dy, l)];
+            clearCanvas(dx, dy, w, h);
+            // Add new pixel boundings and position
+            texture.dx = e.offsetX;
+            texture.dy = e.offsetY;
+            addPixels(texture);
+            mapping.value[ckey(texture.dx, texture.dy , l)] = texture;
+            ctx.drawImage(texture.texture.canvas, texture.dx, texture.dy);
+            // Reset canvas cursor
+            document.getElementById(SCENE.CANVAS)!.style.cursor = 'pointer';
+        }
+        return texture;
     }
     /**
      * Add a listener to listen for various rendering events
@@ -203,6 +253,7 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
     return {
         initialize,
         addTexture,
+        selectTexture,
         removeTexture,
         undoRevision,
         render,

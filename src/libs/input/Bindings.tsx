@@ -64,7 +64,7 @@ class Bindings extends Input {
         if (Array.isArray(types)) {
             for (const type of types) {
                 // Join inputs , types and id together to create a key lookup
-                const key = `${inputs.join(",")}+${type}+${id ? `+${id}` : ""}`;
+                const key = `${inputs.join(",")}+${type}${id ? `+${id}` : ""}`;
                 if (this.checkBindingExists(key)) this.removeBinding(key);
                 this.__bindings[key] = {
                     fn: this.createEventListener(fn, type, mapping, inputs, once, id),
