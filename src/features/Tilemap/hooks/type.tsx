@@ -1,5 +1,5 @@
 import { Signal } from "@preact/signals-react"
-import { TextureObject } from "../../../libs/rendering"
+import { TextureItem} from "../../../libs/rendering"
 type TilemapHook = {
     /**
      * Sets the tileset JSX element.
@@ -34,23 +34,23 @@ type TilemapHook = {
     /**
      * Draws the background image on a canvas based on the given texture object.
      *
-     * @param {TextureObject} object - The texture object containing the dimensions and source coordinates.
+     * @param {TextureItem} object - The texture object containing the dimensions and source coordinates.
      * @returns {string} The data URL of the canvas image or empty string if there's an error.
      *
      * @description
-     * This function takes a `TextureObject` as a parameter, which should contain the necessary information for drawing the background image.
+     * This function takes a object as a parameter, which should contain the necessary information for drawing the background image.
      * It creates a canvas element and sets its width and height based on the dimensions from the `object` parameter.
      * The function then obtains the 2D rendering context of the canvas using `getContext('2d')`.
      * If the context is available, it retrieves the image from `editor.input.textureSources` using the `TILESET_NAME` value and draws it on the canvas using `drawImage`.
      * Finally, it returns the data URL of the canvas image using `toDataURL`.
      */
-    drawBackground: (object: TextureObject) => string
+    drawBackground: (object: TextureItem) => string
     /**
      * Sets the tile brush for the scene.
      *
      * @param {string} id - The ID of the tile element.
      * @param {string} group - The group of the tile.
-     * @param {TextureObject} object - The texture object for the tile.
+     * @param {TextureItem} object - The texture object for the tile.
      *
      * @description
      * This function sets the tile brush for the level editor based on the provided parameters.
@@ -59,7 +59,7 @@ type TilemapHook = {
      * The function also updates the `TILE.value` variable to store the ID of the new tile.
      * Finally, it calls the `SceneDesign.setBrush` function to update the brush in the level editor. The `SceneDesign.setBrush` static instance plays a crucial role in integration for rendering texture on canvas based on UI interaction.
      */
-    setTileBrush: (id: string, group: string, object: TextureObject) => void
+    setTileBrush: (id: string, group: string, object: TextureItem) => void
     /**
      * Sets the background image for the tiles all tiles.
      * 

@@ -1,13 +1,12 @@
-import configuration from '../../data/config.json';
 import { Config, RevisionRecord, TexturesMapping, TextureSources } from './types';
-import { capitalize } from '../../utils/text';
 import { useSignal } from '@preact/signals-react';
 import { getHeight, getWidth } from '../../utils/styleProps';
-const useTextureRenderer = (ctx: CanvasRenderingContext2D) => {
+import { Sprite, Tile } from '../object';
+const useTexture = (ctx: CanvasRenderingContext2D) => {
     const __revisions = useSignal<RevisionRecord[]>([]);
     const __textureSources = useSignal<TextureSources>({});
     const __textureMapping = useSignal<TexturesMapping>({});
-    const CONFIG: Config = process.env.NODE_ENV === 'production' ? configuration : require('../../data/test-config.json');
+    const CONFIG: Config = process.env.NODE_ENV === 'production' ? require('../../data/config.json') : require('../../data/test-config.json');
     const textureRenderer = {
         get textureSources() {
             return __textureSources.value
@@ -16,6 +15,9 @@ const useTextureRenderer = (ctx: CanvasRenderingContext2D) => {
             return ctx
         }
     }
+    /**
+    * Initializes the renderer.
+    */
     const initialize = async () => {
         await addAllSources();
         startListeners();
@@ -69,7 +71,7 @@ const useTextureRenderer = (ctx: CanvasRenderingContext2D) => {
      * NOTE: The key is generated from the destination coordinates (x and y) and dimensions (height and width).
      */
     const posExists = (x: number, y: number, w: number, h: number): boolean => {
-        return __textureMapping.value[`${x},${y},${w},${h}`] ? true : false;
+        return __textureMapping.value[ckey(x, y, w, h)] ? true : false;
     }
     /**
      * Scales the coordinates based on the canvas size
@@ -121,102 +123,59 @@ const useTextureRenderer = (ctx: CanvasRenderingContext2D) => {
     const clearCanvas = (dx: number, dy: number, w: number, h: number) => {
         ctx.clearRect(dx, dy, w, h);
     }
-    const addTexture = (src: string, name: string, clipping: boolean, x: number, y: number, h: number, w: number, sx = 0, sy = 0): number[] => {
+    /**
+     * Generates a unique key for a texture based on the position and dimensions.
+     */
+    const ckey = (dx: number, dy: number, w: number, h: number) => {
+        return `${dx},${dy},${w},${h}`;
+    }
+    const addTexture = (src: string, name: string, clipping: boolean, x: number, y: number, w: number, h: number, sx = 0, sy = 0): number[] => {
         // Scaling and account for clipping if true
         const [dx, dy] = scaling(x, y, w, h, clipping);
-        // Only add the texture once
-        if (!posExists(dx, dy, w, h)) {
-            // Store the texture by the x, y, w, h coordinates for uniqueness
-            __textureMapping.value[`${dx},${dy},${w},${h}`] = {
-                src: src,
-                name: name,
-                sx: sx,
-                sy: sy,
-                dx: dx,
-                dy: dy,
-                w: w,
-                h: h
-            };
-            // Store action in history
-            __revisions.value.push({
-                src: src,
-                name: name,
-                sx: sx,
-                sy: sy,
-                dx: dx,
-                dy: dy,
-                w: w,
-                h: h,
-                action: "added"
-            });
-            return [dx, dy];
+        // Store the texture by the name
+        let texture;
+        if (sx !== 0 && sy !== 0) {
+            const preloadTexture = __textureSources.value[src];
+            texture = new Tile(ctx, preloadTexture, name, dx, dy, w, h, sx, sy);
+        } else {
+            texture = new Sprite(ctx, src, name, dx, dy, w, h);
         }
-        return [];
+        console.log(ckey( dx, dy, w, h ));
+        __textureMapping.value[ckey( dx, dy, w, h )] = texture;
+        // Store action in history
+        __revisions.value.push({
+            texture: texture,
+            action: "added"
+        });
+        return [dx, dy];
     }
-    const removeTexture = (src: string, name: string, clipping: boolean, x: number, y: number, h: number, w: number, sx = 0, sy = 0): number[] => {
+    const removeTexture = (clipping: boolean, x: number, y: number, h: number, w: number): number[] => {
         const [dx, dy] = scaling(x, y, w, h, clipping);
         if (posExists(dx, dy, w, h)) {
             clearCanvas(dx, dy, w, h);
-            delete __textureMapping.value[`${dx},${dy},${w},${h}`];
+            delete __textureMapping.value[ckey( dx, dy, w, h )];
             return [dx, dy];
         }
         return [];
     }
-    const undoRevision = (): boolean => {
-        if (__revisions.value.length > 0) {
-            const action = __revisions.value.pop();
-            if (action) {
-                const { dx, dy, w, h, src, name, sx, sy } = action;
-                switch (action.action) {
-                    case "added":
-                        delete __textureMapping.value[`${dx},${dy},${w},${h}`];
-                        clearCanvas(dx, dy, w, h);
-                        break;
-                    case "removed":
-                        __textureMapping.value[`${dx},${dy},${w},${h}`] = {
-                            src: src,
-                            name: name,
-                            sx: sx,
-                            sy: sy,
-                            dx: dx,
-                            dy: dy,
-                            w: w,
-                            h: h
-                        };
-                        break;
-                }
+    const undoRevision = () => {
+        const action = __revisions.value.pop();
+        if (action) {
+            const { name, dx, dy, w, h } = action.texture;
+            switch (action.action) {
+                case "added":
+                    delete __textureMapping.value[ckey( dx, dy, w, h )];
+                    clearCanvas(dx, dy, w, h);
+                    break;
+                default:
+                    break;
             }
-            return true;
         }
-        return false;
     }
     const render = () => {
         for (const key in __textureMapping.value) {
             const texture = __textureMapping.value[key];
-            let src;
-            // Texture is not loaded so load it
-            if (!__textureSources.value[texture.src]) {
-                src = new Image();
-                src.src = texture.src;
-                ctx.drawImage(
-                    src,
-                    texture.dx,
-                    texture.dy,
-                );
-            } else {
-                src = __textureSources.value[texture.src];
-                ctx.drawImage(
-                    src,
-                    texture.sx,
-                    texture.sy,
-                    texture.w,
-                    texture.h,
-                    texture.dx,
-                    texture.dy,
-                    texture.w,
-                    texture.h
-                );
-            }
+            texture.render();
         }
     }
     const removeAllTexture = () =>{
@@ -245,5 +204,5 @@ const useTextureRenderer = (ctx: CanvasRenderingContext2D) => {
     };
 }
 export {
-    useTextureRenderer
+    useTexture
 }

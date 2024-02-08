@@ -1,7 +1,7 @@
 import configuration from '../../../data/test-config.json';
 import { Bindings } from "../../../libs/input";
 import { Signal, useSignal } from "@preact/signals-react";
-import { Config, TextureRenderer } from "../../../libs/rendering/types";
+import { Config, Texture } from "../../../libs/rendering";
 import { Brush } from "./type";
 import { iconEffects } from "../../../libs/effects";
 import { SCENE } from "..";
@@ -14,7 +14,7 @@ import { SCENE } from "..";
  * @param brush - The selected brush
  * 
  */
-const useInput = (renderer: TextureRenderer, brush: Signal<Brush | null>) => {
+const useInput = (renderer: Texture, brush: Signal<Brush | null>) => {
     const config: Config = configuration;
     const __editable = useSignal(false);
     const __drag = useSignal(false);
@@ -84,9 +84,8 @@ const useInput = (renderer: TextureRenderer, brush: Signal<Brush | null>) => {
      * NOTE: The method does not allow redo, such as undoing a previous undo action.
      */
     const handleUndo = (): void => {
-        if (renderer.undoRevision()) {
-            renderer.render();
-        }
+        renderer.undoRevision()
+        renderer.render();
     }
     /**
      * Handles the constant creation of a div to
@@ -119,10 +118,10 @@ const useInput = (renderer: TextureRenderer, brush: Signal<Brush | null>) => {
         const src = config.textures["tilesets"][id.split("-")[0]].name;
         if (__trash.value) {
             if (event.type === "mousemove" && !__drag.value) return;
-            renderer.removeTexture(src, name, __clip.value, event.offsetX, event.offsetY, h, w, sx, sy);
+            renderer.removeTexture(__clip.value, event.offsetX, event.offsetY, w, h);
         } else {
             if (event.type === "mousemove" && !__drag.value) return;
-            renderer.addTexture(src, name, __clip.value, event.offsetX, event.offsetY, h, w, sx, sy);
+            renderer.addTexture(src, name, __clip.value, event.offsetX, event.offsetY, w, h, sx, sy);
         }
         renderer.render();
     }

@@ -1,6 +1,6 @@
 import { useSignal } from '@preact/signals-react';
 import { useInput } from './useInput';
-import { useTextureRenderer } from '../../../libs/rendering';
+import { useTexture } from '../../../libs/rendering';
 import { Brush } from './type';
 /**
  * The hook is responsible for managing the scene behavior and provides a way to set and interact with the canvas brush.
@@ -8,7 +8,7 @@ import { Brush } from './type';
  */
 const useScene = (ctx: CanvasRenderingContext2D | null) => {
     const __brush = useSignal<Brush | null>(null);
-    const __renderer = useTextureRenderer(ctx!);
+    const __renderer = useTexture(ctx!);
     const __input = useInput(__renderer, __brush);
     const attrs = {
         get width() {
@@ -46,7 +46,7 @@ const useScene = (ctx: CanvasRenderingContext2D | null) => {
     const initialize = async (): Promise<void> => {
         if (ctx) {
             await __renderer.initialize();
-            await __input.initialize();
+            __input.initialize();
         }
     }
     const clear = () => {
