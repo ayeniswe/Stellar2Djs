@@ -1,6 +1,6 @@
 import configuration from '../../../data/test-config.json';
 import { Bindings } from "../../../libs/input";
-import { Signal, useSignal } from "@preact/signals-react";
+import { useSignal } from "@preact/signals-react";
 import { Config, Texture } from "../../../libs/rendering";
 import { Brush } from "./type";
 import { iconEffects } from "../../../libs/effects";
@@ -14,7 +14,7 @@ import { SCENE } from "..";
  * @param brush - The selected brush
  * 
  */
-const useInput = (renderer: Texture, brush: Signal<Brush | null>) => {
+const useInput = (renderer: Texture) => {
     const config: Config = configuration;
     const __editable = useSignal(false);
     const __drag = useSignal(false);
@@ -22,6 +22,7 @@ const useInput = (renderer: Texture, brush: Signal<Brush | null>) => {
     const __trash = useSignal(false);
     const __clip = useSignal(false);
     const __ready = useSignal(false);
+    const _brush = useSignal<Brush | null>(null);
     const { applyDragEffect, applyTrashEffect, applyClippingEffect, applyEditingEffect } = iconEffects();
     const input = {
         get editable() {
@@ -60,11 +61,17 @@ const useInput = (renderer: Texture, brush: Signal<Brush | null>) => {
         set drag(value: boolean) {
             __drag.value = value
         },
+        get brush() {
+            return _brush.value
+        },
+        set brush(value: Brush | null) {
+            _brush.value = value
+        }
     }
     const initialize = (): void => {
         const bindings = Bindings.getInstance();
         bindings.addBinding(handleDropSprite.bind(this), [], 'drop', false, SCENE.CANVAS);
-        bindings.addBinding(handleBrush.bind(this), [], ['mousemove'], false, SCENE.CANVAS);
+        bindings.addBinding(handleBrush.bind(this), [], 'mousemove', false, SCENE.CANVAS);
         bindings.addBinding(handleDrawing.bind(this), ['LeftButton'], ['mousedown', 'mousemove'], false, SCENE.CANVAS);
         bindings.addBinding(toggleClipMode.bind(this), ['c'], 'keydown', true);
         bindings.addBinding(toggleDragMode.bind(this), ['d'], 'keydown', true);
@@ -89,39 +96,50 @@ const useInput = (renderer: Texture, brush: Signal<Brush | null>) => {
     }
     /**
      * Handles the constant creation of a div to
-     * create a shadow brush effect.
-     *
-     * NOTE: This method is only available if the scene is ready and a brush is selected
+     * create a brush effect.
      */
     const handleBrush = (event: MouseEvent): void => {
-        if (!__ready.value || !brush.value) return;
+        if (!_brush.value) return;
         const brushElement = document.getElementById(SCENE.BRUSH)!;
-        const { w, h } = brush.value!.object;
-        brushElement.style.display = 'flex';
-        brushElement.style.left = `${event.clientX}px`;
-        brushElement.style.top = `${event.clientY}px`;
-        brushElement.style.width = `${w}px`;
-        brushElement.style.height = `${h}px`;
+        if (__editable.value) {
+            const { w, h } = _brush.value.object;
+            brushElement.style.left = `${event.clientX}px`;
+            brushElement.style.top = `${event.clientY}px`;
+            brushElement.style.display = 'flex';
+            brushElement.style.width = `${w}px`;
+            brushElement.style.height = `${h}px`;
+            brushElement.style.backgroundImage = _brush.value.coverImage;
+        } else {
+            brushElement.style.display = 'none';
+        }
     }
     /**
      * Handles the drawing action in the level scene based on mouse events.
-     * If the scene is in trash mode, it removes an element at the specified position.
-     * If not in trash mode, it adds an element at the specified position and logs appropriate messages.
+     * If the scene is in `trash` mode, it removes an element at the specified position.
+     * If the scene is in `selection` mode "when edit it turned off", it allows the selection of an element and drop it at the specified position.
+     * If the scene is in `drag` mode, it rapidly adds an element at the specified position.
      * @param {MouseEvent} event - The mouse event object.
      * 
      * NOTE: This method is only available if the scene is ready.
      */
     const handleDrawing = (event: MouseEvent): void => {
-        if (!__ready.value || !brush.value) return;
-        const { id, object } = brush.value;
-        const { name, h, w, sx, sy } = object;
-        const src = config.textures["tilesets"][id.split("-")[0]].name;
-        if (__trash.value) {
-            if (event.type === "mousemove" && !__drag.value) return;
-            renderer.removeTexture(__clip.value, event.offsetX, event.offsetY, w, h);
+        if (!__editable.value && !__trash.value) {
+            // Select texture
+            document.getElementById(SCENE.CANVAS)!.style.cursor = 'move';
+            renderer.selectTexture(event.offsetX, event.offsetY, 1);
         } else {
-            if (event.type === "mousemove" && !__drag.value) return;
-            renderer.addTexture(src, name, __clip.value, event.offsetX, event.offsetY, w, h, sx, sy);
+            if (!__ready.value || !_brush.value || !__drag.value && event.type === "mousemove") return;
+            // TODO: make more dynamic way to do this
+            // Get brush src image tilesheet data
+            const { id, object } = _brush.value!;
+            const { name, h, w, sx, sy } = object;
+            const src = config.textures["tilesets"][id.split("-")[0]].name;
+            // Remove or add a texture
+            if (__trash.value) {
+                renderer.removeTexture(event.offsetX, event.offsetY);
+            } else {
+                renderer.addTexture(src, name, __clip.value, event.offsetX, event.offsetY, w, h, sx, sy);
+            }
         }
         renderer.render();
     }
@@ -132,7 +150,7 @@ const useInput = (renderer: Texture, brush: Signal<Brush | null>) => {
     const handleDropSprite = (e: DragEvent): void => {
         e.preventDefault();
         const frames = JSON.parse(e.dataTransfer!.getData("application/sprite")).frames;
-        renderer.addTexture(frames[0].src, "sprite", __clip.value, e.offsetX, e.offsetY, frames[0].w, frames[0].h);
+        renderer.addTexture(frames[0].src, "", __clip.value, e.offsetX, e.offsetY, frames[0].w, frames[0].h);
         renderer.render();
     }
     // *****************************************

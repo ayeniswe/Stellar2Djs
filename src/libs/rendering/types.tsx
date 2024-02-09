@@ -49,6 +49,7 @@ type Texture = {
      * @param {number} h - The height of the texture.
      * @param {number} sx - The source x-coordinate of the texture.
      * @param {number} sy - The source y-coordinate of the texture.
+     * @param {number} l - The layer of the texture.
      * @returns {number[]} Returns an array containing the x and y coordinates of the removed texture, or an empty array if the texture was not removed.
      *
      * @description
@@ -61,25 +62,19 @@ type Texture = {
      * It then stores the texture in the textures mapping using the destination coordinates and dimensions as the key.
      * Additionally, it stores an action object in the revisions array to keep track of the added texture.
      */
-    addTexture: (src: string, name: string, clipping: boolean, x: number, y: number, w: number, h: number, sx?: number, sy?: number) => number[]
+    addTexture: (src: string, name: string, clipping: boolean, x: number, y: number, w: number, h: number, sx?: number, sy?: number, l?: number) => number[]
     /**
      * Removes a texture from the canvas.
      *
-     * @param {boolean} clipping - Indicates whether clipping is applied.
      * @param {number} x - The x-coordinate of the texture.
      * @param {number} y - The y-coordinate of the texture.
-     * @param {number} h - The height of the texture.
-     * @param {number} w - The width of the texture.
-     * @returns {number[]} Returns an array containing the x and y coordinates of the removed texture, or an empty array if the texture was not removed.
+     * @param {number} l - The layer of the texture.
      *
      * @description
-     * This method retrieves the height (h) and width (w) of the brush 
-     * It then scales the x and y coordinates based on the dimensions of the texture.
-     * If the destination coordinates (x, y) and dimensions (height, width) exists on the canvas, it clears the canvas at the specified destination coordinates and dimensions.
-     * It also deletes the corresponding texture mapping.
-     * Finally, it returns an array containing the x and y coordinates of the removed texture, or an empty array if the texture was not removed.
+     * This method retrieves the texture information.
+     * from the pixel boundings if the texture exists.
      */
-    removeTexture: (clipping: boolean, x: number, y: number, w: number, h: number) => number[],
+    removeTexture: (x: number, y: number, l?: number) => void,
     /**
      * Undoes the last revision made to the canvas.
      *
@@ -115,6 +110,11 @@ type Texture = {
     * Initializes the renderer.
     */
     initialize: () => Promise<void>
+    /**
+     * Selects a texture from the canvas to drag and drop.
+     * @returns {string} Returns the canvas data url for background image when dragging
+     */
+    selectTexture: (x: number, y: number, l?: number) => void
     textureRenderer: {
         /**
         * All textures sources available to be used in the renderer

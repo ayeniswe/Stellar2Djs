@@ -49,8 +49,9 @@ const useTilemap = () => {
         // Set new tile
         document.getElementById(id)!.style.opacity = SELECTED_TILE_OPACITY;
         document.getElementById(id)!.ariaPressed = 'true';
+        const img = document.getElementById(id)!.style.backgroundImage;
         TILE.value = id;
-        scene.attrs.brush = { id, group, object };
+        scene.attrs.input.brush = { id, group, object, coverImage: img };
     }
     /**
      * Returns an array of JSX elements representing tiles based on the provided `tiles` object and `group` string.

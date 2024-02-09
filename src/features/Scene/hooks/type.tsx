@@ -78,11 +78,16 @@ type Inputs = {
      * The `clip` signal is a flag to control clipping.
      */
     clip: boolean
+    /**
+     * The brush being used in the scene.
+     */
+    brush: Brush | null
 }
 type Brush = {
     id: string
-    group: string
+    group?: string
     object: TextureItem
+    coverImage: string
 }
 type Scene = {
     /**
@@ -114,10 +119,6 @@ type SceneAttributes = {
      * The current rendering context of the scene.
      */
     readonly ctx: CanvasRenderingContext2D | null
-    /**
-     * The current brush being used in the scene.
-     */
-    brush: Brush | null
     /**
      * The current width of the scene.
      * 

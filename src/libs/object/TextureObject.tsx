@@ -5,10 +5,11 @@ abstract class TextureObject {
     abstract readonly ctx: CanvasRenderingContext2D;
     abstract readonly texture: CanvasRenderingContext2D;
     abstract readonly name: string;
-    abstract readonly dx: number;
-    abstract readonly dy: number;
-    abstract readonly w: number;
-    abstract readonly h: number;
+    abstract dx: number;
+    abstract dy: number;
+    abstract w: number;
+    abstract h: number;
+    abstract l: number;
     abstract _scale: [boolean, boolean];
     protected abstract save: () => void;
     abstract render: () => void;
