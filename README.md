@@ -13,11 +13,13 @@ Stellar2D
   - [x] Scene
   - [x] Toolbar
 - [ ] **Object Placement:** Create and place various game objects within scene.
-  - [ ] Characters
+  - [x] Characters
   - [x] Items
-- [ ] **Object Manipulation:** Define their initial properties like position, size, rotation, and other attributes.
-  - [ ] Characters
-  - [ ] Items
+- [ ] **Object Manipulation:** Define their initial properties like position, size, flip, rotation, and other attributes.
+  - [x] Flip
+  - [x] Position
+  - [ ] Size
+  - [ ] Rotation
 - [ ] **Layer Management:** Manage different layers for organizing and arranging objects.
 - [ ] **Camera Control:** Set and control the camera position and properties.
 - [ ] **Collison Detection:** Add colliders to objects for collision detection.
