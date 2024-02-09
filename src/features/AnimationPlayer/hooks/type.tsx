@@ -58,41 +58,41 @@ type Timeline = {
      * Represents the timeline display value.
      * @type {Signal<string>}
      */
-    DISPLAY: Signal<string>;
+    display: Signal<string>;
     /**
      * Represents the pixel scaling value for one second
      * 
      * Example: 10px represents 1 seconds.
      * @type {Signal<number>}
      */
-    SCALE: Signal<number>;
+    scale: Signal<number>;
     /**
      * Represents the width value of the timeline.
      * @type {Signal<number>}
      */
-    WIDTH: Signal<number>;
+    width: Signal<number>;
      /**
      * Represents the slider position
      * @type {Signal<number>}
      */
-    SLIDER: Signal<number>;
+    slider: Signal<number>;
     /**
      * Represents the frames src in the timeline 
      * @description
      * This list of frames src is inherited from the current sprite animation
      * @type {Signal<ImageData[] | undefined>}
      */
-    FRAMES: Signal<ImageData[] | undefined>;
+    frames: Signal<ImageData[] | undefined>;
     /**
      * Represents the current frame to be displayed
      * @type {Signal<ImageData | undefined>}
      */
-    FRAME: Signal<ImageData | undefined>;
+    frame: Signal<ImageData | undefined>;
     /**
      * Represents the frames per second
      * @type {Signal<string>}
      */
-    FPS: Signal<string>;
+    fps: Signal<string>;
 }
 /**
  * This hook provides functionality for controlling the playback of the timeline.
@@ -170,12 +170,12 @@ type Controls = {
      * Check if timeline is in play or not
      * @type {Signal<Boolean | null>}
      */
-    PLAYING: Signal<Boolean | null>;
+    playing: Signal<Boolean | null>;
     /**
      * Repeat timeline 
      * @type {Signal<Boolean>}
      */
-    LOOP: Signal<Boolean>;
+    loop: Signal<Boolean>;
 }
 /**
  * This hook provides functionality for managing the sprite animation.
@@ -234,32 +234,32 @@ type SpriteAnimation = {
      * Sprite animation unique name
      * @type {Signal<string>}
      */
-    NAME: Signal<string>;
+    spriteName: Signal<string>;
     /**
      * The current sprite
      * @type {Signal<Sprite | null>}
      */
-    SPRITE: Signal<Sprite | null>;
+    sprite: Signal<Sprite | null>;
     /**
      * The list of sprite animations objects
      * @type {Signal<Sprite[]>}
      */
-    SPRITES: Signal<Sprite[]>;
+    sprites: Signal<Sprite[]>;
     /**
      * The current frame selected
      * @type {Signal<number>}
      */
-    CURRENT_FRAME: Signal<number>;
+    current_frame: Signal<number>;
     /**
      * Indicates if sprite animation is currently being created
      * @type {Signal<boolean>}
      */
-    CREATING: Signal<boolean>;
+    creating: Signal<boolean>;
     /**
      * Represents the frames src in the current sprite animation
      * @type {Signal<ImageData[]>}
      */
-    FRAMES: Signal<ImageData[]>;
+    frames: Signal<ImageData[]>;
 }
 type Sprite = {
     /**

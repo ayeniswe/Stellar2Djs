@@ -16,7 +16,7 @@ const Playback = () => {
     return (
         <div className="Playback">
             <div className="buttons">
-                <button data-cy="animation-repeat" title="repeat" onClick={() => timelineControls.repeat()} style={{ backgroundColor: `${timelineControls.LOOP.value ? "var(--accent-color)" : "transparent"}`}}>
+                <button data-cy="animation-repeat" title="repeat" onClick={() => timelineControls.repeat()} style={{ backgroundColor: `${timelineControls.loop.value ? "var(--accent-color)" : "transparent"}`}}>
                     <img alt="animation repeat" src={repeatIcon}/>
                 </button>
                 <button data-cy="animation-play-backward" title="play backward" onClick={() => timelineControls.playBackward()}>
@@ -25,8 +25,8 @@ const Playback = () => {
                 <button data-cy="animation-play-previous-frame" title="play previous frame" onClick={() => timelineControls.playFastBackward()}>
                     <img alt="animation play previous frame" src={arrowLeftLeftIcon}/>
                 </button>
-                <button data-cy={`animation-${timelineControls.PLAYING.value ? "stop" : "play"}`} title={timelineControls.PLAYING.value ? "stop" : "play"} onClick={() => timelineControls.PLAYING.value ? timelineControls.stop() : timelineControls.play()}>
-                    <img alt={`animation ${timelineControls.PLAYING.value ? "stop" : "play"}`} src={timelineControls.PLAYING.value ? stopIcon : playIcon}/>
+                <button data-cy={`animation-${timelineControls.playing.value ? "stop" : "play"}`} title={timelineControls.playing.value ? "stop" : "play"} onClick={() => timelineControls.playing.value ? timelineControls.stop() : timelineControls.play()}>
+                    <img alt={`animation ${timelineControls.playing.value ? "stop" : "play"}`} src={timelineControls.playing.value ? stopIcon : playIcon}/>
                 </button>
                 <button data-cy="animation-play-next-frame" title="play next frame" onClick={() => timelineControls.playFastForward()}>
                     <img alt="animation play next frame" src={arrowRightRightIcon}/>

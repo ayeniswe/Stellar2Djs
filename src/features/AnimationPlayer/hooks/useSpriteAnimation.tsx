@@ -4,22 +4,22 @@ import { Sprite } from "./type";
  * The sprite animation currently being played and attributes
  */
 const useSpriteAnimation = () => {
-    const NAME = useSignal("SpriteAnimation-1");
-    const CREATING = useSignal(true);
-    const SPRITES = useSignal<Sprite[]>([]);
-    const CURRENT_FRAME = useSignal(0);
-    const SPRITE = useSignal<Sprite | null>(null);
-    const FRAMES = useSignal(SPRITE.value?.frames || []);
+    const spriteName = useSignal("SpriteAnimation-1");
+    const creating = useSignal(true);
+    const sprites = useSignal<Sprite[]>([]);
+    const current_frame = useSignal(0);
+    const sprite = useSignal<Sprite | null>(null);
+    const frames = useSignal(sprite.value?.frames || []);
     const changeSprite = (value: number) => {
-        SPRITE.value = SPRITES.value[value];
+        sprite.value = sprites.value[value];
         // TODO: better performance w/ linked list
-        FRAMES.value = [ ...SPRITE.value.frames ];
+        frames.value = [ ...sprite.value.frames ];
     }
     const changeName = (name: string) => {
-        NAME.value = name;
+        spriteName.value = name;
     }
     const showSprites = () => {
-        return SPRITES.value.map((sprite, index) => (
+        return sprites.value.map((sprite, index) => (
             <option
                 key={index}
                 value={sprite.id}
@@ -37,7 +37,7 @@ const useSpriteAnimation = () => {
             reader.onload = (e) => {
                 img.src = e.target?.result as string;
                 img.onload = () => {
-                    FRAMES.value = [...FRAMES.value, { 
+                    frames.value = [...frames.value, { 
                         h: img.height,
                         w: img.width,
                         src: img.src
@@ -47,35 +47,35 @@ const useSpriteAnimation = () => {
         }
     }
     const removeFrame = (index: number) => {;
-        FRAMES.value.splice(index, 1);
+        frames.value.splice(index, 1);
         // TODO: better performance w/ linked list
-        FRAMES.value = [ ...FRAMES.value ];
+        frames.value = [ ...frames.value ];
     }
     const saveAnimation = () => {
-        const sprite = {
-            name: SPRITE.value?.name || NAME.value,
-            frames: FRAMES.value,
-            id: Number(SPRITE.value?.id) || 0
+        const currentSprite = {
+            name: sprite.value?.name || spriteName.value,
+            frames: frames.value,
+            id: Number(sprite.value?.id) || 0
         }
-        if (CREATING.value) {
-            sprite.id = SPRITES.value.length > 0 ? SPRITES.value.length : 0;
+        if (creating.value) {
+            currentSprite.id = sprites.value.length > 0 ? sprites.value.length : 0;
             // TODO: better performance w/ linked list
-            SPRITES.value = [ ...SPRITES.value, sprite ];
-            CREATING.value = false;
-            changeSprite(sprite.id);
+            sprites.value = [ ...sprites.value, currentSprite ];
+            creating.value = false;
+            changeSprite(currentSprite.id);
         } else {
             // TODO: better performance w/ linked list
-            SPRITES.value[sprite.id] = sprite;
+            sprites.value[currentSprite.id] = currentSprite;
         }
     }
     const createAnimation = () => {
-        FRAMES.value = [];
-        SPRITE.value = null;
-        CREATING.value = true;
+        frames.value = [];
+        sprite.value = null;
+        creating.value = true;
     }
     const handleSpriteDragDrop = (e: React.DragEvent<HTMLImageElement>) => {
         e.dataTransfer.setData("application/sprite", JSON.stringify({
-            frames: FRAMES.value
+            frames: frames.value
         }));
     }
     return {
@@ -87,12 +87,12 @@ const useSpriteAnimation = () => {
         removeFrame,
         loadFrame,
         showSprites,
-        SPRITE,
-        SPRITES,
-        CREATING,
-        CURRENT_FRAME,
-        FRAMES,
-        NAME
+        sprite,
+        sprites,
+        creating,
+        current_frame,
+        frames,
+        spriteName
     }
 }
 export default useSpriteAnimation

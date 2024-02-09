@@ -11,10 +11,10 @@ const SpriteAnimation = () => {
     const { spriteAnimation } = useAppContext();
     return (
         <div className="SpriteAnimation AnimationPlayerGroup AnimationPlayerGroup--col">
-            {spriteAnimation.CREATING.value ? 
-            <input data-cy="animation-name" className="display" onChange={(e) => spriteAnimation.changeName(e.target.value)} value={spriteAnimation.NAME.value}/>
+            {spriteAnimation.creating.value ? 
+            <input data-cy="animation-name" className="display" onChange={(e) => spriteAnimation.changeName(e.target.value)} value={spriteAnimation.spriteName.value}/>
             :
-            <select data-cy="animation-name" className="display" value={spriteAnimation.SPRITE.value?.id} onChange={(e) => spriteAnimation.changeSprite(Number(e.target.value))}>
+            <select data-cy="animation-name" className="display" value={spriteAnimation.sprite.value?.id} onChange={(e) => spriteAnimation.changeSprite(Number(e.target.value))}>
                 {spriteAnimation.showSprites()}
             </select>
             }

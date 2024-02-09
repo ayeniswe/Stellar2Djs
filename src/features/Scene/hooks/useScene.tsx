@@ -5,8 +5,8 @@ import { useTexture } from '../../../libs/rendering';
  * @param ctx - The canvas rendering context
  */
 const useScene = (ctx: CanvasRenderingContext2D | null) => {
-    const __renderer = useTexture(ctx!);
-    const __input = useInput(__renderer);
+    const renderer = useTexture(ctx!);
+    const input = useInput(renderer);
     const attrs = {
         get width() {
             if (!ctx) return -1;
@@ -28,20 +28,20 @@ const useScene = (ctx: CanvasRenderingContext2D | null) => {
             return ctx;
         },
         get input() {
-            return __input.input;
+            return input.input;
         },
         get textureSources() {
-            return __renderer.textureRenderer.textureSources;
+            return renderer.textureRenderer.textureSources;
         }
     }
     const initialize = async (): Promise<void> => {
         if (ctx) {
-            await __renderer.initialize();
-            __input.initialize();
+            await renderer.initialize();
+            input.initialize();
         }
     }
     const clear = () => {
-        __input.removeAll();
+        input.removeAll();
     }
     return {
         initialize,

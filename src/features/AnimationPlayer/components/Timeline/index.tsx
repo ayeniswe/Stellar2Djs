@@ -14,14 +14,14 @@ const Timeline = () => {
     return (
         <div data-cy="timeline" id={ANIMATION_PLAYER.TIMELINE}>
             <FrameCollection/>
-            <input data-cy="animation-timeline-display" className="display" onChange={(e) => timelineControls.changeSliderDisplay(e.target.value)} value={timeline.DISPLAY.value}/>
+            <input data-cy="animation-timeline-display" className="display" onChange={(e) => timelineControls.changeSliderDisplay(e.target.value)} value={timeline.display.value}/>
             <div data-cy="animation-timeline-slider" id={ANIMATION_PLAYER.TIMELINE_SLIDER}>
                 <div data-cy="animation-timeline-slider-thumb" id={ANIMATION_PLAYER.TIMELINE_SLIDER_THUMB}/>
             </div>
             <ProgressBars
-                scaling={timeline.SCALE.value}
+                scaling={timeline.scale.value}
                 step={2}
-                width={timeline.WIDTH.value}
+                width={timeline.width.value}
             />
         </div>
     )

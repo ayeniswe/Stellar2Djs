@@ -10,14 +10,13 @@ import { computed, signal, useComputed, useSignal } from '@preact/signals-react'
 const useTilemap = () => {
     const { scene } = useAppContext();
     let config: Config = process.env.NODE_ENV === 'production' ? configuration : require('../../../data/test-config.json');
-    const TILESETS = config.textures.tilesets;
-    const EMPTY = useComputed( () => { return !(Object.keys(TILESETS).length > 0) });
-    const TILESET_KEY = useSignal("");
-    const TILESET = useSignal<JSX.Element>(<></>);
-    const TILE = useSignal("");
-    const TILES = signal<TextureItems>({});
-    const TILESET_NAME = computed(() => TILESETS[TILESET_KEY.value].name);
-    const SELECTED_TILE_OPACITY = '1' // 100% opacity
+    const tilesets = config.textures.tilesets;
+    const empty = useComputed( () => { return !(Object.keys(tilesets).length > 0) });
+    const tileset_key = useSignal("");
+    const tileset = useSignal<JSX.Element>(<></>);
+    const tile = useSignal("");
+    const tiles = signal<TextureItems>({});
+    const tileset_NAME = computed(() => tilesets[tileset_key.value].name);
     const drawBackground = (object: TextureItem): string => {
         const { sx, sy, w, h } = object
         const canvas = document.createElement('canvas');
@@ -25,32 +24,32 @@ const useTilemap = () => {
         canvas.height = h;
         const ctx = canvas.getContext('2d');
         if (ctx) {
-            let background = scene.attrs.textureSources[TILESET_NAME.value];
+            let background = scene.attrs.textureSources[tileset_NAME.value];
             ctx.drawImage(background, sx, sy, w, h, 0, 0, w, h);
             return canvas.toDataURL();
         }
         return '';
     };
     const setTilesBackground = (): void => {
-        for (const key in TILES.value) {
+        for (const key in tiles.value) {
             const tile = document.getElementById(key);
             if (tile) {
-                const url = drawBackground(TILES.value[key]);
+                const url = drawBackground(tiles.value[key]);
                 tile.style.backgroundImage = `url("${url}")`;
             };
         };
     }
     const setTileBrush = (id: string, group: string, object: TextureItem): void => {
         // Reset previous tile
-        if (TILE.value) {
-            document.getElementById(TILE.value)!.style.opacity = "";
-            document.getElementById(TILE.value)!.ariaPressed = 'false';
+        if (tile.value) {
+            document.getElementById(tile.value)!.style.opacity = "";
+            document.getElementById(tile.value)!.ariaPressed = 'false';
         }
         // Set new tile
-        document.getElementById(id)!.style.opacity = SELECTED_TILE_OPACITY;
+        document.getElementById(id)!.style.opacity = '1';
         document.getElementById(id)!.ariaPressed = 'true';
         const img = document.getElementById(id)!.style.backgroundImage;
-        TILE.value = id;
+        tile.value = id;
         scene.attrs.input.brush = { id, group, object, coverImage: img };
     }
     /**
@@ -61,14 +60,14 @@ const useTilemap = () => {
      * @returns {Array<JSX.Element>} An array of JSX elements representing the tiles.
      *
      * @description
-     * This function updates the `TILES.value` object by merging the existing `TILES.value` object with the provided `tiles` object.
+     * This function updates the `tiles.value` object by merging the existing `tiles.value` object with the provided `tiles` object.
      * It then maps over the keys of the `tiles` object and for each key, it extracts the width (`w`), height (`h`), source x-coordinate (`sx`), source y-coordinate (`sy`), and name (`name`) of the tile from the corresponding texture object.
      * It returns a JSX element representing the tile, with the extracted information used to set the `id`, `key`, `title`, `aria-label`, `role`, and `className` attributes.
      * It also attaches an `onClick` event listener that calls the `setTileBrush` function with the current tile's ID, the provided `group`, and the corresponding texture object.
      */
     const getTiles = (tiles: TextureItems , group: string): Array<JSX.Element> => {
-        TILES.value = {
-            ...TILES.value,
+        tiles.value = {
+            ...tiles.value,
             ...tiles
         }; // keep track of all tiles
         return Object.keys(tiles).map(key => {
@@ -94,13 +93,13 @@ const useTilemap = () => {
      * @returns {Array<JSX.Element>} An array of JSX elements representing the tile groups.
      *
      * @description
-     * This function retrieves the groups of tiles from the `TILESETS` object based on the current `TILESET_KEY.value`.
+     * This function retrieves the groups of tiles from the `tilesets` object based on the current `tileset_key.value`.
      * It maps over the keys of the `groups` object and for each key (group name), it returns a JSX element representing the group.
      * The JSX element includes a title element with the capitalized group name and a container for the tiles of that group.
      * It also calls the `getTiles` function to retrieve the JSX elements representing the tiles within the group.
      */
     const getGroups = (): JSX.Element[] => {
-        const groups = TILESETS[TILESET_KEY.value].groups;
+        const groups = tilesets[tileset_key.value].groups;
         return Object.keys(groups).map(name => {
             return (
                 <div className='group' key={name}>
@@ -115,26 +114,26 @@ const useTilemap = () => {
         });
     }
     const setTileset = async (): Promise<void> => {
-        TILESET.value = (
+        tileset.value = (
             <>
                 {getGroups()}
             </>
         );
     }
     const getTilesets = (): JSX.Element[] => {
-        return Object.keys(TILESETS).map(key => {
+        return Object.keys(tilesets).map(key => {
             return (
                 <option value={key} key={key}>
-                    {capitalize(TILESETS[key].name)}
+                    {capitalize(tilesets[key].name)}
                 </option>
             );
         });
     }
     const setTilesetKey = (value: string): void => {
-       TILESET_KEY.value = value;
+       tileset_key.value = value;
     }
     const showTileset = () => {
-        return TILESET;
+        return tileset;
     }
     return {
         setTileset,
@@ -144,10 +143,10 @@ const useTilemap = () => {
         setTilesBackground,
         drawBackground,
         setTileBrush,
-        TILESET_KEY,
-        TILESET,
-        EMPTY,
-        TILE
+        tileset_key,
+        tileset,
+        empty,
+        tile
     }
 }
 export {

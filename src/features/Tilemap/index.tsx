@@ -12,34 +12,34 @@ const Tilemap = () => {
       setTilesBackground,
       getTilesets,
       showTileset,
-      TILESET_KEY,
-      EMPTY,
+      tileset_key,
+      empty,
     }: TilemapHook = useTilemap();
     // This effect handles the initialization of the tileset chosen, set the background image of the tiles, and set the ready property of the editor input to receive input
     useEffect(() => {
-      if (TILESET_KEY.value !== '') {
+      if (tileset_key.value !== '') {
         scene!.attrs.input.ready = true;
         (async () => {
           await setTileset();
           setTilesBackground();
         })();
       }
-    }, [TILESET_KEY.value, setTilesBackground, setTileset, scene]);
+    }, [tileset_key.value, setTilesBackground, setTileset, scene]);
     return (
       <div data-cy="tilemap-editor" className="Tilemap">
           <h4 className='dropdown'>
             Select Tileset
-            <select data-cy="tileset-select" value={TILESET_KEY.value} onChange={e => setTilesetKey(e.target.value)}>
+            <select data-cy="tileset-select" value={tileset_key.value} onChange={e => setTilesetKey(e.target.value)}>
               <option value="" disabled>None</option>
               {getTilesets()}
             </select>
           </h4>
           <div className="tileset">
-            {TILESET_KEY.value ?
+            {tileset_key.value ?
             showTileset()
             :
             <h2 className='empty'>
-              No Tileset {`${EMPTY.value ? 'Available' : 'Selected'}`}
+              No Tileset {`${empty.value ? 'Available' : 'Selected'}`}
             </h2>
             }
           </div>
