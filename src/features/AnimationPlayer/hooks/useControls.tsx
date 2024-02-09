@@ -8,43 +8,43 @@ import { ANIMATION_PLAYER } from "..";
  * This hook need to be used in conjunction with an initialized Timeline hook to control the Timeline
  */
 const useControls = (timeline: Timeline) => {
-    const PLAYING = useSignal<Boolean | null>(null);
-    const LOOP = useSignal(false);
+    const playing = useSignal<Boolean | null>(null);
+    const loop = useSignal(false);
     const changeSliderDisplay = (value: string) => {
-        const maxTime = timeline.WIDTH.value / timeline.SCALE.value;
+        const maxTime = timeline.width.value / timeline.scale.value;
         const minTime = 0;
         const validateInput = /^\d*\.?\d{0,3}$/;
         if(validateInput.test(value) && Number(value) <= maxTime && Number(value) >= minTime) {
-            timeline.DISPLAY.value = value;
-            const position = Number(timeline.DISPLAY.value) * timeline.SCALE.value;
+            timeline.display.value = value;
+            const position = Number(timeline.display.value) * timeline.scale.value;
             const slider = document.getElementById(ANIMATION_PLAYER.TIMELINE_SLIDER)!;
             setPosition(slider, position);
-            timeline.SLIDER.value = position
+            timeline.slider.value = position
         }
         else if (value === "") {
-            timeline.DISPLAY.value = "";
+            timeline.display.value = "";
         }
     }
     const changeFPS = (direction: "up" | "down") => {
         const maxFPS = 120;
         const minFPS = 1;
         const increment = (direction === "up") ? 1 : -1;
-        const value = Number(timeline.FPS.value) + increment;
+        const value = Number(timeline.fps.value) + increment;
         if (value <= maxFPS && value >= minFPS) {
-            timeline.FPS.value = value.toString();
+            timeline.fps.value = value.toString();
         }
     }
     const play = async () => {
-        PLAYING.value = true;
+        playing.value = true;
         // Reset timeline to beginning if at end
         timeline.reset();
-        while (timeline.SLIDER.value < timeline.WIDTH.value) {
-            timeline.SLIDER.value += timeline.SCALE.value / Number(timeline.FPS.value);
+        while (timeline.slider.value < timeline.width.value) {
+            timeline.slider.value += timeline.scale.value / Number(timeline.fps.value);
             const stillPlaying = await new Promise<boolean>((resolve) => {
-                if (PLAYING.value) {
-                    const timeout = 1000 / Number(timeline.FPS.value);
+                if (playing.value) {
+                    const timeout = 1000 / Number(timeline.fps.value);
                     setTimeout(() => {
-                        timeline.moveSlider(timeline.SLIDER.value);
+                        timeline.moveSlider(timeline.slider.value);
                         timeline.moveFrame(1);
                         resolve(true);
                     }, timeout)
@@ -54,25 +54,25 @@ const useControls = (timeline: Timeline) => {
             });
             if (!stillPlaying) {
                 break;
-            } else if (LOOP.value) {
+            } else if (loop.value) {
                 timeline.reset();
             }
         };
-        PLAYING.value = false;
+        playing.value = false;
     }
     const stop = () => {
-        PLAYING.value = false;
+        playing.value = false;
     }
     const playBackward = () => {
-        const decrement = ((timeline.SCALE.value / Number(timeline.FPS.value)) / 2);
-        if (timeline.SLIDER.value >= decrement) {
-            timeline.moveSlider(timeline.SLIDER.value - decrement);
+        const decrement = ((timeline.scale.value / Number(timeline.fps.value)) / 2);
+        if (timeline.slider.value >= decrement) {
+            timeline.moveSlider(timeline.slider.value - decrement);
         }
     }
     const playForward = () => {
-        const increment = ((timeline.SCALE.value / Number(timeline.FPS.value)) / 2);
-        if (timeline.SLIDER.value < timeline.WIDTH.value - increment) {
-            timeline.moveSlider(timeline.SLIDER.value + increment);
+        const increment = ((timeline.scale.value / Number(timeline.fps.value)) / 2);
+        if (timeline.slider.value < timeline.width.value - increment) {
+            timeline.moveSlider(timeline.slider.value + increment);
         }
     }
     const playFastBackward = () => {
@@ -82,7 +82,7 @@ const useControls = (timeline: Timeline) => {
         timeline.moveFrame(1);
     }
     const repeat = () => {
-        LOOP.value = !LOOP.value
+        loop.value = !loop.value
     }
     return {
         changeSliderDisplay,
@@ -94,8 +94,8 @@ const useControls = (timeline: Timeline) => {
         playFastBackward,
         playFastForward,
         repeat,
-        PLAYING,
-        LOOP
+        playing,
+        loop
     }
 }
 export default useControls

@@ -10,70 +10,70 @@ import { ANIMATION_PLAYER } from "../constants";
  * Must call the `initialize` before using the hook
  */
 const useTimeline = (spriteAnimation: SpriteAnimation) => {
-    const SCALE = useSignal(20);
-    const WIDTH = useSignal(0);
-    const DISPLAY = useSignal("0.00");
+    const scale = useSignal(20);
+    const width = useSignal(0);
+    const display = useSignal("0.00");
     const ELEMENTS = useSignal<TimelineElements | null>(null);
-    const SLIDER = useSignal(0);
-    const FPS = useSignal("30");
-    const CURRENT_FRAME = useSignal(0);
-    const FRAMES = useComputed(() => { return spriteAnimation.FRAMES.value });
-    const FRAME = useComputed(() => { return FRAMES.value[CURRENT_FRAME.value] });
+    const slider = useSignal(0);
+    const fps = useSignal("30");
+    const current_frame = useSignal(0);
+    const frames = useComputed(() => { return spriteAnimation.frames.value });
+    const frame = useComputed(() => { return frames.value[current_frame.value] });
     const moveSlider = (value: number) => {
-        const slider = document.getElementById(ANIMATION_PLAYER.TIMELINE_SLIDER)!;
-        setPosition(slider, value);
-        SLIDER.value = value;
-        DISPLAY.value = calculateDisplay(value, SCALE.value);
+        const sliderElement = document.getElementById(ANIMATION_PLAYER.TIMELINE_SLIDER)!;
+        setPosition(sliderElement, value);
+        slider.value = value;
+        display.value = calculateDisplay(value, scale.value);
     }
     const removeFrame = () => {
-        spriteAnimation.removeFrame(CURRENT_FRAME.value);
+        spriteAnimation.removeFrame(current_frame.value);
         // Prevent out of bounds
-        if (CURRENT_FRAME.value >= FRAMES.value?.length && FRAMES.value.length > 0) {
-            CURRENT_FRAME.value = FRAMES.value?.length - 1;
+        if (current_frame.value >= frames.value?.length && frames.value.length > 0) {
+            current_frame.value = frames.value?.length - 1;
         }
     }
     const moveFrame = (amount: number) => {
-        if (FRAMES.value) {
-            const newAmount = CURRENT_FRAME.value + amount;
-            const frame = newAmount >= 0 ? newAmount : FRAMES.value.length - 1;
-            CURRENT_FRAME.value = frame % FRAMES.value.length;
+        if (frames.value) {
+            const newAmount = current_frame.value + amount;
+            const frame = newAmount >= 0 ? newAmount : frames.value.length - 1;
+            current_frame.value = frame % frames.value.length;
         }
     }
     const showFrames = () => {
-        return FRAMES.value?.map((frame, index) => (
+        return frames.value?.map((frame, index) => (
             <img
                 key={index}
                 data-cy='animation-timeline-frame'
                 src={frame.src}
                 style={{
-                    width: `${SCALE.value / Number(FPS.value)}px`,
+                    width: `${scale.value / Number(fps.value)}px`,
                 }}
             />
         ))
     }
     const initialize = () => {
         // Get all elements the timeline utilizes
-        const slider = document.getElementById(ANIMATION_PLAYER.TIMELINE_SLIDER);
+        const sliderElement = document.getElementById(ANIMATION_PLAYER.TIMELINE_SLIDER);
         const sliderThumb = document.getElementById(ANIMATION_PLAYER.TIMELINE_SLIDER_THUMB);
         const timeline = document.getElementById(ANIMATION_PLAYER.TIMELINE);
         const frameCollection = document.getElementById(ANIMATION_PLAYER.TIMELINE_FRAME_COLLECTION);
         // Check all elements do exists before storing them
-        if (slider && sliderThumb && timeline && frameCollection) {
+        if (sliderElement && sliderThumb && timeline && frameCollection) {
             // Allow timeline and slider to resize with the window
             window.addEventListener("resize", () => {
-                WIDTH.value = getWidth(timeline).toNumber();
-                if(WIDTH.value <= SLIDER.value){
-                    moveSlider(WIDTH.value);
+                width.value = getWidth(timeline).toNumber();
+                if(width.value <= slider.value){
+                    moveSlider(width.value);
                 }
             })
             // Allow the slider to be able to drag back n forth within the timeline dimensions
-            WIDTH.value = getWidth(timeline).toNumber();
+            width.value = getWidth(timeline).toNumber();
             sliderThumb.onmousedown = (e) => {
                 const startX = e.clientX;
-                const sliderPosition = SLIDER.value;
+                const sliderPosition = slider.value;
                 document.onmousemove = (e) => {
                     const newSliderPosition = sliderPosition - (startX - e.clientX);
-                    if (newSliderPosition >= 0 && newSliderPosition <= WIDTH.value) {
+                    if (newSliderPosition >= 0 && newSliderPosition <= width.value) {
                         moveSlider(newSliderPosition);
                     }
                 }
@@ -84,7 +84,7 @@ const useTimeline = (spriteAnimation: SpriteAnimation) => {
         }
     }
     const reset = () => {
-        if (SLIDER.value >= WIDTH.value) {
+        if (slider.value >= width.value) {
             moveSlider(0);
         };
     }
@@ -95,13 +95,13 @@ const useTimeline = (spriteAnimation: SpriteAnimation) => {
         moveSlider,
         initialize,
         reset,
-        DISPLAY,
-        WIDTH,
-        SCALE,
-        SLIDER,
-        FRAMES,
-        FRAME,
-        FPS,
+        display,
+        width,
+        scale,
+        slider,
+        frames,
+        frame,
+        fps,
         ELEMENTS
     }
 }

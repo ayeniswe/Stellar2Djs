@@ -8,7 +8,7 @@ import { memo, useEffect } from "react";
  */
 const FrameCollection = memo(() => {
     const { timeline, spriteAnimation } = useAppContext();
-    useEffect(() => {},[spriteAnimation.FRAMES.value, spriteAnimation.CREATING.value, spriteAnimation.SPRITE.value, timeline.FRAMES.value])
+    useEffect(() => {},[spriteAnimation.frames.value, spriteAnimation.creating.value, spriteAnimation.sprite.value, timeline.frames.value])
     return (
         <>
             <div className="TimelineFrameCollection"/> {/* 1st layer of frame collection to make it transparent*/}

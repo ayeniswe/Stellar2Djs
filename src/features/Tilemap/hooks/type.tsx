@@ -73,19 +73,19 @@ type TilemapHook = {
     /**
      * The key of the selected tileset.
      */
-    TILESET_KEY: Signal<string>
+    tileset_key: Signal<string>
     /**
      * The currently selected tileset.
      */
-    TILESET: Signal<JSX.Element>
+    tileset: Signal<JSX.Element>
     /**
      * Whether the tilesets is empty.
      */
-    EMPTY: Signal<boolean>
+    empty: Signal<boolean>
     /**
      * The ID of the selected tile.
      */
-    TILE: Signal<string>
+    tile: Signal<string>
 }
 export type {
     TilemapHook
