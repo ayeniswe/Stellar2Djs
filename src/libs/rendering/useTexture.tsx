@@ -219,6 +219,9 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
         if (!selector.value) {
             // Check if texture exists in pixel boundings
             selector.value = pixels.get(ckey(x, y, l));
+            if (selector.value) {
+                document.getElementById(SCENE.CANVAS)!.style.cursor = 'move';
+            }
         } else {
             const texture = selector.value;
             if (!texture) return;
@@ -235,7 +238,7 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
             ctx.drawImage(texture.texture.canvas, texture.dx, texture.dy);
             document.onmouseup = (e) => {
                 // Reset canvas cursor
-                ctx.canvas.onmouseup = null;
+                document.onmouseup = null;
                 document.getElementById(SCENE.CANVAS)!.style.cursor = 'pointer';
                 selector.value = undefined;
             }

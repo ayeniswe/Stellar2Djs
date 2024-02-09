@@ -48,9 +48,8 @@ const useTilemap = () => {
         // Set new tile
         document.getElementById(id)!.style.opacity = '1';
         document.getElementById(id)!.ariaPressed = 'true';
-        const img = document.getElementById(id)!.style.backgroundImage;
         tile.value = id;
-        scene.attrs.input.brush = { id, group, object, coverImage: img };
+        scene.attrs.input.brush = { id, group, object};
     }
     /**
      * Returns an array of JSX elements representing tiles based on the provided `tiles` object and `group` string.
@@ -65,13 +64,13 @@ const useTilemap = () => {
      * It returns a JSX element representing the tile, with the extracted information used to set the `id`, `key`, `title`, `aria-label`, `role`, and `className` attributes.
      * It also attaches an `onClick` event listener that calls the `setTileBrush` function with the current tile's ID, the provided `group`, and the corresponding texture object.
      */
-    const getTiles = (tiles: TextureItems , group: string): Array<JSX.Element> => {
+    const getTiles = (items: TextureItems , group: string): Array<JSX.Element> => {
         tiles.value = {
             ...tiles.value,
-            ...tiles
+            ...items
         }; // keep track of all tiles
-        return Object.keys(tiles).map(key => {
-            const [w, h, x, y, name] = [tiles[key].w, tiles[key].h, tiles[key].sx, tiles[key].sy, tiles[key].name];
+        return Object.keys(items).map(key => {
+            const [w, h, x, y, name] = [items[key].w, items[key].h, items[key].sx, items[key].sy, items[key].name];
             return (
                 <button
                     className='tile'
@@ -80,7 +79,7 @@ const useTilemap = () => {
                     data-cy={key}
                     title={`${w} x ${h}\n${x} , ${y}`}
                     aria-label={`tile: ${name}`}
-                    onClick={(e) =>setTileBrush(e.currentTarget.id, group, tiles[key])}
+                    onClick={(e) =>setTileBrush(e.currentTarget.id, group, items[key])}
                 >
                     <img/>
                 </button>

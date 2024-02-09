@@ -87,7 +87,6 @@ type Brush = {
     id: string
     group?: string
     object: TextureItem
-    coverImage: string
 }
 type Scene = {
     /**

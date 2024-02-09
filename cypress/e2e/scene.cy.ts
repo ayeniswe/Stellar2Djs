@@ -251,6 +251,32 @@ context('Drawing on Scene', () => {
       .invoke('toDataURL')
       .should('not.equal', '@beforeCanvas');
   })
+  it('move textures on canvas', () => {
+    cy.getBySel('canvas').as('canvas');
+    // Click on tile
+    cy.getBySel('1-1')
+      .click();
+    // Turn on edit mode
+    cy.getBySel('scene-edit')
+      .click();
+    // Draw on canvas
+    cy.get('@canvas')
+      .click(100, 100)
+      .invoke('get', 0)
+      .invoke('toDataURL')
+      .as('beforeCanvas');
+    // Turn off edit mode
+    cy.getBySel('scene-edit')
+      .click();
+    // Move texture
+    cy.get('@canvas')
+      .trigger('mousedown', { button: 0, offsetX: 110, offsetY: 105 })
+      .trigger('mousemove', { offsetX: 500, offsetY: 105 })
+      .trigger('mouseup')
+      .invoke('get', 0)
+      .invoke('toDataURL')
+      .should('not.equal', '@beforeCanvas');
+  })
 })
 context('Scene dialogs', () => {
   beforeEach(() => {
@@ -296,5 +322,14 @@ context('Scene interaction', () => {
       .invoke('get', 0)
       .invoke('toDataURL')
       .should('not.equal', '@beforeCanvas');
+  })
+  it('move textures on canvas', () => {
+    cy.getBySel('canvas').as('canvas');
+    // Turn on edit mode
+    cy.getBySel('scene-edit')
+      .click();
+    // Draw on canvas
+    cy.get('@canvas')
+      .click(100, 100);
   })
 })
