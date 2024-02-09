@@ -22,6 +22,10 @@ const input = (attrs: ToolbarAttrs) => {
         document.onmousemove = (e) => {
             toolbar.style.height = `${currentHeight + -(e.clientY - currentY)}px`;
         }
+        document.onmouseup = () => {
+            document.onmousemove = null;
+            document.onmouseup = null;
+        }
     }
     /**
      * Handles opening the animation player tab

@@ -108,7 +108,6 @@ const useInput = (renderer: Texture) => {
             brushElement.style.display = 'flex';
             brushElement.style.width = `${w}px`;
             brushElement.style.height = `${h}px`;
-            brushElement.style.backgroundImage = _brush.value.coverImage;
         } else {
             brushElement.style.display = 'none';
         }
@@ -125,7 +124,6 @@ const useInput = (renderer: Texture) => {
     const handleDrawing = (event: MouseEvent): void => {
         if (!__editable.value && !__trash.value) {
             // Select texture
-            document.getElementById(SCENE.CANVAS)!.style.cursor = 'move';
             renderer.selectTexture(event.offsetX, event.offsetY, 1);
         } else {
             if (!__ready.value || !_brush.value || !__drag.value && event.type === "mousemove") return;
