@@ -8,14 +8,15 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
     const revisions = useSignal<RevisionRecord[]>([]);
     const sources = useSignal<TextureSources>({});
     const mapping = useSignal<TexturesMapping>({});
-    const pixelMap = new Map<string, TextureObject>();
+    const selector = useSignal<TextureObject | undefined>(undefined);
+    const pixels = new Map<string, TextureObject>();
     const CONFIG: Config = process.env.NODE_ENV === 'production' ? require('../../data/config.json') : require('../../data/test-config.json');
     const textureRenderer = {
         get textureSources() {
-            return sources.value
+            return sources.value;
         },
         get ctx() {
-            return ctx
+            return ctx;
         }
     }
     /**
@@ -142,7 +143,7 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
         const { l, w, h, dx, dy } = texture;
         for (let i = dx; i <= dx+w; i++) {
             for (let j = dy; j <= dy+h; j++) {
-                pixelMap.set(ckey(i, j, l), texture);
+                pixels.set(ckey(i, j, l), texture);
             }
         }
     }
@@ -150,7 +151,7 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
         const { l, w, h, dx, dy } = texture;
         for (let i = dx; i <= dx+w; i++) {
             for (let j = dy; j <= dy+h; j++) {
-                pixelMap.delete(ckey(i, j, l));
+                pixels.delete(ckey(i, j, l));
             }
         }
     }
@@ -182,7 +183,7 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
     }
     const removeTexture = (x: number, y: number, l = 1) => {
         const key = ckey(x, y, l);
-        const texture = pixelMap.get(key)
+        const texture = pixels.get(key)
         if (!texture) return [];
         const {dx, dy, w, h} = texture;
         removePixels(texture);
@@ -214,30 +215,31 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
         mapping.value = {};
         clearCanvas(0, 0, ctx.canvas.width, ctx.canvas.height);
     }
-    const selectTexture = (x: number, y: number, l: number = 1): TextureObject | undefined => {
-        // Check if texture exists in pixel boundings
-        const key = ckey(x, y, l);
-        const texture = pixelMap.get(key);
-        if (!texture) return;
-        // Set grabbing cursor
-        document.getElementById(SCENE.CANVAS)!.style.cursor = 'grab';
-        ctx.canvas.onmouseup = (e) => {
-            ctx.canvas.onmouseup = null;
+    const selectTexture = (x: number, y: number, l: number = 1) => {
+        if (!selector.value) {
+            // Check if texture exists in pixel boundings
+            selector.value = pixels.get(ckey(x, y, l));
+        } else {
+            const texture = selector.value;
+            if (!texture) return;
             // Remove old pixel boundings and position
             const {l, w, h, dx, dy} = texture;
             removePixels(texture);
             delete mapping.value[ckey(dx, dy, l)];
             clearCanvas(dx, dy, w, h);
             // Add new pixel boundings and position
-            texture.dx = e.offsetX;
-            texture.dy = e.offsetY;
+            texture.dx = x;
+            texture.dy = y;
             addPixels(texture);
             mapping.value[ckey(texture.dx, texture.dy , l)] = texture;
             ctx.drawImage(texture.texture.canvas, texture.dx, texture.dy);
-            // Reset canvas cursor
-            document.getElementById(SCENE.CANVAS)!.style.cursor = 'pointer';
+            document.onmouseup = (e) => {
+                // Reset canvas cursor
+                ctx.canvas.onmouseup = null;
+                document.getElementById(SCENE.CANVAS)!.style.cursor = 'pointer';
+                selector.value = undefined;
+            }
         }
-        return texture;
     }
     /**
      * Add a listener to listen for various rendering events

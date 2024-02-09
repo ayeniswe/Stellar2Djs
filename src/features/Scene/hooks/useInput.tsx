@@ -1,6 +1,6 @@
 import configuration from '../../../data/test-config.json';
 import { Bindings } from "../../../libs/input";
-import { Signal, useSignal } from "@preact/signals-react";
+import { useSignal } from "@preact/signals-react";
 import { Config, Texture } from "../../../libs/rendering";
 import { Brush } from "./type";
 import { iconEffects } from "../../../libs/effects";
@@ -101,16 +101,16 @@ const useInput = (renderer: Texture) => {
     const handleBrush = (event: MouseEvent): void => {
         if (!_brush.value) return;
         const brushElement = document.getElementById(SCENE.BRUSH)!;
-        const { w, h } = _brush.value.object;
-        brushElement.style.left = `${event.clientX}px`;
-        brushElement.style.top = `${event.clientY}px`;
-        brushElement.style.display = 'flex';
-        brushElement.style.width = `${w}px`;
-        brushElement.style.height = `${h}px`;
-        brushElement.style.backgroundImage = _brush.value.coverImage;
-        document.onmouseup = () => {
-            document.onmouseup = null;
-            document.getElementById(SCENE.CANVAS)!.style.cursor = 'pointer';
+        if (__editable.value) {
+            const { w, h } = _brush.value.object;
+            brushElement.style.left = `${event.clientX}px`;
+            brushElement.style.top = `${event.clientY}px`;
+            brushElement.style.display = 'flex';
+            brushElement.style.width = `${w}px`;
+            brushElement.style.height = `${h}px`;
+            brushElement.style.backgroundImage = _brush.value.coverImage;
+        } else {
+            brushElement.style.display = 'none';
         }
     }
     /**
@@ -125,12 +125,8 @@ const useInput = (renderer: Texture) => {
     const handleDrawing = (event: MouseEvent): void => {
         if (!__editable.value && !__trash.value) {
             // Select texture
-            const selection = renderer.selectTexture(event.offsetX, event.offsetY, 1);
-            if (!selection) return;
-            // Set the brush
-            const {name, h, w, texture} = selection;
-            _brush.value = {id: "selection-brush", object: {name: name, h: h, w: w, sx: 0, sy: 0}, coverImage: `url("${texture.canvas.toDataURL()}")`};
-            handleBrush(event);
+            document.getElementById(SCENE.CANVAS)!.style.cursor = 'move';
+            renderer.selectTexture(event.offsetX, event.offsetY, 1);
         } else {
             if (!__ready.value || !_brush.value || !__drag.value && event.type === "mousemove") return;
             // TODO: make more dynamic way to do this
@@ -154,7 +150,7 @@ const useInput = (renderer: Texture) => {
     const handleDropSprite = (e: DragEvent): void => {
         e.preventDefault();
         const frames = JSON.parse(e.dataTransfer!.getData("application/sprite")).frames;
-        renderer.addTexture(frames[0].src, "sprite", __clip.value, e.offsetX, e.offsetY, frames[0].w, frames[0].h);
+        renderer.addTexture(frames[0].src, "", __clip.value, e.offsetX, e.offsetY, frames[0].w, frames[0].h);
         renderer.render();
     }
     // *****************************************

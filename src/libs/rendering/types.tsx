@@ -114,7 +114,7 @@ type Texture = {
      * Selects a texture from the canvas to drag and drop.
      * @returns {string} Returns the canvas data url for background image when dragging
      */
-    selectTexture: (dx: number, dy: number, l?: number) => TextureObject | undefined
+    selectTexture: (x: number, y: number, l?: number) => void
     textureRenderer: {
         /**
         * All textures sources available to be used in the renderer
