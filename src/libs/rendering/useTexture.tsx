@@ -4,12 +4,13 @@ import { getHeight, getWidth } from '../../utils/styleProps';
 import { Sprite, Tile } from '../object';
 import { TextureObject } from '../object/TextureObject';
 import { SCENE } from '../../features/Scene';
+import { RTree } from '.';
 const useTexture = (ctx: CanvasRenderingContext2D) => {
+    const tree = new RTree(2);
     const revisions = useSignal<RevisionRecord[]>([]);
     const sources = useSignal<TextureSources>({});
     const mapping = useSignal<TexturesMapping>({});
     const selector = useSignal<TextureObject | undefined>(undefined);
-    const pixels = new Map<string, TextureObject>();
     const CONFIG: Config = process.env.NODE_ENV === 'production' ? require('../../data/config.json') : require('../../data/test-config.json');
     const textureRenderer = {
         get textureSources() {
@@ -136,25 +137,6 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
     const ckey = (dx: number, dy: number, layer: number = 1) => {
         return `${dx},${dy}-${layer}`;
     }
-    /**
-     * Add to pixels mapping for texture selection bounding box
-     */
-    const addPixels = (texture: TextureObject) => {
-        const { l, w, h, dx, dy } = texture;
-        for (let i = dx; i <= dx+w; i++) {
-            for (let j = dy; j <= dy+h; j++) {
-                pixels.set(ckey(i, j, l), texture);
-            }
-        }
-    }
-    const removePixels = (texture: TextureObject) => {
-        const { l, w, h, dx, dy } = texture;
-        for (let i = dx; i <= dx+w; i++) {
-            for (let j = dy; j <= dy+h; j++) {
-                pixels.delete(ckey(i, j, l));
-            }
-        }
-    }
     const addTexture = (src: string, name: string, clipping: boolean, x: number, y: number, w: number, h: number, sx = 0, sy = 0, l = 1): number[] => {
         // Scaling and account for clipping if true
         const [dx, dy] = scaling(x, y, w, h, clipping, l);
@@ -170,8 +152,7 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
             } else {
                 texture = new Sprite(ctx, src, name, dx, dy, w, h, l);
             }
-            // Store pixel mapping for selection
-            addPixels(texture);
+            tree.insert({minX: dx, minY:dy, maxX: dx+w, maxY: dy+h}, texture)
             mapping.value[ckey( dx, dy, l )] = texture;
             // Store action in history
             revisions.value.push({
@@ -182,11 +163,11 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
         }
     }
     const removeTexture = (x: number, y: number, l = 1) => {
-        const key = ckey(x, y, l);
-        const texture = pixels.get(key)
-        if (!texture) return [];
-        const {dx, dy, w, h} = texture;
-        removePixels(texture);
+        const results = tree.search({minX: x, minY:y, maxX:x, maxY:y});
+        if (results.length === 0) return [];
+        const texture = results[0].value;
+        const { dx, dy, w, h } = texture
+        tree.delete({minX: dx, maxX: dx+w, minY: dy, maxY: dy+h})
         delete mapping.value[ckey(dx, dy, l)];
         clearCanvas(dx, dy, w, h);
     }
@@ -196,7 +177,7 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
             const { l, dx, dy, w, h } = action.texture;
             switch (action.action) {
                 case "added":
-                    removePixels(action.texture);
+                    tree.delete({minX: dx, maxX: dx+w, minY: dy, maxY: dy+h})
                     delete mapping.value[ckey( dx, dy, l)];
                     clearCanvas(dx, dy, w, h);
                     break;
@@ -206,6 +187,7 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
         }
     }
     const render = () => {
+        console.log(tree.tree)
         for (const key in mapping.value) {
             const texture = mapping.value[key];
             texture.render();
@@ -213,29 +195,32 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
     }
     const removeAllTexture = () =>{
         mapping.value = {};
+        tree.clear();
         clearCanvas(0, 0, ctx.canvas.width, ctx.canvas.height);
     }
     const selectTexture = (x: number, y: number, l: number = 1) => {
         if (!selector.value) {
-            // Check if texture exists in pixel boundings
-            selector.value = pixels.get(ckey(x, y, l));
+            // Check if texture exists in boundings
+            const result = tree.search({minX: x, minY:y, maxX:x, maxY:y});
+            if (result.length === 0) return;
+            selector.value = result[0].value
             if (selector.value) {
                 document.getElementById(SCENE.CANVAS)!.style.cursor = 'move';
             }
         } else {
             const texture = selector.value;
             if (!texture) return;
-            // Remove old pixel boundings and position
+            // Remove old boundings and position
             const {l, w, h, dx, dy} = texture;
-            removePixels(texture);
+            tree.delete({minX: dx, maxX: dx+w, minY: dy, maxY: dy+h})
             delete mapping.value[ckey(dx, dy, l)];
             clearCanvas(dx, dy, w, h);
-            // Add new pixel boundings and position
+            // Add new boundings and position
             texture.dx = x;
             texture.dy = y;
-            addPixels(texture);
-            mapping.value[ckey(texture.dx, texture.dy , l)] = texture;
-            ctx.drawImage(texture.texture.canvas, texture.dx, texture.dy);
+            tree.insert({minX: x, maxX: x+w, minY: y, maxY: y+h}, texture)
+            mapping.value[ckey(x, y , l)] = texture;
+            ctx.drawImage(texture.texture.canvas, x, y);
             document.onmouseup = (e) => {
                 // Reset canvas cursor
                 document.onmouseup = null;

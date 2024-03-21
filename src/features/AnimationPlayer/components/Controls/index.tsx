@@ -7,7 +7,7 @@ import FPS from "./components/FPS";
  */
 const Controls= () => {
     return (
-        <div className="Controls grouping">
+        <div className="AnimationPlayerControls grouping">
             <FPS/>
             <Playback/>
         </div>

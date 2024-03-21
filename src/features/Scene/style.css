@@ -27,19 +27,19 @@
         width: 32px;
     }
 }
-.Controls {
+.SceneControls {
+    align-items: end;
     display: flex;
     flex-direction: column;
     .button {
         background-color: var(--serious-color);
-        border-radius: var(--window-border-radius);
-        border: 2px solid var(--accent-color);
+        border: 1px solid var(--accent-color);
+        border-right: none;
         color: var(--text-color);
         cursor: pointer;
-        margin-top: 10px;
         text-align: center;
         transition: 0.2s;
-        width: 75%;
+        width: 41px;
         &:hover {
             transition: 0.2s;
             background-color: var(--serious-hover-color);
@@ -57,5 +57,11 @@
         padding: 10px;
         text-align: center;
         transition: 0.2s;
+        white-space: pre-wrap;
+        .button {
+            border-radius: var(--window-border-radius);
+            margin-top: 10px;
+            width: 50%;
+        }
     }
 }

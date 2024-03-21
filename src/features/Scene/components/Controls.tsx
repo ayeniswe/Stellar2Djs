@@ -18,16 +18,18 @@ const Controls = () => {
       showDeleteConfirmation,
     }: Control = useControls();
     return (
-        <div className='Controls'>
+        <div className='SceneControls'>
             {scene.attrs.input.trash &&
             <>
                 {scene.attrs.input.safety ?
-                <button data-cy='scene-clear' aria-label='clear canvas' className="button" onClick={() => showDeleteConfirmation()}>
-                    Delete All
+                <button title= "clear scene" data-cy='scene-clear' aria-label='clear canvas' className="button" onClick={() => showDeleteConfirmation()}>
+                    X
                 </button>
                 :
                 <dialog data-cy='scene-clear-confirmation' className='dialog' aria-label='confirmation to clear canvas' open>
-                    Are you sure? Action can't be UNDONE!
+                    This action will clear the ENTIRE scene. 
+                    <br/>
+                    Click "Yes" to continue
                     <button data-cy='scene-clear' aria-label="yes to delete all confirmation message" onClick={() => scene.clear()} className="button">Yes</button>
                 </dialog>
                 }
