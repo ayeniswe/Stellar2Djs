@@ -230,25 +230,20 @@ class RTree {
       records.push(node);
     } else {
       // Insert a parent node
-      // parent = this.#tree
-      // const siblings = [parent];
-      // while (siblings.length > 0) {
-      //   let sibling = siblings.pop()!;
-      //   if (node.height === sibling.height) {
-      //     let smallestCapacity = Infinity
-      //     for (const child of sibling.parent!.children as Node[]) {
-      //       smallestCapacity = Math.min(smallestCapacity, child.children.length);
-      //       if (child.children.length === smallestCapacity) {
-
-      //         sibling.children.push(node);
-      //       }
-      //     }
-      //   } else {
-      //     for (const child of sibling.children as Node[]) {
-      //       sibling = this.#chooseSubtree(sibling, child, node.bounds);
-      //     }
-      //     siblings.push(sibling);
-      // }
+      parent = this.#tree
+      const siblings = [parent];
+      while (siblings.length > 0) {
+        let sibling = siblings.pop()!;
+        if (node.height === sibling.height) {
+          sibling.children.push(node)
+          parent = sibling;
+        } else {
+          for (const child of sibling.children as Node[]) {
+            sibling = this.#chooseSubtree(sibling, child, node.bounds);
+          }
+          siblings.push(sibling);
+        }
+      }
     }
     // Adjust tree to reflect changes
     if (parent.children.length > this.#maxCapacity) {
