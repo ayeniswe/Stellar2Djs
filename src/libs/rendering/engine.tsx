@@ -328,7 +328,7 @@ class RTree {
             maxX: -Infinity,
             minY: Infinity,
             maxY: -Infinity
-        }, 
+        }
         parent.children.forEach((child) => {
           parent.bounds = this.#adjustBounds(parent.bounds, child.bounds);
         })

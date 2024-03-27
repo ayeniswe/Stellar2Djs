@@ -152,7 +152,7 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
             } else {
                 texture = new Sprite(ctx, src, name, dx, dy, w, h, l);
             }
-            tree.insert({minX: dx, minY:dy, maxX: dx+w, maxY: dy+h}, texture)
+            tree.insert({minX: dx, maxX: dx+w, minY: dy, maxY: dy+h}, texture)
             mapping.value[ckey( dx, dy, l )] = texture;
             // Store action in history
             revisions.value.push({
@@ -187,7 +187,6 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
         }
     }
     const render = () => {
-        console.log(tree.tree)
         for (const key in mapping.value) {
             const texture = mapping.value[key];
             texture.render();
@@ -218,13 +217,13 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
             // Add new boundings and position
             texture.dx = x;
             texture.dy = y;
-            tree.insert({minX: x, maxX: x+w, minY: y, maxY: y+h}, texture)
             mapping.value[ckey(x, y , l)] = texture;
             ctx.drawImage(texture.texture.canvas, x, y);
             document.onmouseup = (e) => {
                 // Reset canvas cursor
                 document.onmouseup = null;
                 document.getElementById(SCENE.CANVAS)!.style.cursor = 'pointer';
+                tree.insert({minX: x, maxX: x+w, minY: y, maxY: y+h}, texture)
                 selector.value = undefined;
             }
         }
