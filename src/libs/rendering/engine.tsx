@@ -58,7 +58,6 @@ class RTree {
   }
   #addNode = (node: Node, child: Node | Record) => {
     node.children.push(child as any);
-    node.bounds = this.#adjustBounds(node.bounds, child.bounds);
   }
   #contain = (bounds: Bound, search: Bound) => {
       return bounds.minX <= search.minX &&
@@ -73,16 +72,36 @@ class RTree {
              bounds.maxY >= search.minY;
   }
   #adjustBounds = (bounds: Bound, current: Bound) => {
-    const minX = Math.min(bounds.minX, current.minX);
-    const maxX = Math.max(bounds.maxX, current.maxX);
-    const minY = Math.min(bounds.minY, current.minY);
-    const maxY = Math.max(bounds.maxY, current.maxY);
-    return {
+      const minX = Math.min(bounds.minX, current.minX);
+      const maxX = Math.max(bounds.maxX, current.maxX);
+      const minY = Math.min(bounds.minY, current.minY);
+      const maxY = Math.max(bounds.maxY, current.maxY);
+      return {
         minX: minX,
         maxX: maxX,
         minY: minY,
         maxY: maxY
+      }
+  }
+  #adjustBoundsAll = (parent: Node) => {
+    parent.bounds = {
+      minX: Infinity,
+      maxX: -Infinity,
+      minY: Infinity,
+      maxY: -Infinity
     }
+    parent.children.forEach((child) => {
+      const minX = Math.min(parent.bounds.minX, child.bounds.minX);
+      const maxX = Math.max(parent.bounds.maxX, child.bounds.maxX);
+      const minY = Math.min(parent.bounds.minY, child.bounds.minY);
+      const maxY = Math.max(parent.bounds.maxY, child.bounds.maxY);
+      parent.bounds = {
+        minX: minX,
+        maxX: maxX,
+        minY: minY,
+        maxY: maxY
+      }
+    })
   }
   #calculateArea = (bounds: Bound) => {
     return Math.abs(bounds.maxX - bounds.minX) * Math.abs(bounds.minY - bounds.maxY);
@@ -188,7 +207,10 @@ class RTree {
   #adjustTree = (node: Node, newNode?: Node) => {
     if (node.parent !== null) {
       const parent = node.parent;
+      // Readjust tree
+      this.#adjustBoundsAll(node)
       if (newNode) {
+        this.#adjustBoundsAll(newNode)
         this.#addNode(parent, newNode);
       }
       if (parent.children.length > this.#maxCapacity) {
@@ -220,12 +242,30 @@ class RTree {
       }
     }
   }
+  #condenseTree = (parent: Node, removedChildren: (Node | Record)[] = []) => {
+    const pparent = parent.parent;
+    // Check if at the root node 
+    if (pparent) {
+      if (parent.children.length < this.#minCapacity) {
+        // Relocate nodes or records in underfilled node
+        removedChildren.push(...parent.children.slice());
+        // Remove underfilled node
+        pparent.children = pparent.children.filter((child) => {
+          return parent !== child;
+        }) as Node[]
+      } else {
+        // Readjust tree
+        this.#adjustBoundsAll(parent)
+      }
+      this.#condenseTree(pparent, removedChildren)
+    }
+    return removedChildren
+  }
   #insert = (node: Node | Record) => {
     let parent;
     if (node instanceof Record) {
       // Insert a record
       parent = this.#chooseLeafNode(node.bounds);
-      parent.bounds = this.#adjustBounds(parent.bounds, node.bounds);
       const records = parent.children as Record[];
       records.push(node);
     } else {
@@ -293,6 +333,7 @@ class RTree {
     }
     return results;
   }
+  // TODO fix the adjusting bounds after multiple deletes and reentries
   delete = (bounds: Bound) => {
     // Search for parent node of record to delete
     const parent = this.#findParent(bounds);
@@ -309,33 +350,6 @@ class RTree {
         }
       }
     }
-  }
-  #condenseTree = (parent: Node, removedChildren: (Node | Record)[] = []) => {
-    const pparent = parent.parent;
-    // Check if at the root node 
-    if (pparent) {
-      if (parent.children.length < this.#minCapacity) {
-        // Relocate nodes or records in underfilled node
-        removedChildren.push(...parent.children.slice());
-        // Remove underfilled node
-        pparent.children = pparent.children.filter((child) => {
-          return parent !== child;
-        }) as Node[]
-      } else {  
-        // Readjust tree
-        parent.bounds = {
-            minX: Infinity,
-            maxX: -Infinity,
-            minY: Infinity,
-            maxY: -Infinity
-        }
-        parent.children.forEach((child) => {
-          parent.bounds = this.#adjustBounds(parent.bounds, child.bounds);
-        })
-      }
-      this.#condenseTree(pparent, removedChildren)
-    }
-    return removedChildren
   }
 }
 export {

@@ -187,6 +187,8 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
         }
     }
     const render = () => {
+        console.log(tree.tree)
+        console.log(tree.getData())
         for (const key in mapping.value) {
             const texture = mapping.value[key];
             texture.render();
@@ -198,6 +200,7 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
         clearCanvas(0, 0, ctx.canvas.width, ctx.canvas.height);
     }
     const selectTexture = (x: number, y: number, l: number = 1) => {
+        console.log("X", x, "Y", y)
         if (!selector.value) {
             // Check if texture exists in boundings
             const result = tree.search({minX: x, minY:y, maxX:x, maxY:y});
