@@ -1,12 +1,12 @@
-import { Config, RevisionRecord, TexturesMapping, TextureSources } from './types';
+import { Config, TextObject, RevisionRecord, TexturesMapping, TextureSources } from './types';
 import { useSignal } from '@preact/signals-react';
 import { getHeight, getWidth } from '../../utils/styleProps';
 import { Sprite, Tile } from '../object';
 import { TextureObject } from '../object/TextureObject';
 import { SCENE } from '../../features/Scene';
-import { RTree } from '.';
+import RBush from 'rbush';
 const useTexture = (ctx: CanvasRenderingContext2D) => {
-    const tree = new RTree(2);
+    const tree = new RBush<TextObject>();
     const revisions = useSignal<RevisionRecord[]>([]);
     const sources = useSignal<TextureSources>({});
     const mapping = useSignal<TexturesMapping>({});
@@ -152,7 +152,7 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
             } else {
                 texture = new Sprite(ctx, src, name, dx, dy, w, h, l);
             }
-            tree.insert({minX: dx, maxX: dx+w, minY: dy, maxY: dy+h}, texture)
+            tree.insert({minX: dx, maxX: dx+w, minY: dy, maxY: dy+h, value: texture})
             mapping.value[ckey( dx, dy, l )] = texture;
             // Store action in history
             revisions.value.push({
@@ -166,8 +166,14 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
         const results = tree.search({minX: x, minY:y, maxX:x, maxY:y});
         if (results.length === 0) return [];
         const texture = results[0].value;
+        if (!texture) return [];
         const { dx, dy, w, h } = texture
-        tree.delete({minX: dx, maxX: dx+w, minY: dy, maxY: dy+h})
+        tree.remove({minX: dx, maxX: dx, minY: dy, maxY: dy, value: texture},(a,b)=>{
+            return a.value==b.value
+        })
+        revisions.value = revisions.value.filter((obj)=>
+            obj.texture !== texture
+        )
         delete mapping.value[ckey(dx, dy, l)];
         clearCanvas(dx, dy, w, h);
     }
@@ -177,7 +183,9 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
             const { l, dx, dy, w, h } = action.texture;
             switch (action.action) {
                 case "added":
-                    tree.delete({minX: dx, maxX: dx+w, minY: dy, maxY: dy+h})
+                    tree.remove({minX: dx, maxX: dx+w, minY: dy, maxY: dy+h, value: action.texture},(a,b)=>{
+                        return a.value===b.value
+                    })
                     delete mapping.value[ckey( dx, dy, l)];
                     clearCanvas(dx, dy, w, h);
                     break;
@@ -187,8 +195,7 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
         }
     }
     const render = () => {
-        console.log(tree.tree)
-        console.log(tree.getData())
+        console.log(tree.all())
         for (const key in mapping.value) {
             const texture = mapping.value[key];
             texture.render();
@@ -200,7 +207,6 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
         clearCanvas(0, 0, ctx.canvas.width, ctx.canvas.height);
     }
     const selectTexture = (x: number, y: number, l: number = 1) => {
-        console.log("X", x, "Y", y)
         if (!selector.value) {
             // Check if texture exists in boundings
             const result = tree.search({minX: x, minY:y, maxX:x, maxY:y});
@@ -214,7 +220,9 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
             if (!texture) return;
             // Remove old boundings and position
             const {l, w, h, dx, dy} = texture;
-            tree.delete({minX: dx, maxX: dx+w, minY: dy, maxY: dy+h})
+            tree.remove({minX: dx, maxX: dx+w, minY: dy, maxY: dy+h, value: texture},(a,b)=>{
+                return a.value==b.value
+            })
             delete mapping.value[ckey(dx, dy, l)];
             clearCanvas(dx, dy, w, h);
             // Add new boundings and position
@@ -226,7 +234,7 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
                 // Reset canvas cursor
                 document.onmouseup = null;
                 document.getElementById(SCENE.CANVAS)!.style.cursor = 'pointer';
-                tree.insert({minX: x, maxX: x+w, minY: y, maxY: y+h}, texture)
+                tree.insert({minX: x, maxX: x+w, minY: y, maxY: y+h, value: texture})
                 selector.value = undefined;
             }
         }
