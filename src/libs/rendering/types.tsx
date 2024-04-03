@@ -2,6 +2,13 @@ import { TextureObject } from "../object/TextureObject"
 type TexturesMapping = {
     [key: string]: TextureObject
 }
+type TextObject = {
+    minX: number
+    maxX: number
+    minY: number
+    maxY: number
+    value?: TextureObject
+}
 type TextureSources = {
     [key: string]: HTMLImageElement
 }
@@ -127,6 +134,7 @@ type Texture = {
     }
 }
 export type {
+    TextObject,
     Texture,
     TextureSources,
     TextureItem,
