@@ -1,8 +1,10 @@
 /* eslint-disable no-unused-vars */
 import { TextureObject } from '../object/TextureObject';
+
 type TexturesMapping = {
     [key: string]: TextureObject
 }
+
 type TextObject = {
     minX: number
     maxX: number
@@ -10,9 +12,11 @@ type TextObject = {
     maxY: number
     value?: TextureObject
 }
+
 type TextureSources = {
     [key: string]: HTMLImageElement
 }
+
 type TextureItem = {
     name: string;
     sx: number;
@@ -20,9 +24,11 @@ type TextureItem = {
     w: number;
     h: number;
 }
+
 type TextureItems = {
     [key: string]: TextureItem
 }
+
 type Textures = {
     name: string;
     src: string;
@@ -30,6 +36,7 @@ type Textures = {
         [key: string]: TextureItems
     };
 }
+
 type Config = {
     name: string;
     version: string;
@@ -39,11 +46,14 @@ type Config = {
         };
     };
 }
+
 type RevisionAction = 'added' | 'removed'
+
 type RevisionRecord = {
     texture: TextureObject,
     action: RevisionAction
 }
+
 type Texture = {
     /**
      * Adds a texture to the canvas.
@@ -79,6 +89,7 @@ type Texture = {
      */
     addTexture: (src: string, name: string, clipping: boolean,
         x: number, y: number, w: number, h: number, sx?: number, sy?: number, l?: number) => number[]
+
     /**
      * Removes a texture from the canvas.
      *
@@ -90,7 +101,8 @@ type Texture = {
      * This method retrieves the texture information.
      * from the pixel bounding if the texture exists.
      */
-    removeTexture: (x: number, y: number, l?: number) => void,
+    removeTexture: (x: number, y: number, l?: number) => void
+
     /**
      * Undoes the last revision made to the canvas.
      *
@@ -112,11 +124,13 @@ type Texture = {
      *
      * NOTE: This method is only available to undo "added" actions
      */
-    undoRevision: () => void,
+    undoRevision: () => void
+
     /**
      * Removes all textures from the canvas.
      */
     removeAllTexture: () => void
+
     /**
      * This method is responsible for rendering textures onto a canvas.
      *
@@ -129,10 +143,12 @@ type Texture = {
      * NOTE: The load a new image is typically done from drag and drop events
      */
     render: () => void
+
     /**
      * Initializes the renderer.
      */
     initialize: () => Promise<void>
+
     /**
      * Selects a texture from the canvas to drag and drop.
      * @returns {string} Returns the canvas data url
@@ -150,6 +166,7 @@ type Texture = {
         readonly ctx: CanvasRenderingContext2D
     }
 }
+
 export type {
   TextObject,
   Texture,
