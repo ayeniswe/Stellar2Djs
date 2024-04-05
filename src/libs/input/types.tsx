@@ -1,6 +1,7 @@
 type KMMapping = {
     [KM in KMInput]?: boolean
 }
+
 type BindingsMapping = {
     [key: string]: {
         fn: Function,
@@ -13,6 +14,7 @@ enum MouseInputToName {
   "MiddleButton" = 1,
   "RightButton" = 2
 }
+
 type KMInput =
   | "a"
   | "b"

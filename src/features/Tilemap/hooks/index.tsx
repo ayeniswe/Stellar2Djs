@@ -1,5 +1,3 @@
-import { TilemapHook } from "./type";
+import { TilemapHook } from './type';
 
-export type {
-    TilemapHook
-}
+export type { TilemapHook };

@@ -5,12 +5,12 @@ type TexturesMapping = {
     [key: string]: TextureObject
 }
 
-type TextObject = {
+type TextureObjectBounds = {
     minX: number
     maxX: number
     minY: number
     maxY: number
-    value?: TextureObject
+    object: TextureObject
 }
 
 type TextureSources = {
@@ -168,7 +168,7 @@ type Texture = {
 }
 
 export type {
-  TextObject,
+  TextureObjectBounds,
   Texture,
   TextureSources,
   TextureItem,

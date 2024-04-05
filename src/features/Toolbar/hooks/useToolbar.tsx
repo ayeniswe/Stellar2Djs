@@ -1,47 +1,52 @@
-import { useSignal } from "@preact/signals-react";
-import { input } from "./input";
+import { input } from './input';
+import React from 'react';
+import { useSignal } from '@preact/signals-react';
+
 const useToolbar = () => {
-    const __tabContent = useSignal<JSX.Element>(<div/>);
-    const __tab = useSignal<HTMLElement | null>(null);
-    const attrs = {
-        get tabContent() {
-            return __tabContent.value
-        },
-        set tabContent(value: JSX.Element) {
-            __tabContent.value = value
-        },
-        get tab() {
-            return __tab.value
-        },
-        set tab(value: HTMLElement | null) {
-            __tab.value = value
-        }
+  const tabContent = useSignal<React.JSX.Element>(<div/>);
+  const tab = useSignal<HTMLElement | null>(null);
+  const attrs = {
+    get tabContent() {
+      return tabContent.value;
+    },
+    set tabContent(value: React.JSX.Element) {
+      tabContent.value = value;
+    },
+    get tab() {
+      return tab.value;
+    },
+    set tab(value: HTMLElement | null) {
+      tab.value = value;
     }
-    const __input = input(attrs);
-    const openTab = (element: HTMLElement , content: JSX.Element) => {
-        // Closes the tab if it's already open
-        if (__tabContent.value.type === content.type) {
-            __tab.value!.style.backgroundColor = "";
-            __tab.value = null;
-            __tabContent.value = <div/>;
-        } else {
-            if (__tab.value) {
-                __tab.value.style.backgroundColor = "";
-            }
-            __tab.value = element;
-            __tab.value.style.backgroundColor = "var(--hover-color)";
-            __tabContent.value = content;
-        }
+  };
+  const toolbarInput = input(attrs);
+
+  function openTab(element: HTMLElement, content: React.JSX.Element) {
+    // Closes the tab if it's already open
+    if (tabContent.value.type === content.type) {
+            tab.value!.style.backgroundColor = '';
+            tab.value = null;
+            tabContent.value = <div/>;
     }
-    const initialize = () => {
-        __input.initialize();
+    else {
+      if (tab.value) {
+        tab.value.style.backgroundColor = '';
+      }
+      tab.value = element;
+      tab.value.style.backgroundColor = 'var(--hover-color)';
+      tabContent.value = content;
     }
-    return {
-        attrs,
-        openTab,
-        initialize
-    }
-}
-export {
-    useToolbar
-}
+  }
+
+  function initialize() {
+    toolbarInput.initialize();
+  }
+
+  return {
+    attrs,
+    openTab,
+    initialize
+  };
+};
+
+export { useToolbar };
