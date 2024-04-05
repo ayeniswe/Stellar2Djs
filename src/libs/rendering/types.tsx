@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { TextureObject } from '../object/TextureObject';
 
 type TexturesMapping = {

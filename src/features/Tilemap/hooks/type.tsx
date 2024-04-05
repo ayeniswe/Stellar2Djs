@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React from 'react';
 import { Signal } from '@preact/signals-react';
 import { TextureItem } from '../../../libs/rendering';
