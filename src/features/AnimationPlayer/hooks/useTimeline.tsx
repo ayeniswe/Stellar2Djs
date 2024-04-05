@@ -48,11 +48,11 @@ const useTimeline = (spriteAnimation: SpriteAnimation) => {
   }
 
   function showFrames() {
-    return frames.value?.map((theFrame, index) => (
+    return frames.value?.map((fr, index) => (
       <img
         key={index}
         data-cy='animation-timeline-frame'
-        src={theFrame.src}
+        src={fr.src}
         style={{ width: `${scale.value / Number(fps.value)}px`, }} />
     ));
   }
