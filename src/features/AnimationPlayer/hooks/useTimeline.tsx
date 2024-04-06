@@ -77,11 +77,11 @@ const useTimeline = (spriteAnimation: SpriteAnimation) => {
        * forth within the timeline dimensions
        */
       width.value = getWidth(timeline).toNumber();
-      sliderThumb.onmousedown = (e) => {
-        const startX = e.clientX;
+      sliderThumb.onmousedown = (sliderThumbEvent) => {
+        const startX = sliderThumbEvent.clientX;
         const sliderPosition = slider.value;
-        document.onmousemove = () => {
-          const newSliderPosition = sliderPosition - (startX - e.clientX);
+        document.onmousemove = (event) => {
+          const newSliderPosition = sliderPosition - (startX - event.clientX);
           if (newSliderPosition >= 0 && newSliderPosition <= width.value) {
             moveSlider(newSliderPosition);
           }
