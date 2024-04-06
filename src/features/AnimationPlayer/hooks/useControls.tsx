@@ -1,4 +1,4 @@
-import { ANIMATION_PLAYER } from '..';
+import { ANIMATION_PLAYER } from '../constants';
 import { setPosition } from './utils/timeline';
 import { Timeline } from './type';
 import { useSignal } from '@preact/signals-react';

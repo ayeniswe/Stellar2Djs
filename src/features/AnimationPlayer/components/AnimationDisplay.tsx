@@ -1,5 +1,5 @@
 import '../style.css';
-import { ANIMATION_PLAYER } from '..';
+import { ANIMATION_PLAYER } from '../constants';
 import React from 'react';
 import { useAppContext } from '../../../context/appContext';
 

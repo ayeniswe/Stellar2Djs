@@ -3,7 +3,7 @@ import { Config, Texture } from '../../../libs/rendering';
 import { Bindings } from '../../../libs/input';
 import configuration from '../../../data/test-config.json';
 import { iconEffects } from '../../../libs/effects';
-import { SCENE } from '..';
+import { SCENE } from '../constants';
 import { useSignal } from '@preact/signals-react';
 
 /**

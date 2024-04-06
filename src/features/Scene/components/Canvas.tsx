@@ -1,6 +1,6 @@
 import '../style.css';
 import React from 'react';
-import { SCENE } from '..';
+import { SCENE } from '../constants';
 
 type Props = {
   reference : React.RefObject<HTMLCanvasElement>

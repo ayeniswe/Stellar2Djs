@@ -3,7 +3,7 @@ import { Control } from '../hooks/type';
 import dragpointer from '../../../assets/images/icons/dragpointer.svg';
 import editpointer from '../../../assets/images/icons/editpointer.png';
 import React from 'react';
-import { SCENE } from '..';
+import { SCENE } from '../constants';
 import scissors from '../../../assets/images/icons/scissors.svg';
 import ToggleIcon from '../../../components/ToggleIcon';
 import trashcan from '../../../assets/images/icons/trashcan.svg';
