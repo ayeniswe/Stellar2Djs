@@ -1,6 +1,5 @@
 enum TILEMAP {
-    $ = "Tilemap"
+    $ = 'Tilemap'
 }
-export {
-    TILEMAP
-}
+
+export { TILEMAP };

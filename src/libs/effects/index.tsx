@@ -1,4 +1,3 @@
-import { iconEffects } from "./icons";
-export {
-    iconEffects
-}
+import { iconEffects } from './icons';
+
+export { iconEffects };

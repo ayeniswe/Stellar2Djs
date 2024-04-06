@@ -1,6 +1,7 @@
-import { Sprite } from "./Sprite";
-import { Tile } from "./Tile";
+import { Sprite } from './Sprite';
+import { Tile } from './Tile';
+
 export {
-    Tile,
-    Sprite
-}
+  Tile,
+  Sprite
+};

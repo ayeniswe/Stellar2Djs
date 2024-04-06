@@ -1,24 +1,29 @@
-import "../../../style.css";
-import { FC, memo } from "react";
-import { ProgressBarsProps } from "../type";
+import '../../../style.css';
+import React, { memo } from 'react';
+import { ProgressBarsProps } from '../type';
+
 /**
  * Displays a series of progress bars.
- * @returns {JSX.Element} - The `memomized` rendered ProgressBars component.
+ * @returns {JSX.Element} - The `memoized` rendered ProgressBars component.
  */
-const ProgressBars: FC<ProgressBarsProps> = memo(({ scaling, step, width }) => {
-    const numOfBars = width / (scaling * step) + 1
-    return (
-        <div className="Progress">
-            {Array.from({ length: numOfBars }, (_, index) => {
-                if (index > 0) {
-                    return (
-                        <div key={index} className="bar" style={{ left: `${index * scaling * step}px`}}>
-                            <span className="unit">{index * step}</span>
-                        </div>
-                    )
-                }
-            })}
-        </div>
-    )
-})
-export default ProgressBars
+const ProgressBars = memo(({ scaling, step, width }: ProgressBarsProps) => {
+  const numOfBars = width / (scaling * step) + 1;
+
+  return (
+    <div className="Progress">
+      {Array.from({ length: numOfBars }, (_, index) => {
+        if (index > 0) {
+          return (
+            <div key={index} className="bar" style={{ left: `${index * scaling * step}px` }}>
+              <span className="unit">{index * step}</span>
+            </div>
+          );
+        }
+      })}
+    </div>
+  );
+});
+
+ProgressBars.displayName = 'ProgressBars';
+
+export default ProgressBars;

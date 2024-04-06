@@ -14,7 +14,7 @@ type ButtonProps = {
     /*
      * The type of button
      */
-    type?: "file"
+    type?: 'file'
     /**
      * The tooltip for button
      */
@@ -24,6 +24,7 @@ type ButtonProps = {
      */
     cy?: string
 }
+
 type ToggleIconProps = {
     /**
      * The name of the toggle icon.
@@ -50,7 +51,8 @@ type ToggleIconProps = {
      */
      cy?: string
 }
+
 export type {
-    ToggleIconProps,
-    ButtonProps
-} 
+  ToggleIconProps,
+  ButtonProps
+};
