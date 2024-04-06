@@ -18,12 +18,12 @@ const input = (attrs: ToolbarAttrs) => {
   /**
    * Handles resizing the toolbar up and down
    */
-  function resizeToolbar(e: MouseEvent) {
+  function resizeToolbar(toolbarEvent: MouseEvent) {
     const toolbar = document.getElementById(TOOLBAR.$)!;
-    const currentY = e.clientY;
+    const currentY = toolbarEvent.clientY;
     const currentHeight = getHeight(toolbar).toNumber();
-    document.onmousemove = () => {
-      toolbar.style.height = `${currentHeight + -(e.clientY - currentY)}px`;
+    document.onmousemove = (event) => {
+      toolbar.style.height = `${currentHeight + -(event.clientY - currentY)}px`;
     };
     document.onmouseup = () => {
       document.onmousemove = null;
