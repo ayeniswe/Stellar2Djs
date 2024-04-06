@@ -1,11 +1,11 @@
 .Scene {
     align-items: center;
     background-image: url('../../assets/images/background.jpg');
-    /* cursor: pointer; */
     display: flex;
     height: 100%;
     justify-content: center;
     width: 100%;
+
     #Canvas {
         background-color: var(--primary-color);
         border-radius: var(--window-border-radius);
@@ -14,23 +14,28 @@
         image-rendering: pixelated;
         width: 100%;
     }
+
     #CanvasBrush {
+        animation: 0.3s reveal;
         background-color: var(--accent-color);
         border-radius: var(--window-border-radius);
         cursor: pointer;
         display: none;
         height: 32px;
         opacity: 0.5;
-        position: absolute;
         pointer-events: none;
-        animation: 0.3s reveal;
+        position: absolute;
         width: 32px;
     }
+
+    /* cursor: pointer; */
 }
+
 .SceneControls {
     align-items: end;
     display: flex;
     flex-direction: column;
+
     .button {
         background-color: var(--serious-color);
         border: 1px solid var(--accent-color);
@@ -40,11 +45,13 @@
         text-align: center;
         transition: 0.2s;
         width: 41px;
+
         &:hover {
-            transition: 0.2s;
             background-color: var(--serious-hover-color);
+            transition: 0.2s;
         }
     }
+
     .dialog {
         align-items: center;
         background-color: var(--background-color);
@@ -53,11 +60,12 @@
         color: var(--text-color);
         display: flex;
         flex-direction: column;
-        position: absolute;
         padding: 10px;
+        position: absolute;
         text-align: center;
         transition: 0.2s;
         white-space: pre-wrap;
+
         .button {
             border-radius: var(--window-border-radius);
             margin-top: 10px;

@@ -6,16 +6,19 @@
     border-radius: var(--window-border-radius);
     display: flex;
     height: 200px;
+
     .dropdown {
         display: flex;
         flex-direction: column;
         margin: 30px;
         white-space: nowrap;
+
         select {
             border-radius: var(--window-border-radius);
             cursor: pointer;
         }
     }
+
     .tileset {
         display: flex;
         height: inherit;
@@ -24,24 +27,29 @@
         scrollbar-color: var(--secondary-color) transparent;
         scrollbar-width: thin;
         width: 100%;
+
         .empty {
             align-items: center;
             display: flex;
             justify-content: center;
             width: 100%;
         }
+
         .group {
             margin: 10px;
             text-align: center;
+
             .title {
                 margin: 0;
                 margin-bottom: 5px;
             }
+
             .tiles {
                 column-gap: 10px;
                 display: grid;
                 grid-template-columns: repeat(4, 1fr);
                 row-gap: 10px;
+
                 .tile {
                     background-color: var(--background-color);
                     background-size: cover;
@@ -52,6 +60,7 @@
                     image-rendering: pixelated;
                     opacity: 0.5;
                     width: 50px;
+
                     &:hover {
                         opacity: 1;
                         transition: 0.2s;

@@ -1,16 +1,17 @@
-import { Controls, Direction, Sprite, SpriteAnimation, Timeline } from "./type";
-import useControls from "./useControls";
-import useSpriteAnimation from "./useSpriteAnimation";
-import useTimeline from "./useTimeline";
+import { Controls, Direction, Sprite, SpriteAnimation, Timeline } from './type';
+import useControls from './useControls';
+import useSpriteAnimation from './useSpriteAnimation';
+import useTimeline from './useTimeline';
+
 export type {
-    Timeline,
-    Controls,
-    SpriteAnimation,
-    Direction,
-    Sprite
-}
+  Timeline,
+  Controls,
+  SpriteAnimation,
+  Direction,
+  Sprite
+};
 export {
-    useTimeline,
-    useControls,
-    useSpriteAnimation
-}
+  useTimeline,
+  useControls,
+  useSpriteAnimation
+};

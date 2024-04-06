@@ -1,6 +1,7 @@
-import { Controls, SpriteAnimation, Timeline } from "../features/AnimationPlayer/hooks"
-import { Scene } from "../features/Scene/hooks"
-import { Toolbar } from "../features/Toolbar/hooks"
+import { Controls, SpriteAnimation, Timeline } from '../features/AnimationPlayer/hooks';
+import { Scene } from '../features/Scene/hooks';
+import { Toolbar } from '../features/Toolbar/hooks';
+
 type AppContextProps = {
     timeline: Timeline,
     timelineControls: Controls
@@ -8,6 +9,5 @@ type AppContextProps = {
     scene: Scene
     toolbar: Toolbar
 }
-export type {
-    AppContextProps
-}
+
+export type { AppContextProps };

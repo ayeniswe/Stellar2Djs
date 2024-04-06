@@ -1,4 +1,5 @@
-import { Signal } from "@preact/signals-react";
+import { Signal } from '@preact/signals-react';
+
 /**
  * All the dynamic elements of the timeline
  */
@@ -8,9 +9,10 @@ type TimelineElements = {
     timeline: HTMLElement
     frameCollection: HTMLElement
 }
+
 type ProgressBarsProps = {
     /**
-     * The scaling factor for the progress bars to represent a second. 
+     * The scaling factor for the progress bars to represent a second.
      * @type {number}
      */
     scaling: number // px in seconds
@@ -25,7 +27,8 @@ type ProgressBarsProps = {
      */
     width: number
 }
+
 export type {
-    TimelineElements,
-    ProgressBarsProps
-}
+  TimelineElements,
+  ProgressBarsProps
+};

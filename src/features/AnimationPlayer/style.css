@@ -3,18 +3,22 @@
     display: flex;
     height: inherit;
     width: inherit;
+
     .AnimationPlayerGroup {
         align-items: center;
         display: flex;
         gap: 10px;
     }
+
     .AnimationPlayerGroup--margined {
         margin: 15px;
     }
+
     .AnimationPlayerGroup--col {
         flex-direction: column;
     }
 }
+
 #Timeline {
     border: inset 3px var(--primary-color);
     display: flex;
@@ -24,13 +28,17 @@
     margin: 15px;
     position: relative;
     width: inherit;
+
     .display {
         background-color: var(--primary-color);
         border: inset 6px var(--accent-color);
-        text-align: center;
         margin: 5px;
+        text-align: center;
         width: 50px;
-    };
+    }
+
+    ;
+
     #TimelineSlider {
         background-color: var(--primary-color);
         box-shadow: 4px 0 1px var(--accent-color);
@@ -39,6 +47,7 @@
         width: 2px;
         z-index: 2;
     }
+
     #TimelineSliderThumb {
         background-color: var(--primary-color);
         border-radius: 100%;
@@ -50,6 +59,7 @@
         width: 10px;
     }
 }
+
 .TimelineFrameCollection {
     background-color: var(--primary-color);
     bottom: 0;
@@ -59,19 +69,22 @@
     position: absolute;
     width: inherit;
     z-index: 1;
+
     transparent {
         background-color: transparent;
         opacity: 1;
     }
 }
+
 .Progress {
     background-color: var(--background-color);
     bottom: 0;
     display: flex;
     height: 15%;
+    overflow-x: clip;
     position: absolute;
     width: inherit;
-    overflow-x: clip;
+
     .bar {
         align-items: center;
         background-color: var(--primary-color);
@@ -82,28 +95,35 @@
         position: absolute;
         width: 2px;
     }
+
     .unit {
         margin-top: -15px;
         position: relative;
     }
 }
+
 .AnimationPlayerControls {
     align-items: center;
     display: flex;
     flex-direction: column;
+
     img {
         cursor: pointer;
     }
 }
+
 .FPS {
     align-items: center;
     display: flex;
     font-size: 18px;
+
     .buttons {
         flex-direction: column;
+
         img {
             width: 13px;
         }
+
         button {
             background-color: transparent;
             border: none;
@@ -112,25 +132,32 @@
             justify-content: center;
             transition: 0.2s;
             width: 15px;
-            &:hover{
+
+            &:hover {
                 background-color: var(--accent-color);
             }
         }
     }
+
     .display {
         background-color: var(--primary-color);
         border: inset 6px var(--accent-color);
-        text-align: center;
         margin: 5px;
+        text-align: center;
         width: 50px;
-    };
+    }
+
+    ;
 }
+
 .Playback {
     .buttons {
         display: flex;
+
         img {
             width: 20px;
         }
+
         button {
             background-color: transparent;
             border: none;
@@ -139,19 +166,23 @@
             justify-content: center;
             transition: 0.2s;
             width: 22px;
+
             &:hover {
                 background-color: var(--accent-color);
             }
         }
     }
 }
+
 .AnimationDisplay {
     width: 120px;
+
     img {
         background-color: var(--primary-color);
         border: 1px solid var(--accent-color);
         width: inherit;
     }
+
     .empty {
         align-items: center;
         background-color: var(--primary-color);
@@ -162,18 +193,24 @@
         text-align: center;
         width: inherit;
     }
+
     .display {
         background-color: var(--primary-color);
         border: inset 6px var(--accent-color);
         text-align: center;
         width: 50px;
-    };
+    }
+
+    ;
 }
+
 .SpriteAnimation {
     .display {
         background-color: var(--primary-color);
         border: inset 6px var(--accent-color);
         text-align: center;
         width: 100%;
-    };
+    }
+
+    ;
 }
