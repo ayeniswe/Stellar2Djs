@@ -1,4 +1,4 @@
-import { DND, Keyboard, KMInput, KMMapping, Mouse, MouseInputToName } from '.';
+import { DND, Keyboard, KMInput, KMMapping, Mouse, MouseInputToName } from './types';
 
 /**
  * Handles tracking of keyboard/mouse inputs to specific custom actions.

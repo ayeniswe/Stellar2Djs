@@ -1,4 +1,5 @@
-import { BindingsMapping, DND, Input, Keyboard, KMInput, KMMapping, Mouse } from '.';
+import { BindingsMapping, DND, Keyboard, KMInput, KMMapping, Mouse } from './types';
+import { Input } from './Input';
 
 /**
  * Sets up the bindings for the keyboard/mouse events
