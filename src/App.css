@@ -21,6 +21,7 @@ code {
 :root {
   --accent-color: black;
   --background-color: rgb(32, 32, 32);
+  --body-font-sz: 14px;
   --drag-hover-color: white;
   --game-height: 600px;
   --game-width: 800px;
@@ -32,8 +33,6 @@ code {
   --serious-hover-color: darkred;
   --text-color: white;
   --window-border-radius: 10px;
-
-  /* --background-color: white; */
 }
 
 .App {
@@ -47,28 +46,36 @@ code {
   text-shadow: 0 1px 1px var(--accent-color);
   user-select: none;
   width: 100vw;
-}
 
-.App input {
-  -webkit-text-stroke-color: var(--accent-color);
-  -webkit-text-stroke-width: 0.1px;
-  color: var(--text-color);
-  font-family: PixelFont;
-  text-shadow: 0 1px 1px var(--accent-color);
-}
+  .scene-panel {
+    align-items: center;
+    display: flex;
+    gap: 5px;
+    height: 90%;
+    margin: 30px;
+  }
 
-.App button {
-  -webkit-text-stroke-color: var(--accent-color);
-  -webkit-text-stroke-width: 0.1px;
-  color: var(--text-color);
-  font-family: PixelFont;
-  text-shadow: 0 1px 1px var(--accent-color);
-}
+  input {
+    -webkit-text-stroke-color: var(--accent-color);
+    -webkit-text-stroke-width: 0.1px;
+    color: var(--text-color);
+    font-family: PixelFont;
+    text-shadow: 0 1px 1px var(--accent-color);
+  }
 
-.App select {
-  -webkit-text-stroke-color: var(--accent-color);
-  -webkit-text-stroke-width: 0.1px;
-  color: var(--text-color);
-  font-family: PixelFont;
-  text-shadow: 0 1px 1px var(--accent-color);
+  button {
+    -webkit-text-stroke-color: var(--accent-color);
+    -webkit-text-stroke-width: 0.1px;
+    color: var(--text-color);
+    font-family: PixelFont;
+    text-shadow: 0 1px 1px var(--accent-color);
+  }
+
+  select {
+    -webkit-text-stroke-color: var(--accent-color);
+    -webkit-text-stroke-width: 0.1px;
+    color: var(--text-color);
+    font-family: PixelFont;
+    text-shadow: 0 1px 1px var(--accent-color);
+  }
 }

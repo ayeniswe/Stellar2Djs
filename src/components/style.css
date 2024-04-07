@@ -58,8 +58,7 @@
     div {
         align-items: center;
         background-color: var(--background-color);
-        border: 1px solid var(--accent-color);
-        border-right: none;
+        border: 2px solid var(--accent-color);
         display: flex;
         justify-content: center;
         width: 40px;

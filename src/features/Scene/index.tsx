@@ -26,10 +26,9 @@ const Scene = () => {
   }, [ctx.value]);
 
   return (
-    <div className="Scene">
+    <>
       <Canvas reference={ref}/>
-      <Controls/>
-    </div>
+    </>
   );
 };
 

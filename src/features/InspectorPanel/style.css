@@ -1,0 +1,28 @@
+#InspectorPanel {
+    border: 2px solid var(--accent-color);
+    height: 100%;
+    width: 275px;
+
+    .panel-name {
+        border-bottom: 2px solid var(--accent-color);
+        margin-top: 5px;
+        margin-bottom: 5px;
+        text-align: center;
+    }
+
+    .object-name {
+        margin: 5px;
+        font-size: var(--body-font-sz);
+
+        header {
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        div {
+            padding: 2.5px;
+            background-color: var(--primary-color);
+            border: inset 6px var(--accent-color);
+        }
+    }
+}
