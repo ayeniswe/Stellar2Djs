@@ -4,6 +4,7 @@ import { Bindings } from '../../../libs/input';
 import configuration from '../../../data/test-config.json';
 import { iconEffects } from '../../../libs/effects';
 import { SCENE } from '../constants';
+import { selection } from '../signals';
 import { useSignal } from '@preact/signals-react';
 
 /**
@@ -74,7 +75,8 @@ const useInput = (renderer: Texture) => {
     const bindings = Bindings.getInstance();
     bindings.addBinding(handleDropSprite.bind(this), [], 'drop', false, SCENE.CANVAS);
     bindings.addBinding(handleBrush.bind(this), [], 'mousemove', false, SCENE.CANVAS);
-    bindings.addBinding(handleDrawing.bind(this), ['LeftButton'], ['mousedown', 'mousemove'], false, SCENE.CANVAS);
+    bindings.addBinding(handleClickEvent.bind(this), ['LeftButton'], ['mousedown'], false, SCENE.CANVAS);
+    bindings.addBinding(handleMoveEvent.bind(this), ['LeftButton'], ['mousemove'], false, SCENE.CANVAS);
     bindings.addBinding(toggleClipMode.bind(this), ['c'], 'keydown', true);
     bindings.addBinding(toggleDragMode.bind(this), ['d'], 'keydown', true);
     bindings.addBinding(toggleEditMode.bind(this), ['e'], 'keydown', true);
@@ -121,38 +123,45 @@ const useInput = (renderer: Texture) => {
   }
 
   /**
-   * Handles the drawing action in the level scene based on mouse events.
-   * If the scene is in `trash` mode, it removes an element at the specified
-   * position.
-   * If the scene is in `selection` mode "when edit it turned off", it
-   * allows the selection of an element and drop it at the specified position.
-   * If the scene is in `drag` mode, it rapidly adds an element
-   * at the specified position.
+   * Handles the click and mouse-move action in the level
+   * scene based on mouse events.
    * @param {MouseEvent} event - The mouse event object.
    *
    * NOTE: This method is only available if the scene is ready.
    */
-  function handleDrawing(event: MouseEvent): void {
-    if (!editable.value && !trash.value) {
-      // Select texture
-      renderer.selectTexture(event.offsetX, event.offsetY, 1);
+  function handleClickEvent(event: MouseEvent) {
+    if (!ready.value || !brush.value) return;
+    const { id, object } = brush.value!;
+    const { name, h, w, sx, sy } = object;
+    const src = config.textures['tilesets'][id.split('-')[0]].name;
+    switch (true) {
+    case drag.value && !editable.value && !trash.value:
+      renderer.selectTexture(event.offsetX, event.offsetY, selection);
+      break;
+    case trash.value && !editable.value && !drag.value:
+      renderer.removeTexture(event.offsetX, event.offsetY);
+      break;
+    case editable.value && !drag.value && !trash.value:
+      renderer.addTexture(src, name, clip.value, event.offsetX, event.offsetY, w, h, sx, sy);
+      break;
     }
-    else {
-      if (!ready.value || !brush.value || !drag.value && event.type === 'mousemove') return;
-      /*
-       * TODO: make more dynamic way to do this
-       * Get brush src image tilesheet data
-       */
-      const { id, object } = brush.value!;
-      const { name, h, w, sx, sy } = object;
-      const src = config.textures['tilesets'][id.split('-')[0]].name;
-      // Remove or add a texture
-      if (trash.value) {
-        renderer.removeTexture(event.offsetX, event.offsetY);
-      }
-      else {
-        renderer.addTexture(src, name, clip.value, event.offsetX, event.offsetY, w, h, sx, sy);
-      }
+    renderer.render();
+  }
+  function handleMoveEvent(event: MouseEvent) {
+    if (!ready.value || !brush.value) return;
+    const { id, object } = brush.value!;
+    const { name, h, w, sx, sy } = object;
+    const src = config.textures['tilesets'][id.split('-')[0]].name;
+    switch (true) {
+    case drag.value && !editable.value && !trash.value:
+      renderer.moveTexture(event.offsetX, event.offsetY, selection);
+      break;
+    case trash.value && !editable.value && !drag.value:
+      renderer.removeTexture(event.offsetX, event.offsetY);
+      break;
+    case editable.value && !drag.value && !trash.value:
+      renderer.addTexture(src, name, clip.value, event.offsetX, event.offsetY, w, h, sx, sy);
+      break;
     }
     renderer.render();
   }

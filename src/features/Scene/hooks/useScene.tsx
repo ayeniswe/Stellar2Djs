@@ -51,7 +51,8 @@ const useScene = (ctx: CanvasRenderingContext2D | null) => {
   return {
     initialize,
     clear,
-    attrs
+    attrs,
+    renderer
   };
 };
 

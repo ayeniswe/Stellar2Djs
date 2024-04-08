@@ -1,8 +1,8 @@
 import { getHeight, getWidth } from '../../utils/styleProps';
 import React, { useEffect, useRef } from 'react';
 import Canvas from './components/Canvas';
-import Controls from './components/Controls';
 import { SCENE } from './constants';
+import { selection } from './signals';
 import { useAppContext } from '../../context/appContext';
 import { useScene } from './hooks';
 import { useSignal } from '@preact/signals-react';
@@ -33,4 +33,7 @@ const Scene = () => {
 };
 
 export default Scene;
-export { SCENE };
+export {
+  SCENE,
+  selection
+};

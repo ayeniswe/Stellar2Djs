@@ -1,16 +1,16 @@
 import { Config, RevisionRecord, TextureObjectBounds, TextureSources } from './types';
 import { getHeight, getWidth } from '../../utils/styleProps';
+import { Signal, useSignal } from '@preact/signals-react';
 import { Sprite, Tile } from '../object';
 import RBush from 'rbush';
 import { SCENE } from '../../features/Scene';
+import { selection } from '../../features/Scene/signals';
 import { TextureObject } from '../object/TextureObject';
-import { useSignal } from '@preact/signals-react';
 
 const useTexture = (ctx: CanvasRenderingContext2D) => {
   const tree = new RBush<TextureObjectBounds>();
   const revisions = useSignal<RevisionRecord[]>([]);
   const sources = useSignal<TextureSources>({});
-  const selector = useSignal<TextureObject | undefined>(undefined);
   const CONFIG: Config = process.env.NODE_ENV === 'production'
     ? require('../../data/config.json')
     : require('../../data/test-config.json');
@@ -230,50 +230,56 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
     clearCanvas(0, 0, ctx.canvas.width, ctx.canvas.height);
   }
 
-  function selectTexture(x: number, y: number) {
-    if (!selector.value) {
-      // Check if texture exists in bounding
-      const result = tree.search({
-        minX: x,
-        minY: y,
-        maxX: x,
-        maxY: y
-      });
-      if (result.length === 0) return;
-      selector.value = result[0].object;
-      document.getElementById(SCENE.CANVAS)!.style.cursor = 'move';
+  function selectTexture(x: number, y: number, selector: Signal<TextureObject | undefined>) {
+    // Check if texture exists in bounding
+    const result = tree.search({
+      minX: x,
+      minY: y,
+      maxX: x,
+      maxY: y
+    });
+    if (result.length === 0) {
+      selector.value = undefined;
     }
     else {
-      const texture = selector.value;
-      if (!texture) return;
-      // Remove old bounding and position
-      const { w, h, dx, dy } = texture;
-      tree.remove({
-        minX: dx,
-        maxX: dx+w,
-        minY: dy,
-        maxY: dy+h,
-        object: texture
-      }, (a, b) => a.object===b.object);
-      clearCanvas(dx, dy, w, h);
-      // Add new bounding and position
-      texture.dx = x;
-      texture.dy = y;
-      ctx.drawImage(texture.texture.canvas, x, y);
-      document.onmouseup = () => {
-        // Reset canvas cursor
-        document.onmouseup = null;
-        document.getElementById(SCENE.CANVAS)!.style.cursor = 'pointer';
-        tree.insert({
-          minX: x,
-          maxX: x+w,
-          minY: y,
-          maxY: y+h,
-          object: texture
-        });
-        selector.value = undefined;
-      };
+      selector.value = result[0].object;
+      for (const bound of result) {
+        if (Math.max(selector.value.l, bound.object.l) === bound.object!.l) selector.value = bound.object;
+      }
     }
+  }
+
+  function moveTexture(x: number, y: number, selector: Signal<TextureObject | undefined>) {
+    const texture = selector.value;
+    if (!texture) return;
+    document.getElementById(SCENE.CANVAS)!.style.cursor = 'move';
+    // Remove old bounding and position
+    const { w, h, dx, dy } = selector.value!;
+    tree.remove({
+      minX: dx,
+      maxX: dx+w,
+      minY: dy,
+      maxY: dy+h,
+      object: texture
+    }, (a, b) => a.object===b.object);
+    clearCanvas(dx, dy, w, h);
+    // Add new bounding and position
+    texture.dx = x;
+    texture.dy = y;
+    ctx.drawImage(texture.texture.canvas, x, y);
+    document.onmouseup = () => {
+      // Reset canvas cursor
+      document.onmouseup = null;
+      document.getElementById(SCENE.CANVAS)!.style.cursor = 'pointer';
+      tree.insert({
+        minX: x,
+        maxX: x+w,
+        minY: y,
+        maxY: y+h,
+        object: texture
+      });
+      selector.value = undefined;
+    };
   }
 
   function startListeners() {
@@ -290,10 +296,11 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
     addTexture,
     selectTexture,
     removeTexture,
+    moveTexture,
     undoRevision,
     render,
     removeAllTexture,
-    textureRenderer,
+    textureRenderer
   };
 };
 

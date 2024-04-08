@@ -1,21 +1,26 @@
 import './style.css';
 import { INSPECTOR } from './constants';
 import React from 'react';
+import { usePanel } from './usePanel';
 
-const InspectorPanel = () => (
-  <div id={INSPECTOR.$}>
-    <header className='panel-name'>
+const InspectorPanel = () => {
+  const { getObjectName } = usePanel();
+
+  return (
+    <div id={INSPECTOR.$}>
+      <header className='panel-name'>
       Inspector Panel
-    </header>
-    <div className='object-name'>
-      <header>
-        Name
       </header>
-      <div id={INSPECTOR.Name}>
-        Default Object 1001
+      <div className='object-name'>
+        <header>
+        Name
+        </header>
+        <div id={INSPECTOR.Name}>
+          {getObjectName()}
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default InspectorPanel;

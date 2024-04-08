@@ -1,4 +1,4 @@
-import { TextureItem, TextureSources } from '../../../libs/rendering';
+import { Texture, TextureItem, TextureSources } from '../../../libs/rendering';
 import React from 'react';
 
 type Input = {
@@ -16,7 +16,7 @@ type Input = {
      * Each binding is associated with a specific key or
      * mouse event and triggers a
      * corresponding method when the event occurs.
-     * All texture sources are preloaded aswell.
+     * All texture sources are preloaded as well.
      * @returns {Promise<void>} A promise that resolves once the input bindings
      * are initialized.
      */
@@ -127,6 +127,7 @@ type Scene = {
      * All the scene attributes.
      */
     attrs: SceneAttributes
+    renderer: Texture
 }
 
 type SceneAttributes = {
@@ -158,7 +159,7 @@ type SceneAttributes = {
 
 type Tilesets = {
     /**
-     *  Tilesets in a json conifg format to render in the scene
+     *  Tilesets in a json config format to render in the scene
      */
     [key: string]: {
         html: React.JSX.Element

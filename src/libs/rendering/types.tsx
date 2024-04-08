@@ -1,3 +1,4 @@
+import { Signal } from '@preact/signals-react';
 import { TextureObject } from '../object/TextureObject';
 
 type TexturesMapping = {
@@ -149,11 +150,25 @@ type Texture = {
     initialize: () => Promise<void>
 
     /**
-     * Selects a texture from the canvas to drag and drop.
-     * @returns {string} Returns the canvas data url
-     * for background image when dragging
+     * Selects a texture from the canvas to enable drag and drop.
+     *
+     * @param {number} x - The x-coordinate of the selection.
+     * @param {number} y - The y-coordinate of the selection.
+     * @param {Signal<TextureObject | undefined>} selector - Signal to
+     * globally track a selected object.
      */
-    selectTexture: (x: number, y: number, l?: number) => void
+    selectTexture: (x: number, y: number, selector: Signal<TextureObject | undefined>) => void
+
+    /**
+     * Moves a texture around the canvas.
+     *
+     * @param {number} x - The new x-coordinate for the texture.
+     * @param {number} y - The new y-coordinate for the texture.
+     * @param {Signal<TextureObject | undefined>} selector - Signal to
+     * globally track a selected object.
+     */
+    moveTexture: (x: number, y: number, selector: Signal<TextureObject | undefined>) => void
+
     textureRenderer: {
         /**
          * All textures sources available to be used in the renderer
