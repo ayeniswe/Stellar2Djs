@@ -1,28 +1,40 @@
 #InspectorPanel {
     border: 2px solid var(--accent-color);
     height: 100%;
-    width: 275px;
+    width: 15%;
 
-    .panel-name {
+    div {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        font-size: var(--body-font-sz);
+        margin: 10px;
+    }
+
+    label {
+        text-align: center;
+    }
+
+    input {
+        padding: 2.5px;
+        background-color: var(--primary-color);
+        border: inset 6px var(--accent-color);
+    }
+
+    header {
         border-bottom: 2px solid var(--accent-color);
         margin-top: 5px;
         margin-bottom: 5px;
         text-align: center;
     }
 
-    .object-name {
-        margin: 5px;
-        font-size: var(--body-font-sz);
-
-        header {
-            margin-bottom: 5px;
-            text-align: center;
-        }
-
-        div {
-            padding: 2.5px;
-            background-color: var(--primary-color);
-            border: inset 6px var(--accent-color);
-        }
+    .object {
+        align-items: center;
+        background-color: var(--primary-color);
+        display: flex;
+        height: 100px;
+        justify-content: center;
+        width: 100%;
+        border: inset 5px var(--accent-color);
     }
 }

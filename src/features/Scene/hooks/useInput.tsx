@@ -134,9 +134,16 @@ const useInput = (renderer: Texture) => {
     const { id, object } = brush.value!;
     const { name, h, w, sx, sy } = object;
     const src = config.textures['tilesets'][id.split('-')[0]].name;
+    const selectionElement = document.getElementById(SCENE.SELECTION)!;
     switch (true) {
     case drag.value && !editable.value && !trash.value:
       renderer.selectTexture(event.offsetX, event.offsetY, selection);
+      console.log(selection);
+      selectionElement.style.left = `${event.offsetX}px`;
+      selectionElement.style.top = `${event.offsetY}px`;
+      selectionElement.style.display = 'flex';
+      selectionElement.style.width = `${selection.value?.w}px`;
+      selectionElement.style.height = `${selection.value?.h}px`;
       break;
     case trash.value && !editable.value && !drag.value:
       renderer.removeTexture(event.offsetX, event.offsetY);

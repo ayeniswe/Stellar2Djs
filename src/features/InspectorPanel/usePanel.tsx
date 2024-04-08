@@ -1,14 +1,18 @@
 import { selection } from '../Scene';
 
 const usePanel = () => {
-  function getObjectName() {
-    if (selection.value?.name) {
-      return selection.value.name;
-    }
-    return '';
+  function getObject() {
+    return {
+      name: selection.value
+        ? selection.value.name
+        : '',
+      src: selection.value
+        ? selection.value.image
+        : ''
+    };
   }
 
-  return { getObjectName };
+  return { getObject };
 };
 
 export { usePanel };

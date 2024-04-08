@@ -4,7 +4,6 @@ import { Signal, useSignal } from '@preact/signals-react';
 import { Sprite, Tile } from '../object';
 import RBush from 'rbush';
 import { SCENE } from '../../features/Scene';
-import { selection } from '../../features/Scene/signals';
 import { TextureObject } from '../object/TextureObject';
 
 const useTexture = (ctx: CanvasRenderingContext2D) => {
@@ -266,7 +265,7 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
     // Add new bounding and position
     texture.dx = x;
     texture.dy = y;
-    ctx.drawImage(texture.texture.canvas, x, y);
+    ctx.drawImage(texture.canvas, x, y);
     document.onmouseup = () => {
       // Reset canvas cursor
       document.onmouseup = null;

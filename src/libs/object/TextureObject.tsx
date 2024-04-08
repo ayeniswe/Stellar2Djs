@@ -2,9 +2,10 @@
  * A base class for all game objects.
  */
 abstract class TextureObject {
-    abstract readonly ctx: CanvasRenderingContext2D;
-    abstract readonly texture: CanvasRenderingContext2D;
-    abstract readonly name: string;
+    protected abstract frame: HTMLImageElement;
+    protected abstract texture: CanvasRenderingContext2D;
+    abstract ctx: CanvasRenderingContext2D;
+    abstract name: string;
     abstract dx: number;
     abstract dy: number;
     abstract w: number;
@@ -13,6 +14,15 @@ abstract class TextureObject {
     abstract scale: [boolean, boolean];
     protected abstract save: () => void;
     abstract render: () => void;
+
+    get image() {
+      return this.texture.canvas.toDataURL();
+    }
+
+    get canvas() {
+      return this.texture.canvas;
+    }
+
     flip = (horizontal: boolean, vertical: boolean) => {
       switch (true) {
       case horizontal && vertical:

@@ -6,7 +6,7 @@ import Toolbar from './features/Toolbar';
 
 const App = () => (
   <div id="App" className="App">
-    <div className='scene-panel'>
+    <div className='scene-panel-controls'>
       <InspectorPanel/>
       <Scene/>
       <SceneControls/>

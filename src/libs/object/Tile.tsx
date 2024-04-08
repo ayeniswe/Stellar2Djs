@@ -4,7 +4,7 @@ class Tile extends TextureObject {
   readonly name: string;
   readonly ctx: CanvasRenderingContext2D;
   readonly texture: CanvasRenderingContext2D;
-  readonly #frame: HTMLImageElement | HTMLCanvasElement;
+  readonly frame: HTMLImageElement;
   readonly #sx: number;
   readonly #sy: number;
   scale: [boolean, boolean] = [false, false];
@@ -14,7 +14,7 @@ class Tile extends TextureObject {
   w: number;
   h: number;
 
-  constructor(ctx: CanvasRenderingContext2D, frame: HTMLImageElement | HTMLCanvasElement,
+  constructor(ctx: CanvasRenderingContext2D, frame: HTMLImageElement,
     name: string, dx: number, dy: number, w: number, h: number, sx: number, sy: number, l: number) {
     super();
     this.ctx = ctx;
@@ -26,7 +26,7 @@ class Tile extends TextureObject {
     this.w = w;
     this.h = h;
     this.l = l;
-    this.#frame = frame;
+    this.frame = frame;
     const canvas = document.createElement('canvas');
     canvas.width = w;
     canvas.height = h;
@@ -36,7 +36,7 @@ class Tile extends TextureObject {
 
   protected save = () => {
     this.texture.drawImage(
-      this.#frame,
+      this.frame,
       this.#sx,
       this.#sy,
       this.w,

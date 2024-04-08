@@ -1,14 +1,23 @@
+#CanvasSelection {
+    animation: 0.3s reveal;
+    background-color: transparent;
+    border: 2px solid var(--accent-color);
+    cursor: pointer;
+    display: none;
+    opacity: 0.5;
+    /* pointer-events: none; */
+    position: absolute;
+}
+
 #CanvasBrush {
     animation: 0.3s reveal;
     background-color: var(--accent-color);
     border-radius: var(--window-border-radius);
     cursor: pointer;
     display: none;
-    height: 32px;
     opacity: 0.5;
     pointer-events: none;
     position: absolute;
-    width: 32px;
 }
 
 #Canvas {
@@ -17,7 +26,7 @@
     cursor: pointer;
     height: 100%;
     image-rendering: pixelated;
-    width: 100%;
+    width: 85%
 }
 
 .SceneControls {
@@ -60,6 +69,4 @@
             width: 50%;
         }
     }
-
-    /* align-items: end; */
 }

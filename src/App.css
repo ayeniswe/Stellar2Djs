@@ -47,7 +47,7 @@ code {
   user-select: none;
   width: 100vw;
 
-  .scene-panel {
+  .scene-panel-controls {
     align-items: center;
     display: flex;
     gap: 5px;

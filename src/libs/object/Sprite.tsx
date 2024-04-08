@@ -4,7 +4,7 @@ class Sprite extends TextureObject {
   readonly name: string;
   readonly ctx: CanvasRenderingContext2D;
   readonly texture: CanvasRenderingContext2D;
-  readonly #frame: HTMLImageElement;
+  readonly frame: HTMLImageElement;
   scale: [boolean, boolean] = [false, false];
   l: number = 1;
   dx: number;
@@ -22,8 +22,8 @@ class Sprite extends TextureObject {
     this.w = w;
     this.h = h;
     this.l = l;
-    this.#frame = new Image();
-    this.#frame.src = src;
+    this.frame = new Image();
+    this.frame.src = src;
     const canvas = document.createElement('canvas');
     canvas.width = w;
     canvas.height = h;
@@ -32,7 +32,7 @@ class Sprite extends TextureObject {
   }
 
   protected save = () => {
-    this.texture.drawImage(this.#frame, 0, 0);
+    this.texture.drawImage(this.frame, 0, 0);
   };
 
   render = () => {

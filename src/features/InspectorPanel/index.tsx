@@ -4,19 +4,21 @@ import React from 'react';
 import { usePanel } from './usePanel';
 
 const InspectorPanel = () => {
-  const { getObjectName } = usePanel();
+  const { getObject } = usePanel();
+  const { src, name } = getObject();
 
   return (
     <div id={INSPECTOR.$}>
-      <header className='panel-name'>
+      <header>
       Inspector Panel
       </header>
-      <div className='object-name'>
-        <header>
-        Name
-        </header>
-        <div id={INSPECTOR.Name}>
-          {getObjectName()}
+      <div>
+        <label>
+          Name
+          <input id={INSPECTOR.Name} placeholder='None' title="object selected" value={name} disabled/>
+        </label>
+        <div className='object'>
+          <img src={src}/>
         </div>
       </div>
     </div>
