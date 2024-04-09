@@ -1,12 +1,45 @@
 #CanvasSelection {
-    animation: 0.3s reveal;
     background-color: transparent;
-    border: 2px solid var(--accent-color);
+    border-style: solid;
+    border-color: var(--accent-color);
     cursor: pointer;
     display: none;
     opacity: 0.5;
-    /* pointer-events: none; */
     position: absolute;
+    cursor: default;
+
+    svg {
+        background-color: red;
+        position: absolute;
+    }
+
+    .top-border {
+        cursor: n-resize;
+        height: 5px;
+        top: -5px;
+        width: inherit;
+    }
+
+    .left-border {
+        cursor: w-resize;
+        height: inherit;
+        left: -5px;
+        width: 5px;
+    }
+
+    .right-border {
+        cursor: e-resize;
+        height: inherit;
+        left: 100%;
+        width: 5px;
+    }
+
+    .bottom-border {
+        cursor: s-resize;
+        height: 5px;
+        top: 100%;
+        width: inherit;
+    }
 }
 
 #CanvasBrush {
@@ -28,6 +61,7 @@
     image-rendering: pixelated;
     width: 85%
 }
+
 
 .SceneControls {
     display: flex;

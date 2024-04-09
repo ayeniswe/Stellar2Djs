@@ -135,19 +135,28 @@ const useInput = (renderer: Texture) => {
     const { name, h, w, sx, sy } = object;
     const src = config.textures['tilesets'][id.split('-')[0]].name;
     const selectionElement = document.getElementById(SCENE.SELECTION)!;
+    const selectionBorder = 5;
     switch (true) {
+    // *** SELECT TEXTURE ***
     case drag.value && !editable.value && !trash.value:
       renderer.selectTexture(event.offsetX, event.offsetY, selection);
-      console.log(selection);
-      selectionElement.style.left = `${event.offsetX}px`;
-      selectionElement.style.top = `${event.offsetY}px`;
-      selectionElement.style.display = 'flex';
+      if (!selection.value) return;
+      /*
+       * Since selection div is an absolute position it MUST be based on client
+       * x and y
+       */
+      selectionElement.style.left = `${event.clientX - (event.offsetX - selection.value.dx) - selectionBorder}px`;
+      selectionElement.style.top = `${event.clientY - (event.offsetY - selection.value.dy) - selectionBorder}px`;
+      selectionElement.style.borderWidth = `${selectionBorder}px`;
+      selectionElement.style.display = 'block';
       selectionElement.style.width = `${selection.value?.w}px`;
       selectionElement.style.height = `${selection.value?.h}px`;
       break;
+    // *** REMOVE TEXTURE ***
     case trash.value && !editable.value && !drag.value:
       renderer.removeTexture(event.offsetX, event.offsetY);
       break;
+    // *** ADD TEXTURE ***
     case editable.value && !drag.value && !trash.value:
       renderer.addTexture(src, name, clip.value, event.offsetX, event.offsetY, w, h, sx, sy);
       break;
@@ -160,12 +169,15 @@ const useInput = (renderer: Texture) => {
     const { name, h, w, sx, sy } = object;
     const src = config.textures['tilesets'][id.split('-')[0]].name;
     switch (true) {
-    case drag.value && !editable.value && !trash.value:
-      renderer.moveTexture(event.offsetX, event.offsetY, selection);
+    // *** MOVE TEXTURE ***
+    case drag.value && !editable.value && !trash.value :
+      // renderer.moveTexture(event.offsetX, event.offsetY, selection);
       break;
+    // *** REMOVE TEXTURE ***
     case trash.value && !editable.value && !drag.value:
       renderer.removeTexture(event.offsetX, event.offsetY);
       break;
+    // *** ADD TEXTURE ***
     case editable.value && !drag.value && !trash.value:
       renderer.addTexture(src, name, clip.value, event.offsetX, event.offsetY, w, h, sx, sy);
       break;

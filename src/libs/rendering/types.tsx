@@ -62,8 +62,8 @@ type Texture = {
      * @param {string} src - The location path of the texture or the
      * `data/image` url.
      * @param {string} name - The name of the texture.
-     * @param {number} x - The x-coordinate of the texture.
-     * @param {number} y - The y-coordinate of the texture.
+     * @param {number} x - The offset x-coordinate of the canvas.
+     * @param {number} y - The offset y-coordinate of the canvas.
      * @param {number} w - The width of the texture.
      * @param {number} h - The height of the texture.
      * @param {number} sx - The source x-coordinate of the texture.
@@ -93,8 +93,8 @@ type Texture = {
     /**
      * Removes a texture from the canvas.
      *
-     * @param {number} x - The x-coordinate of the texture.
-     * @param {number} y - The y-coordinate of the texture.
+     * @param {number} x - The offset x-coordinate of the canvas.
+     * @param {number} y - The offset y-coordinate of the canvas.
      * @param {number} l - The layer of the texture.
      *
      * @description
@@ -152,8 +152,8 @@ type Texture = {
     /**
      * Selects a texture from the canvas to enable drag and drop.
      *
-     * @param {number} x - The x-coordinate of the selection.
-     * @param {number} y - The y-coordinate of the selection.
+     * @param {number} x - The offset x-coordinate of the selection on canvas.
+     * @param {number} y - The offset y-coordinate of the selection on canvas.
      * @param {Signal<TextureObject | undefined>} selector - Signal to
      * globally track a selected object.
      */
@@ -162,8 +162,8 @@ type Texture = {
     /**
      * Moves a texture around the canvas.
      *
-     * @param {number} x - The new x-coordinate for the texture.
-     * @param {number} y - The new y-coordinate for the texture.
+     * @param {number} x - The new offset x-coordinate of the canvas.
+     * @param {number} y - The new offset y-coordinate of the canvas.
      * @param {Signal<TextureObject | undefined>} selector - Signal to
      * globally track a selected object.
      */
