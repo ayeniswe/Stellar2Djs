@@ -5,7 +5,7 @@ class Sprite extends TextureObject {
   readonly ctx: CanvasRenderingContext2D;
   readonly texture: CanvasRenderingContext2D;
   readonly frame: HTMLImageElement;
-  scale: [boolean, boolean] = [false, false];
+  flipXY : [boolean, boolean] = [false, false];
   l: number = 1;
   dx: number;
   dy: number;

@@ -1,40 +1,39 @@
 #CanvasSelection {
     background-color: transparent;
-    border-style: solid;
     border-color: var(--accent-color);
+    border-style: solid;
     cursor: pointer;
     display: none;
     opacity: 0.5;
     position: absolute;
-    cursor: default;
 
     svg {
-        background-color: red;
+        background-color: purple;
         position: absolute;
     }
 
-    .top-border {
+    :nth-child(1) {
         cursor: n-resize;
         height: 5px;
         top: -5px;
         width: inherit;
     }
 
-    .left-border {
+    :nth-child(2) {
         cursor: w-resize;
         height: inherit;
         left: -5px;
         width: 5px;
     }
 
-    .right-border {
+    :nth-child(3) {
         cursor: e-resize;
         height: inherit;
         left: 100%;
         width: 5px;
     }
 
-    .bottom-border {
+    :nth-child(4) {
         cursor: s-resize;
         height: 5px;
         top: 100%;
@@ -59,9 +58,9 @@
     cursor: pointer;
     height: 100%;
     image-rendering: pixelated;
+
     width: 85%
 }
-
 
 .SceneControls {
     display: flex;

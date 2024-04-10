@@ -76,6 +76,7 @@ const useInput = (renderer: Texture) => {
     bindings.addBinding(handleDropSprite.bind(this), [], 'drop', false, SCENE.CANVAS);
     bindings.addBinding(handleBrush.bind(this), [], 'mousemove', false, SCENE.CANVAS);
     bindings.addBinding(handleClickEvent.bind(this), ['LeftButton'], ['mousedown'], false, SCENE.CANVAS);
+    bindings.addBinding(handleSelection.bind(this), ['LeftButton'], ['mousedown'], false, SCENE.SELECTION);
     bindings.addBinding(handleMoveEvent.bind(this), ['LeftButton'], ['mousemove'], false, SCENE.CANVAS);
     bindings.addBinding(toggleClipMode.bind(this), ['c'], 'keydown', true);
     bindings.addBinding(toggleDragMode.bind(this), ['d'], 'keydown', true);
@@ -120,6 +121,39 @@ const useInput = (renderer: Texture) => {
     else {
       brushElement.style.display = 'none';
     }
+  }
+
+  function handleSelection(selectEvent: MouseEvent) {
+    if (!selection.value) return;
+    const handle = selectEvent.target as HTMLElement;
+    const { cursor } = window.getComputedStyle(handle);
+    const selectionBox = handle.parentElement!;
+    const { clientX, clientY } = selectEvent;
+    const { left, width, height, top } = selectionBox.style;
+    document.onmousemove = (e) => {
+      switch (cursor) {
+      case 'n-resize':
+        selectionBox.style.height = `${parseFloat(height) + -(e.clientY - clientY)}px`;
+        selectionBox.style.top = `${parseFloat(top) + (e.clientY - clientY)}px`;
+        break;
+      case 'w-resize':
+        selectionBox.style.width = `${parseFloat(width) + -(e.clientX - clientX)}px`;
+        selectionBox.style.left = `${parseFloat(left) + (e.clientX - clientX)}px`;
+        break;
+      case 'e-resize':
+        selectionBox.style.width = `${parseFloat(width) + (e.clientX - clientX)}px`;
+        break;
+      case 's-resize':
+        selectionBox.style.height = `${parseFloat(height) + (e.clientY - clientY)}px`;
+        break;
+      default:
+        break;
+      }
+    };
+    document.onmouseup = () => {
+      document.onmousemove = null;
+      document.onmouseup = null;
+    };
   }
 
   /**

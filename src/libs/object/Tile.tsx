@@ -7,7 +7,7 @@ class Tile extends TextureObject {
   readonly frame: HTMLImageElement;
   readonly #sx: number;
   readonly #sy: number;
-  scale: [boolean, boolean] = [false, false];
+  flipXY : [boolean, boolean] = [false, false];
   l: number = 1;
   dx: number;
   dy: number;
