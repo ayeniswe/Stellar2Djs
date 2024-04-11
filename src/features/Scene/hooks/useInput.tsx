@@ -135,16 +135,20 @@ const useInput = (renderer: Texture) => {
       case 'n-resize':
         selectionBox.style.height = `${parseFloat(height) + -(e.clientY - clientY)}px`;
         selectionBox.style.top = `${parseFloat(top) + (e.clientY - clientY)}px`;
+        selection.value?.scaleY(1);
         break;
       case 'w-resize':
         selectionBox.style.width = `${parseFloat(width) + -(e.clientX - clientX)}px`;
         selectionBox.style.left = `${parseFloat(left) + (e.clientX - clientX)}px`;
+        selection.value?.scaleX(1);
         break;
       case 'e-resize':
         selectionBox.style.width = `${parseFloat(width) + (e.clientX - clientX)}px`;
+        selection.value?.scaleX(1);
         break;
       case 's-resize':
         selectionBox.style.height = `${parseFloat(height) + (e.clientY - clientY)}px`;
+        selection.value?.scaleY(1);
         break;
       default:
         break;

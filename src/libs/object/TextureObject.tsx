@@ -3,7 +3,7 @@
  */
 abstract class TextureObject {
     protected abstract frame: HTMLImageElement;
-    protected abstract texture: CanvasRenderingContext2D;
+    protected abstract readonly texture: CanvasRenderingContext2D;
     abstract ctx: CanvasRenderingContext2D;
     abstract name: string;
     abstract dx: number;
@@ -25,9 +25,32 @@ abstract class TextureObject {
 
     scale = (factor: number) => {
       this.ctx.imageSmoothingEnabled = false;
+      this.ctx.clearRect(this.dx, this.dy, this.w, this.h);
       this.ctx.drawImage(this.texture.canvas, 0, 0,
         this.texture.canvas.width, this.texture.canvas.height, this.dx, this.dy,
-        this.texture.canvas.width * factor, this.texture.canvas.height * factor);
+        this.w * factor, this.h * factor);
+      this.w *= factor;
+      this.h *= factor;
+      this.ctx.imageSmoothingEnabled = true;
+    };
+
+    scaleX = (factor: number) => {
+      this.ctx.imageSmoothingEnabled = false;
+      this.ctx.clearRect(this.dx, this.dy, this.w, this.h);
+      this.ctx.drawImage(this.texture.canvas, 0, 0,
+        this.texture.canvas.width, this.texture.canvas.height, this.dx, this.dy,
+        this.w + factor, this.h);
+      this.w += factor;
+      this.ctx.imageSmoothingEnabled = true;
+    };
+
+    scaleY = (factor: number) => {
+      this.ctx.imageSmoothingEnabled = false;
+      this.ctx.clearRect(this.dx, this.dy, this.w, this.h);
+      this.ctx.drawImage(this.texture.canvas, 0, 0,
+        this.texture.canvas.width, this.texture.canvas.height, this.dx, this.dy,
+        this.w, this.h + factor);
+      this.h += factor;
       this.ctx.imageSmoothingEnabled = true;
     };
 
