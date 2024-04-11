@@ -26,31 +26,37 @@ abstract class TextureObject {
     scale = (factor: number) => {
       this.ctx.imageSmoothingEnabled = false;
       this.ctx.clearRect(this.dx, this.dy, this.w, this.h);
-      this.ctx.drawImage(this.texture.canvas, 0, 0,
-        this.texture.canvas.width, this.texture.canvas.height, this.dx, this.dy,
-        this.w * factor, this.h * factor);
       this.w *= factor;
       this.h *= factor;
+      this.ctx.drawImage(this.texture.canvas, 0, 0,
+        this.texture.canvas.width, this.texture.canvas.height, this.dx, this.dy,
+        this.w, this.h);
       this.ctx.imageSmoothingEnabled = true;
     };
 
-    scaleX = (factor: number) => {
+    scaleX = (factor: number, inverse: boolean = false) => {
       this.ctx.imageSmoothingEnabled = false;
       this.ctx.clearRect(this.dx, this.dy, this.w, this.h);
-      this.ctx.drawImage(this.texture.canvas, 0, 0,
-        this.texture.canvas.width, this.texture.canvas.height, this.dx, this.dy,
-        this.w + factor, this.h);
       this.w += factor;
+      this.dx -= inverse
+        ? factor
+        : 0;
+      this.ctx.drawImage(this.texture.canvas, 0, 0,
+        this.texture.canvas.width, this.texture.canvas.height, this.dx, this.dy,
+        this.w, this.h);
       this.ctx.imageSmoothingEnabled = true;
     };
 
-    scaleY = (factor: number) => {
+    scaleY = (factor: number, inverse: boolean = false) => {
       this.ctx.imageSmoothingEnabled = false;
       this.ctx.clearRect(this.dx, this.dy, this.w, this.h);
+      this.h += factor;
+      this.dy -= inverse
+        ? factor
+        : 0;
       this.ctx.drawImage(this.texture.canvas, 0, 0,
         this.texture.canvas.width, this.texture.canvas.height, this.dx, this.dy,
-        this.w, this.h + factor);
-      this.h += factor;
+        this.w, this.h);
       this.ctx.imageSmoothingEnabled = true;
     };
 
