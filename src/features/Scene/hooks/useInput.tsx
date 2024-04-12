@@ -1,6 +1,6 @@
-import { Brush, Input } from './type';
 import { Config, Texture } from '../../../libs/rendering';
 import { Bindings } from '../../../libs/input';
+import { Brush } from './type';
 import configuration from '../../../data/test-config.json';
 import { iconEffects } from '../../../libs/effects';
 import { SCENE } from '../constants';
@@ -76,7 +76,7 @@ const useInput = (renderer: Texture) => {
     bindings.addBinding(handleDropSprite.bind(this), [], 'drop', false, SCENE.CANVAS);
     bindings.addBinding(handleBrush.bind(this), [], 'mousemove', false, SCENE.CANVAS);
     bindings.addBinding(handleClickEvent.bind(this), ['LeftButton'], ['mousedown'], false, SCENE.CANVAS);
-    bindings.addBinding(handleSelection.bind(this), ['LeftButton'], ['mousedown'], false, SCENE.SELECTION);
+    bindings.addBinding(handleSelectionBox.bind(this), ['LeftButton'], ['mousedown'], false, SCENE.SELECTION);
     bindings.addBinding(handleMoveEvent.bind(this), ['LeftButton'], ['mousemove'], false, SCENE.CANVAS);
     bindings.addBinding(toggleClipMode.bind(this), ['c'], 'keydown', true);
     bindings.addBinding(toggleDragMode.bind(this), ['d'], 'keydown', true);
@@ -123,35 +123,67 @@ const useInput = (renderer: Texture) => {
     }
   }
 
-  function handleSelection(selectEvent: MouseEvent) {
+  function handleSelectionBox(selectEvent: MouseEvent) {
     if (!selection.value) return;
     const handle = selectEvent.target as HTMLElement;
-    const { cursor } = window.getComputedStyle(handle);
     const selectionBox = handle.parentElement!;
+    const { cursor } = window.getComputedStyle(handle);
     const { clientX, clientY } = selectEvent;
     const { left, width, height, top } = selectionBox.style;
-    const scale = 2;
     document.onmousemove = (e) => {
+      const diffX = e.clientX - clientX;
+      const diffY = e.clientY - clientY;
+      let newHeight = parseFloat(height);
+      let newWidth = parseFloat(width);
       switch (cursor) {
       case 'n-resize':
-        selectionBox.style.height = `${parseFloat(height) + -(e.clientY - clientY)}px`;
-        selectionBox.style.top = `${parseFloat(top) + (e.clientY - clientY)}px`;
-        selection.value?.scaleY(scale, true);
+        newHeight -= diffY;
+        selectionBox.style.top = `${parseFloat(top) + diffY}px`;
         break;
       case 's-resize':
-        selectionBox.style.height = `${parseFloat(height) + (e.clientY - clientY)}px`;
-        selection.value?.scaleY(scale);
+        newHeight += diffY;
         break;
       case 'w-resize':
-        selectionBox.style.width = `${parseFloat(width) + -(e.clientX - clientX)}px`;
-        selectionBox.style.left = `${parseFloat(left) + (e.clientX - clientX)}px`;
-        selection.value?.scaleX(scale, true);
+        newWidth -= diffX;
+        selectionBox.style.left = `${parseFloat(left) + diffX}px`;
         break;
       case 'e-resize':
-        selectionBox.style.width = `${parseFloat(width) + (e.clientX - clientX)}px`;
-        selection.value?.scaleX(scale);
+        newWidth += diffX;
         break;
+      case 'ne-resize':
+        newHeight -= diffY;
+        newWidth += diffX;
+        selectionBox.style.top = `${parseFloat(top) + diffY}px`;
+        break;
+      case 'se-resize':
+        newHeight += diffY;
+        newWidth += diffX;
+        break;
+      case 'sw-resize':
+        newHeight += diffY;
+        newWidth -= diffX;
+        selectionBox.style.left = `${parseFloat(left) + diffX}px`;
+        break;
+      case 'nw-resize':
+        newHeight -= diffY;
+        selectionBox.style.top = `${parseFloat(top) + diffY}px`;
+        newWidth -= diffX;
+        selectionBox.style.left = `${parseFloat(left) + diffX}px`;
+        break;
+      default:
+        selectionBox.style.left = `${parseFloat(left) + diffX}px`;
+        selectionBox.style.top = `${parseFloat(top) + diffY}px`;
       }
+      selectionBox.style.width = `${newWidth}px`;
+      selectionBox.style.height = `${newHeight}px`;
+      /*
+       * Inverse direction since default css style grows left to right
+       * and top to bottom
+       */
+      const scaleXInverse = !['e-resize', 'ne-resize', 'se-resize'].includes(cursor);
+      const scaleYInverse = !['s-resize', 'sw-resize', 'se-resize'].includes(cursor);
+      if (newWidth > 0) selection.value!.scaleX(newWidth, scaleXInverse);
+      if (newHeight > 0) selection.value!.scaleY(newHeight, scaleYInverse);
     };
     document.onmouseup = () => {
       document.onmousemove = null;
@@ -172,7 +204,8 @@ const useInput = (renderer: Texture) => {
     const { name, h, w, sx, sy } = object;
     const src = config.textures['tilesets'][id.split('-')[0]].name;
     const selectionElement = document.getElementById(SCENE.SELECTION)!;
-    const selectionBorder = 5;
+    // Need to access border to offset width compensation around object
+    const selectionBorder = parseFloat(window.getComputedStyle(selectionElement).borderWidth);
     switch (true) {
     // *** SELECT TEXTURE ***
     case drag.value && !editable.value && !trash.value:
@@ -184,7 +217,6 @@ const useInput = (renderer: Texture) => {
        */
       selectionElement.style.left = `${event.clientX - (event.offsetX - selection.value.dx) - selectionBorder}px`;
       selectionElement.style.top = `${event.clientY - (event.offsetY - selection.value.dy) - selectionBorder}px`;
-      selectionElement.style.borderWidth = `${selectionBorder}px`;
       selectionElement.style.display = 'block';
       selectionElement.style.width = `${selection.value?.w}px`;
       selectionElement.style.height = `${selection.value?.h}px`;
@@ -200,15 +232,19 @@ const useInput = (renderer: Texture) => {
     }
     renderer.render();
   }
+
   function handleMoveEvent(event: MouseEvent) {
     if (!ready.value || !brush.value) return;
     const { id, object } = brush.value!;
     const { name, h, w, sx, sy } = object;
     const src = config.textures['tilesets'][id.split('-')[0]].name;
+    const selectionElement = document.getElementById(SCENE.SELECTION)!;
     switch (true) {
     // *** MOVE TEXTURE ***
-    case drag.value && !editable.value && !trash.value :
-      // renderer.moveTexture(event.offsetX, event.offsetY, selection);
+    case drag.value && !editable.value && !trash.value:
+      if (!selection.value) return;
+      selectionElement.style.display = 'none';
+      renderer.moveTexture(event.offsetX, event.offsetY, selection);
       break;
     // *** REMOVE TEXTURE ***
     case trash.value && !editable.value && !drag.value:
