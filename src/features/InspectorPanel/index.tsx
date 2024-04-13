@@ -20,6 +20,17 @@ const InspectorPanel = () => {
         <div className='object'>
           <img src={src}/>
         </div>
+        <div className='attributes'>
+          <label>
+            Flip
+            <input id={INSPECTOR.Name} placeholder='None' title="object selected" value={name} disabled/>
+            <input id={INSPECTOR.Name} placeholder='None' title="object selected" value={name} disabled/>
+          </label>
+          <label>
+            Flip
+            <input id={INSPECTOR.Name} placeholder='None' title="object selected" value={name} disabled/>
+          </label>
+        </div>
       </div>
     </div>
   );

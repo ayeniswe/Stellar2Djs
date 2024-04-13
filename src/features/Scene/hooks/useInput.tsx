@@ -188,6 +188,8 @@ const useInput = (renderer: Texture) => {
     document.onmouseup = () => {
       document.onmousemove = null;
       document.onmouseup = null;
+      renderer.updateTexture(selection.value!);
+      renderer.render();
     };
   }
 

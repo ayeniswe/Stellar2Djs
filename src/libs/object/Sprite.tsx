@@ -36,11 +36,9 @@ class Sprite extends TextureObject {
   };
 
   render = () => {
-    this.ctx.drawImage(
-      this.texture.canvas,
-      this.dx,
-      this.dy
-    );
+    this.ctx.drawImage(this.texture.canvas, 0, 0,
+      this.texture.canvas.width, this.texture.canvas.height, this.dx, this.dy,
+      this.w, this.h);
   };
 }
 export { Sprite };

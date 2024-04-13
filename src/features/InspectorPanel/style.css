@@ -37,4 +37,18 @@
         width: 100%;
         border: inset 5px var(--accent-color);
     }
+
+    .attributes {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        label {
+            display: flex;
+
+            input {
+                width: 100%;
+            }
+        }
+    }
 }

@@ -134,6 +134,34 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
     ctx.clearRect(dx, dy, w, h);
   }
 
+  function updateTexture(texture: TextureObject) {
+    // Remove old texture bounding
+    const { dx, dy, w, h } = texture;
+    tree.remove({
+      minX: dx,
+      maxX: dx,
+      minY: dy,
+      maxY: dy,
+      object: texture
+    }, (a, b) => a.object===b.object);
+    // Clear undo stack to keep a coupled order
+    revisions.value = revisions.value.filter((obj) => obj.texture !== texture);
+    clearCanvas(dx, dy, w, h);
+    // Insert new bounding with changed object
+    tree.insert({
+      minX: dx,
+      maxX: dx+w,
+      minY: dy,
+      maxY: dy+h,
+      object: texture
+    });
+    // Store action in history
+    revisions.value.push({
+      texture,
+      action: 'added'
+    });
+  }
+
   function addTexture(src: string, name: string, clipping: boolean,
     x: number, y: number, w: number, h: number, sx = 0, sy = 0, l = 1): number[] {
     const [dx, dy] = scaling(x, y, w, h, clipping);
@@ -265,7 +293,7 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
     // Add new bounding and position
     texture.dx = x;
     texture.dy = y;
-    ctx.drawImage(texture.canvas, x, y);
+    texture.render();
     document.onmouseup = () => {
       // Reset canvas cursor
       document.onmouseup = null;
@@ -295,6 +323,7 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
     addTexture,
     selectTexture,
     removeTexture,
+    updateTexture,
     moveTexture,
     undoRevision,
     render,

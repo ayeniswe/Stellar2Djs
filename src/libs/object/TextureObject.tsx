@@ -23,19 +23,7 @@ abstract class TextureObject {
       return this.texture.canvas;
     }
 
-    scale = (factor: number) => {
-      this.ctx.imageSmoothingEnabled = false;
-      this.ctx.clearRect(this.dx, this.dy, this.w, this.h);
-      this.w = factor;
-      this.h = factor;
-      this.ctx.drawImage(this.texture.canvas, 0, 0,
-        this.texture.canvas.width, this.texture.canvas.height, this.dx, this.dy,
-        this.w, this.h);
-      this.ctx.imageSmoothingEnabled = true;
-    };
-
     scaleX = (factor: number, inverse: boolean = false) => {
-      this.ctx.imageSmoothingEnabled = false;
       this.ctx.clearRect(this.dx, this.dy, this.w, this.h);
       this.dx = inverse
         ? this.dx + this.w - factor
@@ -44,11 +32,9 @@ abstract class TextureObject {
       this.ctx.drawImage(this.texture.canvas, 0, 0,
         this.texture.canvas.width, this.texture.canvas.height, this.dx, this.dy,
         this.w, this.h);
-      this.ctx.imageSmoothingEnabled = true;
     };
 
     scaleY = (factor: number, inverse: boolean = false) => {
-      this.ctx.imageSmoothingEnabled = false;
       this.ctx.clearRect(this.dx, this.dy, this.w, this.h);
       this.dy = inverse
         ? this.dy + this.h - factor
@@ -57,7 +43,6 @@ abstract class TextureObject {
       this.ctx.drawImage(this.texture.canvas, 0, 0,
         this.texture.canvas.width, this.texture.canvas.height, this.dx, this.dy,
         this.w, this.h);
-      this.ctx.imageSmoothingEnabled = true;
     };
 
     flip = (horizontal: boolean, vertical: boolean) => {
