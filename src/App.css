@@ -27,6 +27,7 @@ code {
   --game-width: 800px;
   --hover-color: rgb(110, 110, 110);
   --hover2-color: rgb(61, 61, 61);
+  --panel-attribute-background: rgb(15,15,15);
   --primary-color: gray;
   --primary2-color: rgb(75, 75, 75);
   --serious-color: red;

@@ -1,54 +1,61 @@
 #InspectorPanel {
     border: 2px solid var(--accent-color);
     height: 100%;
-    width: 15%;
-
-    div {
-        align-items: center;
-        display: flex;
-        flex-direction: column;
-        font-size: var(--body-font-sz);
-        margin: 10px;
-    }
-
-    label {
-        text-align: center;
-    }
-
-    input {
-        padding: 2.5px;
-        background-color: var(--primary-color);
-        border: inset 6px var(--accent-color);
-    }
-
+    width: 20%;
+ 
     header {
-        border-bottom: 2px solid var(--accent-color);
-        margin-top: 5px;
-        margin-bottom: 5px;
-        text-align: center;
+      border-bottom: 2px solid var(--accent-color);
+      margin-top: 5px;
+      text-align: center;
     }
-
-    .object {
-        align-items: center;
-        background-color: var(--primary-color);
-        display: flex;
-        height: 100px;
-        justify-content: center;
-        width: 100%;
-        border: inset 5px var(--accent-color);
-    }
-
+    
     .attributes {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
+      display: flex;  
+      flex-direction: column;
+      gap: 5px;
+      margin: 5px;
 
-        label {
-            display: flex;
+      .name {
+        background-color: var(--primary-color);
+        border: inset 4px var(--background-color);
+        border-radius: 2px;
+        padding: 2.5px;
+      }
 
-            input {
-                width: 100%;
-            }
+      table {
+        background-color: var(--primary-color);
+        border: inset 4px var(--background-color);
+        border-radius: 2px;
+        border-spacing: 5px;
+
+        .values {
+          input {
+            background-color: var(--panel-attribute-background);
+            border: none;
+            text-align: center;
+            width: 60%;
+          }
         }
+        
+        .content {
+          background-color: var(--panel-attribute-background);
+          padding: 5px;
+          text-align: center;
+          width: 100%;
+        }
+  
+        .wide-group {
+          display: flex;
+          justify-content: space-around;
+        }
+
+        .tight-group {
+          display: flex;
+          justify-content: center;
+          gap: 5px;
+        }
+      }
+
     }
-}
+
+  }
