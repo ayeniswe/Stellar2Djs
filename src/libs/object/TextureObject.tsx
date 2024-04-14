@@ -1,71 +1,103 @@
+import { Signal } from '@preact/signals-react';
+
 /**
  * A base class for all game objects.
  */
 abstract class TextureObject {
     protected abstract frame: HTMLImageElement;
-    protected abstract readonly texture: CanvasRenderingContext2D;
-    abstract ctx: CanvasRenderingContext2D;
+    protected abstract texture: CanvasRenderingContext2D;
+    abstract scene: CanvasRenderingContext2D;
     abstract name: string;
-    abstract dx: number;
-    abstract dy: number;
-    abstract w: number;
-    abstract h: number;
-    abstract l: number;
-    abstract flipXY : [boolean, boolean]; // [flipX, flipY]
+    protected abstract _posX: Signal<number>;
+    protected abstract _posY: Signal<number>;
+    protected abstract _width: Signal<number>;
+    protected abstract _height: Signal<number>;
+    protected abstract _layer: Signal<number>;
+    protected abstract _flipX : Signal<boolean>;
+    protected abstract _flipY : Signal<boolean>;
     protected abstract save: () => void;
     abstract render: () => void;
 
-    get image() {
+    get src() {
       return this.texture.canvas.toDataURL();
     }
 
-    get canvas() {
-      return this.texture.canvas;
+    get layer() {
+      return this._layer.value;
+    }
+    set layer(val) {
+      this._layer.value = val;
+    }
+
+    get flipX() {
+      return this._flipX.value;
+    }
+    set flipX(val) {
+      this._flipX.value = val;
+    }
+
+    get flipY() {
+      return this._flipY.value;
+    }
+    set flipY(val) {
+      this._flipY.value = val;
+    }
+
+    get posX() {
+      return this._posX.value;
+    }
+    set posX(val) {
+      this._posX.value = val;
+    }
+
+    get posY() {
+      return this._posY.value;
+    }
+    set posY(val) {
+      this._posY.value = val;
+    }
+
+    get width() {
+      return this._width.value;
+    }
+    set width(val) {
+      this._width.value = val;
+    }
+
+    get height() {
+      return this._height.value;
+    }
+    set height(val) {
+      this._height.value = val;
     }
 
     scaleX = (factor: number, inverse: boolean = false) => {
-      this.ctx.clearRect(this.dx, this.dy, this.w, this.h);
-      this.dx = inverse
-        ? this.dx + this.w - factor
-        : this.dx;
-      this.w = factor;
-      this.ctx.drawImage(this.texture.canvas, 0, 0,
-        this.texture.canvas.width, this.texture.canvas.height, this.dx, this.dy,
-        this.w, this.h);
+      this.scene.clearRect(this.posX, this.posY, this.width, this.height);
+      this.posX = inverse
+        ? this.posX + this.width - factor
+        : this.posX;
+      this.width = factor;
     };
 
     scaleY = (factor: number, inverse: boolean = false) => {
-      this.ctx.clearRect(this.dx, this.dy, this.w, this.h);
-      this.dy = inverse
-        ? this.dy + this.h - factor
-        : this.dy;
-      this.h = factor;
-      this.ctx.drawImage(this.texture.canvas, 0, 0,
-        this.texture.canvas.width, this.texture.canvas.height, this.dx, this.dy,
-        this.w, this.h);
+      this.scene.clearRect(this.posX, this.posY, this.width, this.height);
+      this.posY = inverse
+        ? this.posY + this.height - factor
+        : this.posY;
+      this.height = factor;
     };
 
-    flip = (horizontal: boolean, vertical: boolean) => {
+    flip = (x: boolean, y: boolean) => {
       switch (true) {
-      case horizontal && vertical:
-        this.texture.translate(this.w, this.h);
-        this.texture.scale(-1, -1);
-        this.flipXY = [true, true];
-        break;
-      case !horizontal && !vertical:
-        this.texture.translate(0, 0);
-        this.texture.scale(1, 1);
-        this.flipXY = [false, false];
-        break;
-      case horizontal:
-        this.texture.translate(this.w, 0);
+      case x:
+        this.texture.translate(this.texture.canvas.width, 0);
         this.texture.scale(-1, 1);
-        this.flipXY = [true, false];
+        this.flipX = !this.flipX;
         break;
-      case vertical:
-        this.texture.translate(0, this.h);
+      case y:
+        this.texture.translate(0, this.texture.canvas.height);
         this.texture.scale(1, -1);
-        this.flipXY = [false, true];
+        this.flipY = !this.flipY;
         break;
       default:
         break;
@@ -73,4 +105,5 @@ abstract class TextureObject {
       this.save();
     };
 }
+
 export { TextureObject };

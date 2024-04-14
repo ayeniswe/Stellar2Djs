@@ -184,6 +184,7 @@ const useInput = (renderer: Texture) => {
       const scaleYInverse = !['s-resize', 'sw-resize', 'se-resize'].includes(cursor);
       if (newWidth > 0) selection.value!.scaleX(newWidth, scaleXInverse);
       if (newHeight > 0) selection.value!.scaleY(newHeight, scaleYInverse);
+      selection.value?.render();
     };
     document.onmouseup = () => {
       document.onmousemove = null;
@@ -212,16 +213,20 @@ const useInput = (renderer: Texture) => {
     // *** SELECT TEXTURE ***
     case drag.value && !editable.value && !trash.value:
       renderer.selectTexture(event.offsetX, event.offsetY, selection);
-      if (!selection.value) return;
-      /*
-       * Since selection div is an absolute position it MUST be based on client
-       * x and y
-       */
-      selectionElement.style.left = `${event.clientX - (event.offsetX - selection.value.dx) - selectionBorder}px`;
-      selectionElement.style.top = `${event.clientY - (event.offsetY - selection.value.dy) - selectionBorder}px`;
-      selectionElement.style.display = 'block';
-      selectionElement.style.width = `${selection.value?.w}px`;
-      selectionElement.style.height = `${selection.value?.h}px`;
+      if (!selection.value) {
+        selectionElement.style.display = 'none';
+      }
+      else {
+        /*
+         * Since selection div is an absolute position it MUST be
+         * based on client x and y
+         */
+        selectionElement.style.left = `${event.clientX - (event.offsetX - selection.value.posX) - selectionBorder}px`;
+        selectionElement.style.top = `${event.clientY - (event.offsetY - selection.value.posY) - selectionBorder}px`;
+        selectionElement.style.display = 'block';
+        selectionElement.style.width = `${selection.value?.width}px`;
+        selectionElement.style.height = `${selection.value?.height}px`;
+      }
       break;
     // *** REMOVE TEXTURE ***
     case trash.value && !editable.value && !drag.value:

@@ -3,17 +3,17 @@ import { selection } from '../Scene';
 const usePanel = () => {
   function getObject() {
     if (selection.value) {
-      const { dx, dy, w, h, l, name, image, flipXY } = selection.value;
+      const { posX, posY, width, height, layer, name, src, flipY, flipX } = selection.value;
       return {
         name,
-        src: image,
-        width: w,
-        height: h,
-        xPos: dx,
-        yPos: dy,
-        layer: l,
-        flipX: flipXY[0],
-        flipY: flipXY[1],
+        src,
+        posX,
+        posY,
+        width,
+        height,
+        layer,
+        flipX,
+        flipY
       };
     }
     return {
@@ -21,15 +21,24 @@ const usePanel = () => {
       src: '',
       width: 0,
       height: 0,
-      xPos: 0,
-      yPos: 0,
+      posX: 0,
+      posY: 0,
       layer: 0,
       flipX: false,
       flipY: false
     };
   }
 
-  return { getObject };
+  function flipObject(x: boolean, y: boolean) {
+    if (selection.value) {
+      selection.value.flip(x, y);
+      selection.value.render();
+    }
+  }
+  return {
+    getObject,
+    flipObject
+  };
 };
 
 export { usePanel };

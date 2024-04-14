@@ -4,12 +4,12 @@ import React from 'react';
 import { usePanel } from './usePanel';
 
 const InspectorPanel = () => {
-  const { getObject } = usePanel();
+  const { getObject, flipObject } = usePanel();
   const {
     src,
     name,
-    yPos,
-    xPos,
+    posY,
+    posX,
     width,
     height,
     layer,
@@ -32,11 +32,13 @@ const InspectorPanel = () => {
                 <div className='tight-group'>
                   <label title='x-axis'>
                     X
-                    <input type='checkbox' checked={flipX} onClick={() => console.log('Click me')}/>
+                    <input type='checkbox' checked={flipX}
+                      onChange={(e) => flipObject(true, false)}/>
                   </label>
                   <label title='y-axis'>
                     Y
-                    <input type='checkbox' checked={flipY}/>
+                    <input type='checkbox' checked={flipY}
+                      onChange={(e) => flipObject(false, true)}/>
                   </label>
                 </div>
               </td>
@@ -46,10 +48,10 @@ const InspectorPanel = () => {
               <td className='content'>
                 <div className='wide-group values'>
                   <span>
-                    x:<input value={xPos} disabled/>
+                    x:<input value={posX} disabled/>
                   </span>
                   <span>
-                    y:<input value={yPos} disabled/>
+                    y:<input value={posY} disabled/>
                   </span>
                 </div>
               </td>
@@ -72,6 +74,14 @@ const InspectorPanel = () => {
               <td className='content'>
                 <div className='values'>
                   <input value={layer} disabled/>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>Angle</td>
+              <td className='content'>
+                <div className='values'>
+                  <input value={`0${ String.fromCharCode(177)}`} disabled/>
                 </div>
               </td>
             </tr>

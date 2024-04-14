@@ -1,27 +1,31 @@
+import { Signal, signal } from '@preact/signals-react';
 import { TextureObject } from './TextureObject';
 
 class Sprite extends TextureObject {
   readonly name: string;
-  readonly ctx: CanvasRenderingContext2D;
+  readonly scene: CanvasRenderingContext2D;
   readonly texture: CanvasRenderingContext2D;
   readonly frame: HTMLImageElement;
-  flipXY : [boolean, boolean] = [false, false];
-  l: number = 1;
-  dx: number;
-  dy: number;
-  w: number;
-  h: number;
+  _flipX : Signal<boolean>;
+  _flipY : Signal<boolean>;
+  _layer: Signal<number>;
+  _posX: Signal<number>;
+  _posY: Signal<number>;
+  _width: Signal<number>;
+  _height: Signal<number>;
 
   constructor(ctx: CanvasRenderingContext2D, src: string, name: string,
-    dx: number, dy: number, w: number, h: number, l: number) {
+    x: number, y: number, w: number, h: number, l: number) {
     super();
-    this.ctx = ctx;
+    this._flipX = signal(false);
+    this._flipY = signal(false);
+    this._posX = signal(x);
+    this._posY = signal(y);
+    this._width = signal(w);
+    this._height = signal(h);
+    this._layer = signal(l);
+    this.scene = ctx;
     this.name = name;
-    this.dx = dx;
-    this.dy = dy;
-    this.w = w;
-    this.h = h;
-    this.l = l;
     this.frame = new Image();
     this.frame.src = src;
     const canvas = document.createElement('canvas');
@@ -36,9 +40,9 @@ class Sprite extends TextureObject {
   };
 
   render = () => {
-    this.ctx.drawImage(this.texture.canvas, 0, 0,
-      this.texture.canvas.width, this.texture.canvas.height, this.dx, this.dy,
-      this.w, this.h);
+    this.scene.drawImage(this.texture.canvas, 0, 0,
+      this.texture.canvas.width, this.texture.canvas.height, this.posX, this.posY,
+      this.width, this.height);
   };
 }
 export { Sprite };

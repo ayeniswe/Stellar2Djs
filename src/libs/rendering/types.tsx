@@ -76,8 +76,8 @@ type Texture = {
      * @param {string} name - The name of the texture.
      * @param {number} x - The offset x-coordinate of the canvas.
      * @param {number} y - The offset y-coordinate of the canvas.
-     * @param {number} width - The width of the texture.
-     * @param {number} height - The height of the texture.
+     * @param {number} w - The width of the texture.
+     * @param {number} h - The height of the texture.
      * @param {number} sx - The source x-coordinate of the texture.
      * @param {number} sy - The source y-coordinate of the texture.
      * @param {number} l - The layer of the texture.
