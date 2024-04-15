@@ -17,6 +17,7 @@ const Canvas: React.FC<Props> = ({ reference }) => (
       <svg/>
       <svg/>
       <svg/>
+      <svg/>
     </div>
     <svg id={SCENE.BRUSH}/>
     <canvas data-cy='canvas' aria-label='drawing canvas' id={SCENE.CANVAS} ref={reference}

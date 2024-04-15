@@ -10,6 +10,7 @@ class Tile extends TextureObject {
   readonly #sy: number;
   readonly #originalW: number;
   readonly #originalH: number;
+  _angle: Signal<number>;
   _flipX : Signal<boolean>;
   _flipY : Signal<boolean>;
   _layer: Signal<number>;
@@ -28,6 +29,7 @@ class Tile extends TextureObject {
     this._width = signal(w);
     this._height = signal(h);
     this._layer = signal(l);
+    this._angle = signal(0);
     this.scene = ctx;
     this.name = name;
     this.#sx = sx;
@@ -57,9 +59,16 @@ class Tile extends TextureObject {
   };
 
   render = () => {
-    this.scene.drawImage(this.texture.canvas, 0, 0,
-      this.texture.canvas.width, this.texture.canvas.height, this.posX, this.posY,
-      this.width, this.height);
+    if (this.angle !== 0) {
+      this.scene.drawImage(this.texture.canvas, 0, 0, this.texture.canvas.width,
+        this.texture.canvas.height, -this.width / 2, -this.height / 2, this.width, this.height);
+    }
+    else {
+      this.scene.drawImage(this.texture.canvas, 0, 0,
+        this.texture.canvas.width, this.texture.canvas.height, this.posX, this.posY,
+        this.width, this.height);
+    }
+    this.scene.restore();
   };
 }
 

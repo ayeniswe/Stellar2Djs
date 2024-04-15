@@ -3,7 +3,7 @@ import { selection } from '../Scene';
 const usePanel = () => {
   function getObject() {
     if (selection.value) {
-      const { posX, posY, width, height, layer, name, src, flipY, flipX } = selection.value;
+      const { posX, posY, width, height, layer, name, src, angle, flipY, flipX } = selection.value;
       return {
         name,
         src,
@@ -13,7 +13,8 @@ const usePanel = () => {
         height,
         layer,
         flipX,
-        flipY
+        flipY,
+        angle
       };
     }
     return {
@@ -25,7 +26,8 @@ const usePanel = () => {
       posY: 0,
       layer: 0,
       flipX: false,
-      flipY: false
+      flipY: false,
+      angle: '0'
     };
   }
 

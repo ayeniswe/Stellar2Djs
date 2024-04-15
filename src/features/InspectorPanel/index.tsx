@@ -14,7 +14,8 @@ const InspectorPanel = () => {
     height,
     layer,
     flipX,
-    flipY
+    flipY,
+    angle
   } = getObject();
 
   return (
@@ -81,7 +82,7 @@ const InspectorPanel = () => {
               <td>Angle</td>
               <td className='content'>
                 <div className='values'>
-                  <input value={`0${ String.fromCharCode(177)}`} disabled/>
+                  <input value={`${angle}°`} disabled/>
                 </div>
               </td>
             </tr>

@@ -17,6 +17,7 @@
         position: absolute;
     }
 
+    /* Borders NWSE */
     :nth-child(1) {
         cursor: n-resize;
         height: var(--border-size);
@@ -51,6 +52,7 @@
         border-radius: 100%;
     }
 
+    /* Borders edge corners NW SW SE NE */
     :nth-child(5) {
         cursor: nw-resize;
         height: var(--border-corner-size);
@@ -83,8 +85,15 @@
         width: var(--border-corner-size);
     }
 
-    /* Borders NWSE */
-    /* Borders edge corners NW SW SE NE */
+    :nth-child(9) {
+        cursor: grab;
+        height: var(--border-corner-size);
+        left: 50%;
+        top: 125%;
+        transform: translate(-50%, 0%);
+        width: var(--border-corner-size);
+    }
+
 }
 
 #CanvasBrush {

@@ -129,10 +129,12 @@ const useInput = (renderer: Texture) => {
     const selectionBox = handle.parentElement!;
     const { cursor } = window.getComputedStyle(handle);
     const { clientX, clientY } = selectEvent;
-    const { left, width, height, top } = selectionBox.style;
+    const { left, width, height, top, rotate } = selectionBox.style;
     document.onmousemove = (e) => {
       const diffX = e.clientX - clientX;
       const diffY = e.clientY - clientY;
+      // Calculate angle based on both X and Y differences
+      const angle = Math.atan2(diffY, diffX) * (180 / Math.PI);
       let newHeight = parseFloat(height);
       let newWidth = parseFloat(width);
       switch (cursor) {
@@ -170,9 +172,11 @@ const useInput = (renderer: Texture) => {
         newWidth -= diffX;
         selectionBox.style.left = `${parseFloat(left) + diffX}px`;
         break;
-      default:
-        selectionBox.style.left = `${parseFloat(left) + diffX}px`;
-        selectionBox.style.top = `${parseFloat(top) + diffY}px`;
+      case 'grab':
+        selection.value!.angle = angle;
+        selection.value!.rotate();
+        selectionBox.style.rotate = `${angle}deg`;
+        break;
       }
       selectionBox.style.width = `${newWidth}px`;
       selectionBox.style.height = `${newHeight}px`;
@@ -226,6 +230,7 @@ const useInput = (renderer: Texture) => {
         selectionElement.style.display = 'block';
         selectionElement.style.width = `${selection.value?.width}px`;
         selectionElement.style.height = `${selection.value?.height}px`;
+        selectionElement.style.rotate = `${selection.value?.angle}deg`;
       }
       break;
     // *** REMOVE TEXTURE ***

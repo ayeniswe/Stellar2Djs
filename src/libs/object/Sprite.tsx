@@ -6,6 +6,7 @@ class Sprite extends TextureObject {
   readonly scene: CanvasRenderingContext2D;
   readonly texture: CanvasRenderingContext2D;
   readonly frame: HTMLImageElement;
+  _angle: Signal<number>;
   _flipX : Signal<boolean>;
   _flipY : Signal<boolean>;
   _layer: Signal<number>;
@@ -24,6 +25,7 @@ class Sprite extends TextureObject {
     this._width = signal(w);
     this._height = signal(h);
     this._layer = signal(l);
+    this._angle = signal(0);
     this.scene = ctx;
     this.name = name;
     this.frame = new Image();
