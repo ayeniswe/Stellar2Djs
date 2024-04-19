@@ -1,3 +1,4 @@
+import { clearArc } from '../rendering/utils';
 import { Signal } from '@preact/signals-react';
 
 /**
@@ -16,8 +17,6 @@ abstract class TextureObject {
     protected abstract _layer: Signal<number>;
     protected abstract _flipX : Signal<boolean>;
     protected abstract _flipY : Signal<boolean>;
-    protected abstract save: () => void;
-    abstract render: (x?: number, y?: number) => void;
 
     get src() {
       return this.texture.canvas.toDataURL();
@@ -79,6 +78,16 @@ abstract class TextureObject {
       this._angle.value = val;
     }
 
+    protected abstract save: () => void;
+    abstract render: () => void;
+
+    protected rotate = () => {
+      clearArc(this.scene, this);
+      this.scene.save();
+      this.scene.translate(this.posX + this.width / 2, this.posY + this.height / 2);
+      this.scene.rotate(this.angle * (Math.PI / 180));
+    };
+
     scaleX = (factor: number, inverse: boolean = false) => {
       this.scene.clearRect(this.posX, this.posY, this.width, this.height);
       this.posX = inverse
@@ -93,12 +102,6 @@ abstract class TextureObject {
         ? this.posY + this.height - factor
         : this.posY;
       this.height = factor;
-    };
-
-    rotate = () => {
-      this.scene.save();
-      this.scene.translate(this.posX + this.width / 2, this.posY + this.height / 2);
-      this.scene.rotate(this.angle * (Math.PI / 180));
     };
 
     flip = (x: boolean, y: boolean) => {

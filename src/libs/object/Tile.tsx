@@ -60,6 +60,7 @@ class Tile extends TextureObject {
 
   render = () => {
     if (this.angle !== 0) {
+      this.rotate();
       this.scene.drawImage(this.texture.canvas, 0, 0, this.texture.canvas.width,
         this.texture.canvas.height, -this.width / 2, -this.height / 2, this.width, this.height);
     }

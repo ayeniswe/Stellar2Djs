@@ -174,7 +174,6 @@ const useInput = (renderer: Texture) => {
         break;
       case 'grab':
         selection.value!.angle = angle;
-        selection.value!.rotate();
         selectionBox.style.rotate = `${angle}deg`;
         break;
       }
@@ -194,7 +193,6 @@ const useInput = (renderer: Texture) => {
       document.onmousemove = null;
       document.onmouseup = null;
       renderer.updateTexture(selection.value!);
-      renderer.render();
     };
   }
 
@@ -236,13 +234,14 @@ const useInput = (renderer: Texture) => {
     // *** REMOVE TEXTURE ***
     case trash.value && !editable.value && !drag.value:
       renderer.removeTexture(event.offsetX, event.offsetY);
+      renderer.render();
       break;
     // *** ADD TEXTURE ***
     case editable.value && !drag.value && !trash.value:
       renderer.addTexture(src, name, clip.value, event.offsetX, event.offsetY, w, h, sx, sy);
+      renderer.render();
       break;
     }
-    renderer.render();
   }
 
   function handleMoveEvent(event: MouseEvent) {
@@ -261,13 +260,14 @@ const useInput = (renderer: Texture) => {
     // *** REMOVE TEXTURE ***
     case trash.value && !editable.value && !drag.value:
       renderer.removeTexture(event.offsetX, event.offsetY);
+      renderer.render();
       break;
-    // *** ADD TEXTURE ***
+      // *** ADD TEXTURE ***
     case editable.value && !drag.value && !trash.value:
       renderer.addTexture(src, name, clip.value, event.offsetX, event.offsetY, w, h, sx, sy);
+      renderer.render();
       break;
     }
-    renderer.render();
   }
 
   /**

@@ -2,6 +2,7 @@ import { Config, RevisionRecord, TextureObjectBounds, TextureSources } from './t
 import { getHeight, getWidth } from '../../utils/styleProps';
 import { Signal, useSignal } from '@preact/signals-react';
 import { Sprite, Tile } from '../object';
+import { clearArc } from './utils';
 import RBush from 'rbush';
 import { SCENE } from '../../features/Scene';
 import { TextureObject } from '../object/TextureObject';
@@ -148,7 +149,6 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
     }, (a, b) => a.object===b.object);
     // Clear undo stack to keep a coupled order
     revisions.value = revisions.value.filter((obj) => obj.texture !== texture);
-    clearCanvas(posX, posY, width, height);
     // Insert new bounding with changed object
     tree.insert({
       minX: posX,
@@ -249,6 +249,7 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
   }
 
   function render() {
+    console.log('called');
     for (const bound of tree.all()) {
       bound.object.render();
     }
@@ -283,7 +284,7 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
     if (!texture) return;
     document.getElementById(SCENE.CANVAS)!.style.cursor = 'move';
     // Remove old bounding and position
-    const { width, height, posX, posY } = selector.value!;
+    const { width, height, posX, posY, angle } = selector.value!;
     tree.remove({
       minX: posX,
       maxX: posX + width,
@@ -291,7 +292,12 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
       maxY: posY + height,
       object: texture
     }, (a, b) => a.object===b.object);
-    clearCanvas(posX, posY, width, height);
+    if (angle !== 0) {
+      clearArc(ctx, selector.value!);
+    }
+    else {
+      clearCanvas(posX, posY, width, height);
+    }
     // Add new bounding and position
     texture.posX = x;
     texture.posY = y;
