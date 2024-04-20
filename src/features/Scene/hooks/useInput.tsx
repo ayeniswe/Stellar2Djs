@@ -173,7 +173,7 @@ const useInput = (renderer: Texture) => {
         selectionBox.style.left = `${parseFloat(left) + diffX}px`;
         break;
       case 'grab':
-        selection.value!.angle = angle;
+        selection.value!.rotate(angle);
         selectionBox.style.rotate = `${angle}deg`;
         break;
       }
@@ -260,14 +260,13 @@ const useInput = (renderer: Texture) => {
     // *** REMOVE TEXTURE ***
     case trash.value && !editable.value && !drag.value:
       renderer.removeTexture(event.offsetX, event.offsetY);
-      renderer.render();
       break;
       // *** ADD TEXTURE ***
     case editable.value && !drag.value && !trash.value:
       renderer.addTexture(src, name, clip.value, event.offsetX, event.offsetY, w, h, sx, sy);
-      renderer.render();
       break;
     }
+    renderer.render();
   }
 
   /**

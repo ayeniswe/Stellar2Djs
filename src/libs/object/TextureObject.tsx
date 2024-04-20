@@ -18,6 +18,13 @@ abstract class TextureObject {
     protected abstract _flipX : Signal<boolean>;
     protected abstract _flipY : Signal<boolean>;
 
+    get angle() {
+      return this._angle.value;
+    }
+    set angle(val) {
+      this._angle.value = val;
+    }
+
     get src() {
       return this.texture.canvas.toDataURL();
     }
@@ -71,21 +78,11 @@ abstract class TextureObject {
       this._height.value = val;
     }
 
-    get angle() {
-      return this._angle.value;
-    }
-    set angle(val) {
-      this._angle.value = val;
-    }
-
-    protected abstract save: () => void;
     abstract render: () => void;
 
-    protected rotate = () => {
+    rotate = (angle: number) => {
+      this.angle = angle;
       clearArc(this.scene, this);
-      this.scene.save();
-      this.scene.translate(this.posX + this.width / 2, this.posY + this.height / 2);
-      this.scene.rotate(this.angle * (Math.PI / 180));
     };
 
     scaleX = (factor: number, inverse: boolean = false) => {
@@ -105,21 +102,8 @@ abstract class TextureObject {
     };
 
     flip = (x: boolean, y: boolean) => {
-      switch (true) {
-      case x:
-        this.texture.translate(this.texture.canvas.width, 0);
-        this.texture.scale(-1, 1);
-        this.flipX = !this.flipX;
-        break;
-      case y:
-        this.texture.translate(0, this.texture.canvas.height);
-        this.texture.scale(1, -1);
-        this.flipY = !this.flipY;
-        break;
-      default:
-        break;
-      }
-      this.save();
+      if (x) this.flipX = !this.flipX;
+      else if (y) this.flipY = !this.flipY;
     };
 }
 

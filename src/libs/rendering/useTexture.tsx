@@ -249,7 +249,6 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
   }
 
   function render() {
-    console.log('called');
     for (const bound of tree.all()) {
       bound.object.render();
     }
