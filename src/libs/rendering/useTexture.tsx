@@ -1,16 +1,16 @@
 import { Config, RevisionRecord, TextureObjectBounds, TextureSources } from './types';
 import { getHeight, getWidth } from '../../utils/styleProps';
+import { Signal, useSignal } from '@preact/signals-react';
 import { Sprite, Tile } from '../object';
+import { clearArc } from './canvas';
 import RBush from 'rbush';
 import { SCENE } from '../../features/Scene';
 import { TextureObject } from '../object/TextureObject';
-import { useSignal } from '@preact/signals-react';
 
 const useTexture = (ctx: CanvasRenderingContext2D) => {
   const tree = new RBush<TextureObjectBounds>();
   const revisions = useSignal<RevisionRecord[]>([]);
   const sources = useSignal<TextureSources>({});
-  const selector = useSignal<TextureObject | undefined>(undefined);
   const CONFIG: Config = process.env.NODE_ENV === 'production'
     ? require('../../data/config.json')
     : require('../../data/test-config.json');
@@ -76,68 +76,97 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
    * Scales the coordinates based on the canvas size
    * @param {number} x The x coordinate.
    * @param {number} y The y coordinate.
-   * @param {number} width The width.
-   * @param {number} height The height.
+   * @param {number} w The width.
+   * @param {number} h The height.
    * @param {boolean} clipping - Whether clipping is enabled or not.
    * @return {number[]} The scaled coordinates.
    */
-  function scaling(x: number, y: number, width: number, height: number, clipping: boolean): number[] {
-    const inBoundsY = (h: number, yc: number) => (yc >= ctx.canvas.height - h
-      ? ctx.canvas.height - h
-      : yc < 0
+  function scaling(x: number, y: number, w: number, h: number, clipping: boolean): number[] {
+    const inBoundsY = (height: number, yCoordinate: number) => (yCoordinate >= ctx.canvas.height - height
+      ? ctx.canvas.height - height
+      : yCoordinate < 0
         ? 0
-        : yc
+        : yCoordinate
     );
-    const inBoundsX = (w: number, xc: number) => (xc >= ctx.canvas.width - w
-      ? ctx.canvas.width - w
-      : xc < 0
+    const inBoundsX = (width: number, xCoordinate: number) => (xCoordinate >= ctx.canvas.width - width
+      ? ctx.canvas.width - width
+      : xCoordinate < 0
         ? 0
-        : xc
+        : xCoordinate
     );
-    const closestUnit = (val: number, scale: number) => Math.min(Math.abs(scale - val), val);
-    const clipX = (w: number, xc: number) => ((xc - closestUnit(xc % w, w)) % w === 0
-      ? xc - closestUnit(xc % w, w)
-      : closestUnit(xc % w, w) + xc
+    const closestUnit = (value: number, scale: number) => Math.min(Math.abs(scale - value), value);
+    const clipX = (width: number, xCoordinate: number) => ((xCoordinate - closestUnit(xCoordinate % width, width))
+      % width === 0
+      ? xCoordinate - closestUnit(xCoordinate % width, width)
+      : closestUnit(xCoordinate % width, width) + xCoordinate
     );
-    const clipY = (h: number, yc: number) => ((yc - closestUnit(yc % h, h)) % h === 0
-      ? yc - closestUnit(yc % h, h)
-      : closestUnit(yc % h, h) + yc
+    const clipY = (height: number, yCoordinate: number) => ((yCoordinate - closestUnit(yCoordinate % height, height))
+      % height === 0
+      ? yCoordinate - closestUnit(yCoordinate % height, height)
+      : closestUnit(yCoordinate % height, height) + yCoordinate
     );
-    let dx, dy;
+    let clippedX, clippedY;
     if (clipping) {
-      dx = clipX(width, inBoundsX(width, x));
-      dy = clipY(height, inBoundsY(height, y));
+      clippedX = clipX(w, inBoundsX(w, x));
+      clippedY = clipY(h, inBoundsY(h, y));
       const result = tree.search({
-        minX: dx,
-        minY: dy,
-        maxX: dx,
-        maxY: dy
+        minX: clippedX,
+        minY: clippedY,
+        maxX: clippedX,
+        maxY: clippedY
       });
-      if (result.length !== 0 && x < dx) dx = inBoundsX(width, dx - width);
-      if (result.length !== 0 && y < dy) dy = inBoundsY(width, dy - height);
+      if (result.length !== 0 && x < clippedX) clippedX = inBoundsX(w, clippedX - w);
+      if (result.length !== 0 && y < clippedY) clippedY = inBoundsY(w, clippedY - h);
     }
     else {
-      dx = inBoundsX(width, x);
-      dy = inBoundsY(height, y);
+      clippedX = inBoundsX(w, x);
+      clippedY = inBoundsY(h, y);
     }
-    return [dx, dy];
+    return [clippedX, clippedY];
   }
 
   /**
    * Clears any part of the canvas.
    *
-   * @param {number} dx - The x-coordinate of the top-left corner of the area.
-   * @param {number} dy - The y-coordinate of the top-left corner of the area.
+   * @param {number} x - The x-coordinate of the top-left corner of the area.
+   * @param {number} y - The y-coordinate of the top-left corner of the area.
    * @param {number} w - The width of the area.
    * @param {number} h - The height of the area.
    */
-  function clearCanvas(dx: number, dy: number, w: number, h: number) {
-    ctx.clearRect(dx, dy, w, h);
+  function clearCanvas(x: number, y: number, w: number, h: number) {
+    ctx.clearRect(x, y, w, h);
+  }
+
+  function updateTexture(texture: TextureObject) {
+    // Remove old texture bounding
+    const { posX, posY, width, height } = texture;
+    tree.remove({
+      minX: posX,
+      maxX: posX,
+      minY: posY,
+      maxY: posY,
+      object: texture
+    }, (a, b) => a.object===b.object);
+    // Clear undo stack to keep a coupled order
+    revisions.value = revisions.value.filter((obj) => obj.texture !== texture);
+    // Insert new bounding with changed object
+    tree.insert({
+      minX: posX,
+      maxX: posX + width,
+      minY: posY,
+      maxY: posY + height,
+      object: texture
+    });
+    // Store action in history
+    revisions.value.push({
+      texture,
+      action: 'added'
+    });
   }
 
   function addTexture(src: string, name: string, clipping: boolean,
     x: number, y: number, w: number, h: number, sx = 0, sy = 0, l = 1): number[] {
-    const [dx, dy] = scaling(x, y, w, h, clipping);
+    const [scaledX, scaledY] = scaling(x, y, w, h, clipping);
     const result = tree.search({
       minX: x,
       minY: y,
@@ -146,21 +175,21 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
     });
     // Update layer when on top of an object
     for (const bound of result) {
-      l = Math.max(l, bound.object.l) + 1;
+      l = Math.max(l, bound.object.layer) + 1;
     }
     let texture;
     if (sx !== 0 || sy !== 0) {
       const preloadTexture = sources.value[src];
-      texture = new Tile(ctx, preloadTexture, name, dx, dy, w, h, sx, sy, l);
+      texture = new Tile(ctx, preloadTexture, name, scaledX, scaledY, w, h, sx, sy, l);
     }
     else {
-      texture = new Sprite(ctx, src, name, dx, dy, w, h, l);
+      texture = new Sprite(ctx, src, name, scaledX, scaledY, w, h, l);
     }
     tree.insert({
-      minX: dx,
-      maxX: dx+w,
-      minY: dy,
-      maxY: dy+h,
+      minX: scaledX,
+      maxX: scaledX + w,
+      minY: scaledY,
+      maxY: scaledY + h,
       object: texture
     });
     // Store action in history
@@ -168,7 +197,7 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
       texture,
       action: 'added'
     });
-    return [dx, dy];
+    return [scaledX, scaledY];
   }
 
   function removeTexture(x: number, y: number) {
@@ -182,36 +211,36 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
     // Find topmost layer
     let texture = result[0].object;
     for (const bound of result) {
-      if (Math.max(texture.l, bound.object.l) === bound.object!.l) texture = bound.object;
+      if (Math.max(texture.layer, bound.object.layer) === bound.object!.layer) texture = bound.object;
     }
     if (!texture) return [];
-    const { dx, dy, w, h } = texture;
+    const { posX, posY, width, height } = texture;
     tree.remove({
-      minX: dx,
-      maxX: dx,
-      minY: dy,
-      maxY: dy,
+      minX: posX,
+      maxX: posX,
+      minY: posY,
+      maxY: posY,
       object: texture
     }, (a, b) => a.object===b.object);
     // Clear undo stack to keep a coupled order
     revisions.value = revisions.value.filter((obj) => obj.texture !== texture);
-    clearCanvas(dx, dy, w, h);
+    clearCanvas(posX, posY, width, height);
   }
 
   function undoRevision() {
     const action = revisions.value.pop();
     if (action) {
-      const { dx, dy, w, h } = action.texture;
+      const { posX, posY, width, height } = action.texture;
       switch (action.action) {
       case 'added':
         tree.remove({
-          minX: dx,
-          maxX: dx+w,
-          minY: dy,
-          maxY: dy+h,
+          minX: posX,
+          maxX: posX + width,
+          minY: posY,
+          maxY: posY + height,
           object: action.texture
         }, (a, b) => a.object===b.object);
-        clearCanvas(dx, dy, w, h);
+        clearCanvas(posX, posY, width, height);
         break;
       default:
         break;
@@ -230,50 +259,61 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
     clearCanvas(0, 0, ctx.canvas.width, ctx.canvas.height);
   }
 
-  function selectTexture(x: number, y: number) {
-    if (!selector.value) {
-      // Check if texture exists in bounding
-      const result = tree.search({
-        minX: x,
-        minY: y,
-        maxX: x,
-        maxY: y
-      });
-      if (result.length === 0) return;
-      selector.value = result[0].object;
-      document.getElementById(SCENE.CANVAS)!.style.cursor = 'move';
+  function selectTexture(x: number, y: number, selector: Signal<TextureObject | undefined>) {
+    // Check if texture exists in bounding
+    const result = tree.search({
+      minX: x,
+      minY: y,
+      maxX: x,
+      maxY: y
+    });
+    if (result.length === 0) {
+      selector.value = undefined;
     }
     else {
-      const texture = selector.value;
-      if (!texture) return;
-      // Remove old bounding and position
-      const { w, h, dx, dy } = texture;
-      tree.remove({
-        minX: dx,
-        maxX: dx+w,
-        minY: dy,
-        maxY: dy+h,
-        object: texture
-      }, (a, b) => a.object===b.object);
-      clearCanvas(dx, dy, w, h);
-      // Add new bounding and position
-      texture.dx = x;
-      texture.dy = y;
-      ctx.drawImage(texture.texture.canvas, x, y);
-      document.onmouseup = () => {
-        // Reset canvas cursor
-        document.onmouseup = null;
-        document.getElementById(SCENE.CANVAS)!.style.cursor = 'pointer';
-        tree.insert({
-          minX: x,
-          maxX: x+w,
-          minY: y,
-          maxY: y+h,
-          object: texture
-        });
-        selector.value = undefined;
-      };
+      selector.value = result[0].object;
+      for (const bound of result) {
+        if (Math.max(selector.value.layer, bound.object.layer) === bound.object!.layer) selector.value = bound.object;
+      }
     }
+  }
+
+  function moveTexture(x: number, y: number, selector: Signal<TextureObject | undefined>) {
+    const texture = selector.value;
+    if (!texture) return;
+    document.getElementById(SCENE.CANVAS)!.style.cursor = 'move';
+    // Remove old bounding and position
+    const { width, height, posX, posY, angle } = selector.value!;
+    tree.remove({
+      minX: posX,
+      maxX: posX + width,
+      minY: posY,
+      maxY: posY + height,
+      object: texture
+    }, (a, b) => a.object===b.object);
+    if (angle !== 0) {
+      clearArc(ctx, selector.value!);
+    }
+    else {
+      clearCanvas(posX, posY, width, height);
+    }
+    // Add new bounding and position
+    texture.posX = x;
+    texture.posY = y;
+    texture.render();
+    document.onmouseup = () => {
+      // Reset canvas cursor
+      document.onmouseup = null;
+      document.getElementById(SCENE.CANVAS)!.style.cursor = 'pointer';
+      tree.insert({
+        minX: x,
+        maxX: x + width,
+        minY: y,
+        maxY: y + height,
+        object: texture
+      });
+      selector.value = undefined;
+    };
   }
 
   function startListeners() {
@@ -290,10 +330,12 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
     addTexture,
     selectTexture,
     removeTexture,
+    updateTexture,
+    moveTexture,
     undoRevision,
     render,
     removeAllTexture,
-    textureRenderer,
+    textureRenderer
   };
 };
 

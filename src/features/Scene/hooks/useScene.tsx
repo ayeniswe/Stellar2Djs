@@ -41,6 +41,8 @@ const useScene = (ctx: CanvasRenderingContext2D | null) => {
     if (ctx) {
       await renderer.initialize();
       input.initialize();
+      // Prevent blurriness
+      ctx.imageSmoothingEnabled = false;
     }
   }
 
@@ -51,7 +53,8 @@ const useScene = (ctx: CanvasRenderingContext2D | null) => {
   return {
     initialize,
     clear,
-    attrs
+    attrs,
+    renderer
   };
 };
 

@@ -1,0 +1,61 @@
+#InspectorPanel {
+    border: 2px solid var(--accent-color);
+    height: 100%;
+    width: 20%;
+ 
+    header {
+      border-bottom: 2px solid var(--accent-color);
+      margin-top: 5px;
+      text-align: center;
+    }
+    
+    .attributes {
+      display: flex;  
+      flex-direction: column;
+      gap: 5px;
+      margin: 5px;
+
+      .name {
+        background-color: var(--primary-color);
+        border: inset 4px var(--background-color);
+        border-radius: 2px;
+        padding: 2.5px;
+      }
+
+      table {
+        background-color: var(--primary-color);
+        border: inset 4px var(--background-color);
+        border-radius: 2px;
+        border-spacing: 5px;
+
+        .values {
+          input {
+            background-color: var(--panel-attribute-background);
+            border: none;
+            text-align: center;
+            width: 60%;
+          }
+        }
+        
+        .content {
+          background-color: var(--panel-attribute-background);
+          padding: 5px;
+          text-align: center;
+          width: 100%;
+        }
+  
+        .wide-group {
+          display: flex;
+          justify-content: space-around;
+        }
+
+        .tight-group {
+          display: flex;
+          justify-content: center;
+          gap: 5px;
+        }
+      }
+
+    }
+
+  }

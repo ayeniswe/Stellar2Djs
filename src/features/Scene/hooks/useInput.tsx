@@ -1,9 +1,10 @@
-import { Brush, Input } from './type';
 import { Config, Texture } from '../../../libs/rendering';
 import { Bindings } from '../../../libs/input';
+import { Brush } from './type';
 import configuration from '../../../data/test-config.json';
 import { iconEffects } from '../../../libs/effects';
 import { SCENE } from '../constants';
+import { selection } from '../signals';
 import { useSignal } from '@preact/signals-react';
 
 /**
@@ -74,7 +75,9 @@ const useInput = (renderer: Texture) => {
     const bindings = Bindings.getInstance();
     bindings.addBinding(handleDropSprite.bind(this), [], 'drop', false, SCENE.CANVAS);
     bindings.addBinding(handleBrush.bind(this), [], 'mousemove', false, SCENE.CANVAS);
-    bindings.addBinding(handleDrawing.bind(this), ['LeftButton'], ['mousedown', 'mousemove'], false, SCENE.CANVAS);
+    bindings.addBinding(handleClickEvent.bind(this), ['LeftButton'], ['mousedown'], false, SCENE.CANVAS);
+    bindings.addBinding(handleSelectionBox.bind(this), ['LeftButton'], ['mousedown'], false, SCENE.SELECTION);
+    bindings.addBinding(handleMoveEvent.bind(this), ['LeftButton'], ['mousemove'], false, SCENE.CANVAS);
     bindings.addBinding(toggleClipMode.bind(this), ['c'], 'keydown', true);
     bindings.addBinding(toggleDragMode.bind(this), ['d'], 'keydown', true);
     bindings.addBinding(toggleEditMode.bind(this), ['e'], 'keydown', true);
@@ -120,39 +123,148 @@ const useInput = (renderer: Texture) => {
     }
   }
 
+  function handleSelectionBox(selectEvent: MouseEvent) {
+    if (!selection.value) return;
+    const handle = selectEvent.target as HTMLElement;
+    const selectionBox = handle.parentElement!;
+    const { cursor } = window.getComputedStyle(handle);
+    const { clientX, clientY } = selectEvent;
+    const { left, width, height, top, rotate } = selectionBox.style;
+    document.onmousemove = (e) => {
+      const diffX = e.clientX - clientX;
+      const diffY = e.clientY - clientY;
+      // Calculate angle based on both X and Y differences
+      const angle = Math.atan2(diffY, diffX) * (180 / Math.PI);
+      let newHeight = parseFloat(height);
+      let newWidth = parseFloat(width);
+      switch (cursor) {
+      case 'n-resize':
+        newHeight -= diffY;
+        selectionBox.style.top = `${parseFloat(top) + diffY}px`;
+        break;
+      case 's-resize':
+        newHeight += diffY;
+        break;
+      case 'w-resize':
+        newWidth -= diffX;
+        selectionBox.style.left = `${parseFloat(left) + diffX}px`;
+        break;
+      case 'e-resize':
+        newWidth += diffX;
+        break;
+      case 'ne-resize':
+        newHeight -= diffY;
+        newWidth += diffX;
+        selectionBox.style.top = `${parseFloat(top) + diffY}px`;
+        break;
+      case 'se-resize':
+        newHeight += diffY;
+        newWidth += diffX;
+        break;
+      case 'sw-resize':
+        newHeight += diffY;
+        newWidth -= diffX;
+        selectionBox.style.left = `${parseFloat(left) + diffX}px`;
+        break;
+      case 'nw-resize':
+        newHeight -= diffY;
+        selectionBox.style.top = `${parseFloat(top) + diffY}px`;
+        newWidth -= diffX;
+        selectionBox.style.left = `${parseFloat(left) + diffX}px`;
+        break;
+      case 'grab':
+        selection.value!.rotate(angle);
+        selectionBox.style.rotate = `${angle}deg`;
+        break;
+      }
+      selectionBox.style.width = `${newWidth}px`;
+      selectionBox.style.height = `${newHeight}px`;
+      /*
+       * Inverse direction since default css style grows left to right
+       * and top to bottom
+       */
+      const scaleXInverse = !['e-resize', 'ne-resize', 'se-resize'].includes(cursor);
+      const scaleYInverse = !['s-resize', 'sw-resize', 'se-resize'].includes(cursor);
+      if (newWidth > 0) selection.value!.scaleX(newWidth, scaleXInverse);
+      if (newHeight > 0) selection.value!.scaleY(newHeight, scaleYInverse);
+      selection.value?.render();
+    };
+    document.onmouseup = () => {
+      document.onmousemove = null;
+      document.onmouseup = null;
+      renderer.updateTexture(selection.value!);
+    };
+  }
+
   /**
-   * Handles the drawing action in the level scene based on mouse events.
-   * If the scene is in `trash` mode, it removes an element at the specified
-   * position.
-   * If the scene is in `selection` mode "when edit it turned off", it
-   * allows the selection of an element and drop it at the specified position.
-   * If the scene is in `drag` mode, it rapidly adds an element
-   * at the specified position.
+   * Handles the click and mouse-move action in the level
+   * scene based on mouse events.
    * @param {MouseEvent} event - The mouse event object.
    *
    * NOTE: This method is only available if the scene is ready.
    */
-  function handleDrawing(event: MouseEvent): void {
-    if (!editable.value && !trash.value) {
-      // Select texture
-      renderer.selectTexture(event.offsetX, event.offsetY, 1);
-    }
-    else {
-      if (!ready.value || !brush.value || !drag.value && event.type === 'mousemove') return;
-      /*
-       * TODO: make more dynamic way to do this
-       * Get brush src image tilesheet data
-       */
-      const { id, object } = brush.value!;
-      const { name, h, w, sx, sy } = object;
-      const src = config.textures['tilesets'][id.split('-')[0]].name;
-      // Remove or add a texture
-      if (trash.value) {
-        renderer.removeTexture(event.offsetX, event.offsetY);
+  function handleClickEvent(event: MouseEvent) {
+    if (!ready.value || !brush.value) return;
+    const { id, object } = brush.value!;
+    const { name, h, w, sx, sy } = object;
+    const src = config.textures['tilesets'][id.split('-')[0]].name;
+    const selectionElement = document.getElementById(SCENE.SELECTION)!;
+    // Need to access border to offset width compensation around object
+    const selectionBorder = parseFloat(window.getComputedStyle(selectionElement).borderWidth);
+    switch (true) {
+    // *** SELECT TEXTURE ***
+    case drag.value && !editable.value && !trash.value:
+      renderer.selectTexture(event.offsetX, event.offsetY, selection);
+      if (!selection.value) {
+        selectionElement.style.display = 'none';
       }
       else {
-        renderer.addTexture(src, name, clip.value, event.offsetX, event.offsetY, w, h, sx, sy);
+        /*
+         * Since selection div is an absolute position it MUST be
+         * based on client x and y
+         */
+        selectionElement.style.left = `${event.clientX - (event.offsetX - selection.value.posX) - selectionBorder}px`;
+        selectionElement.style.top = `${event.clientY - (event.offsetY - selection.value.posY) - selectionBorder}px`;
+        selectionElement.style.display = 'block';
+        selectionElement.style.width = `${selection.value?.width}px`;
+        selectionElement.style.height = `${selection.value?.height}px`;
+        selectionElement.style.rotate = `${selection.value?.angle}deg`;
       }
+      break;
+    // *** REMOVE TEXTURE ***
+    case trash.value && !editable.value && !drag.value:
+      renderer.removeTexture(event.offsetX, event.offsetY);
+      renderer.render();
+      break;
+    // *** ADD TEXTURE ***
+    case editable.value && !drag.value && !trash.value:
+      renderer.addTexture(src, name, clip.value, event.offsetX, event.offsetY, w, h, sx, sy);
+      renderer.render();
+      break;
+    }
+  }
+
+  function handleMoveEvent(event: MouseEvent) {
+    if (!ready.value || !brush.value) return;
+    const { id, object } = brush.value!;
+    const { name, h, w, sx, sy } = object;
+    const src = config.textures['tilesets'][id.split('-')[0]].name;
+    const selectionElement = document.getElementById(SCENE.SELECTION)!;
+    switch (true) {
+    // *** MOVE TEXTURE ***
+    case drag.value && !editable.value && !trash.value:
+      if (!selection.value) return;
+      selectionElement.style.display = 'none';
+      renderer.moveTexture(event.offsetX, event.offsetY, selection);
+      break;
+    // *** REMOVE TEXTURE ***
+    case trash.value && !editable.value && !drag.value:
+      renderer.removeTexture(event.offsetX, event.offsetY);
+      break;
+      // *** ADD TEXTURE ***
+    case editable.value && !drag.value && !trash.value:
+      renderer.addTexture(src, name, clip.value, event.offsetX, event.offsetY, w, h, sx, sy);
+      break;
     }
     renderer.render();
   }

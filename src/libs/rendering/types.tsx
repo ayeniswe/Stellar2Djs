@@ -1,3 +1,4 @@
+import { Signal } from '@preact/signals-react';
 import { TextureObject } from '../object/TextureObject';
 
 type TexturesMapping = {
@@ -55,19 +56,33 @@ type RevisionRecord = {
 
 type Texture = {
     /**
+     * Re-insert an object into the canvas
+     *
+     * @param {TextureObject} texture - an object to insert
+     *
+     * @description
+     * This method removes and re-inserts an object
+     * which is common for ui dimensions changes to an object
+     *
+     */
+    updateTexture: (texture: TextureObject) => void
+
+    /**
      * Adds a texture to the canvas.
      *
      * @param {boolean} clipping - Indicates whether clipping is applied.
      * @param {string} src - The location path of the texture or the
      * `data/image` url.
      * @param {string} name - The name of the texture.
-     * @param {number} x - The x-coordinate of the texture.
-     * @param {number} y - The y-coordinate of the texture.
+     * @param {number} x - The offset x-coordinate of the canvas.
+     * @param {number} y - The offset y-coordinate of the canvas.
      * @param {number} w - The width of the texture.
      * @param {number} h - The height of the texture.
      * @param {number} sx - The source x-coordinate of the texture.
      * @param {number} sy - The source y-coordinate of the texture.
      * @param {number} l - The layer of the texture.
+     * @param {TextureObject} texture - an object to insert to avoid
+     * creating a new object (used when altering dimensions of object)
      * @returns {number[]} Returns an array containing the
      * x and y coordinates of the removed texture, or an empty array
      * if the texture was not removed.
@@ -87,20 +102,21 @@ type Texture = {
      * revisions array to keep track of the added texture.
      */
     addTexture: (src: string, name: string, clipping: boolean,
-        x: number, y: number, w: number, h: number, sx?: number, sy?: number, l?: number) => number[]
+        x: number, y: number, w: number, h: number, sx?: number,
+        sy?: number, l?: number, texture?: TextureObject | null) => number[]
 
     /**
      * Removes a texture from the canvas.
      *
-     * @param {number} x - The x-coordinate of the texture.
-     * @param {number} y - The y-coordinate of the texture.
-     * @param {number} l - The layer of the texture.
-     *
+     * @param {number} x - The offset x-coordinate of the canvas.
+     * @param {number} y - The offset y-coordinate of the canvas.
+     * @param {TextureObject} texture - an object to insert to avoid
+     * creating a new object (used when altering dimensions of object)
      * @description
      * This method retrieves the texture information.
      * from the pixel bounding if the texture exists.
      */
-    removeTexture: (x: number, y: number, l?: number) => void
+    removeTexture: (x: number, y: number, texture?: TextureObject | null) => void
 
     /**
      * Undoes the last revision made to the canvas.
@@ -149,11 +165,25 @@ type Texture = {
     initialize: () => Promise<void>
 
     /**
-     * Selects a texture from the canvas to drag and drop.
-     * @returns {string} Returns the canvas data url
-     * for background image when dragging
+     * Selects a texture from the canvas to enable drag and drop.
+     *
+     * @param {number} x - The offset x-coordinate of the selection on canvas.
+     * @param {number} y - The offset y-coordinate of the selection on canvas.
+     * @param {Signal<TextureObject | undefined>} selector - Signal to
+     * globally track a selected object.
      */
-    selectTexture: (x: number, y: number, l?: number) => void
+    selectTexture: (x: number, y: number, selector: Signal<TextureObject | undefined>) => void
+
+    /**
+     * Moves a texture around the canvas.
+     *
+     * @param {number} x - The new offset x-coordinate of the canvas.
+     * @param {number} y - The new offset y-coordinate of the canvas.
+     * @param {Signal<TextureObject | undefined>} selector - Signal to
+     * globally track a selected object.
+     */
+    moveTexture: (x: number, y: number, selector: Signal<TextureObject | undefined>) => void
+
     textureRenderer: {
         /**
          * All textures sources available to be used in the renderer
