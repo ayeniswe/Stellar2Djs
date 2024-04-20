@@ -2,7 +2,7 @@ import { Config, RevisionRecord, TextureObjectBounds, TextureSources } from './t
 import { getHeight, getWidth } from '../../utils/styleProps';
 import { Signal, useSignal } from '@preact/signals-react';
 import { Sprite, Tile } from '../object';
-import { clearArc } from './utils';
+import { clearArc } from './canvas';
 import RBush from 'rbush';
 import { SCENE } from '../../features/Scene';
 import { TextureObject } from '../object/TextureObject';

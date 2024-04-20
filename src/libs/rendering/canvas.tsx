@@ -7,12 +7,10 @@ import { TextureObject } from '../object/TextureObject';
  * @param {TextureObject} object - The object to erase
  */
 function clearArc(ctx: CanvasRenderingContext2D, object: TextureObject) {
-  ctx.save();
-  ctx.arc(object.posX + object.width / 2, object.posY + object.height / 2,
-    Math.sqrt(object.width * object.height / Math.PI) * 1.3, 0, 2 * Math.PI);
-  ctx.clip();
-  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-  ctx.restore();
+  const centerX = object.posX + object.width / 2;
+  const centerY = object.posY + object.height / 2;
+  const radius = Math.sqrt(object.width * object.height / Math.PI) * 1.3;
+  ctx.clearRect(centerX - radius - 1, centerY - radius - 1, radius * 2 + 2, radius * 2 + 2);
 }
 
 export { clearArc };
