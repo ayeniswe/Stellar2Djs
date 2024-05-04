@@ -134,7 +134,6 @@
     ]
   },
   "devDependencies": {
-    "@types/node": "^20.10.4",
-    "cypress": "^13.6.4"
+    "@types/node": "^20.10.4"
   }
 }
