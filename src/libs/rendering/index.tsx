@@ -2,7 +2,7 @@ import {
   Config, RevisionAction, RevisionRecord,
   Texture, TextureItem, TextureItems, Textures, TexturesMapping, TextureSources
 } from './types';
-import { useTexture } from './useTexture';
+import { useTexture } from './hooks/useTexture';
 
 export { useTexture };
 export type {

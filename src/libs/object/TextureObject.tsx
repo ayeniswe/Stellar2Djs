@@ -1,4 +1,4 @@
-import { clearArc } from '../rendering/canvas';
+import { clearArc } from '../rendering/utils/canvas';
 import { Signal } from '@preact/signals-react';
 
 /**

@@ -1,4 +1,4 @@
-import { TextureObject } from '../object/TextureObject';
+import { TextureObject } from '../../object/TextureObject';
 
 /**
  * Clears the arc formed by an object rotation
