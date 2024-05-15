@@ -1,3 +1,4 @@
+import { clipX, clipY, inBoundsX, inBoundsY } from './utils/placement';
 import { Config, RevisionRecord, TextureObjectBounds, TextureSources } from './types';
 import { getHeight, getWidth } from '../../utils/styleProps';
 import { Signal, useSignal } from '@preact/signals-react';
@@ -82,45 +83,22 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
    * @return {number[]} The scaled coordinates.
    */
   function scaling(x: number, y: number, w: number, h: number, clipping: boolean): number[] {
-    const inBoundsY = (height: number, yCoordinate: number) => (yCoordinate >= ctx.canvas.height - height
-      ? ctx.canvas.height - height
-      : yCoordinate < 0
-        ? 0
-        : yCoordinate
-    );
-    const inBoundsX = (width: number, xCoordinate: number) => (xCoordinate >= ctx.canvas.width - width
-      ? ctx.canvas.width - width
-      : xCoordinate < 0
-        ? 0
-        : xCoordinate
-    );
-    const closestUnit = (value: number, scale: number) => Math.min(Math.abs(scale - value), value);
-    const clipX = (width: number, xCoordinate: number) => ((xCoordinate - closestUnit(xCoordinate % width, width))
-      % width === 0
-      ? xCoordinate - closestUnit(xCoordinate % width, width)
-      : closestUnit(xCoordinate % width, width) + xCoordinate
-    );
-    const clipY = (height: number, yCoordinate: number) => ((yCoordinate - closestUnit(yCoordinate % height, height))
-      % height === 0
-      ? yCoordinate - closestUnit(yCoordinate % height, height)
-      : closestUnit(yCoordinate % height, height) + yCoordinate
-    );
     let clippedX, clippedY;
     if (clipping) {
-      clippedX = clipX(w, inBoundsX(w, x));
-      clippedY = clipY(h, inBoundsY(h, y));
+      clippedX = clipX(w, inBoundsX(ctx.canvas.width, w, x));
+      clippedY = clipY(h, inBoundsY(ctx.canvas.height, h, y));
       const result = tree.search({
         minX: clippedX,
         minY: clippedY,
         maxX: clippedX,
         maxY: clippedY
       });
-      if (result.length !== 0 && x < clippedX) clippedX = inBoundsX(w, clippedX - w);
-      if (result.length !== 0 && y < clippedY) clippedY = inBoundsY(w, clippedY - h);
+      if (result.length !== 0 && x < clippedX) clippedX = inBoundsX(ctx.canvas.height, w, clippedX - w);
+      if (result.length !== 0 && y < clippedY) clippedY = inBoundsY(ctx.canvas.height, w, clippedY - h);
     }
     else {
-      clippedX = inBoundsX(w, x);
-      clippedY = inBoundsY(h, y);
+      clippedX = inBoundsX(ctx.canvas.width, w, x);
+      clippedY = inBoundsY(ctx.canvas.height, h, y);
     }
     return [clippedX, clippedY];
   }
@@ -335,6 +313,7 @@ const useTexture = (ctx: CanvasRenderingContext2D) => {
     undoRevision,
     render,
     removeAllTexture,
+    scaling,
     textureRenderer
   };
 };
